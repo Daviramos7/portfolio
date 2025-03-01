@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Complete Portfolio Website</title>
+    <link rel="shortcut icon" href="#" type="image/x-icon">
+    <!-- Box icons -->
+    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
+    <!-- custom css -->
+     <link rel="stylesheet" href="css/style.css">
+     <script type="text/javascript"
+     src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+    </script>
+    <script type="text/javascript">
+    (function(){
+    emailjs.init({
+        publicKey: "k4v5bBnrqZ9qnsu51",
+    });
+    })();
+    </script>
+    
+</head>
+<body>
+    <header>
+        <a href="#" class="logo">Portfolio</a>
+
+        <div class="nav">
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+        </div>
+
+        <div class="nav-responsive">
+            <a href="#home">Home</a>
+            <a href="#services">Services</a>
+            <a href="#portfolio">Portfolio</a>
+            <a href="#contact">Contact</a>
+            <a href="#about">About</a>
+        </div>
+
+
+        <div class="menu-hamburguer">
+            <div class="bar1"></div>
+            <div class="bar2"></div>
+            <div class="bar3"></div>
+        </div>
+    </header>
+
+    <!-- home section -->
+    <section class="home" id="home">
+        <div class="home-content">
+            <h3>Hello, I'm</h3>
+            <h1>Davi Ramos Ferreira</h1>
+            <h3>Full-Stack <span>Developer</span> and <span>Programer</span></h3>
+
+            <p>  
+                I'm Davi Ramos Ferreira, a Systems Information student passionate about technology and innovation. I have experience in web development (HTML, CSS, JavaScript), Python and Java programming, and SQL databases.
+                Here, you'll find some of my projects, including interactive websites, system development, and technology solutions. I'm always looking for new challenges and opportunities to grow.  
+                Feel free to explore my work and connect with me! 💡
+            </p>
+
+            <div class="social-media">
+                <a href="https://www.linkedin.com/in/davi-ramos-ferreira-325354294/" target="_blank"><i class='bx bxl-linkedin-square'></i></a>
+                <a href="https://github.com/Daviramos7" target="_blank"><i class='bx bxl-github'></i></a>
+                <a href="https://www.instagram.com/davi_1514/" target="_blank"><i class='bx bxl-instagram' ></i></a>
+            </div>
+
+            <div>
+                <a href="curriculo/Currículo 2025.pdf" download="Curriculo_Davi_Ramos_Ferreira.pdf" class="btn">Download CV</a>
+            </div>
+        </div>
+
+        <div class="home-img">
+            <img src="img/WhatsApp Image 2025-03-01 at 17.00.57.png" alt="Profile Picture">
+        </div>
+    </section>
+    <!-- /home section -->
+
+    <!-- service  section-->
+     <section class="services" id="services">
+        <h2>My <span>Services</span></h2>
+
+        <div class="services-container">
+            <div class="services-box">
+                <i class='bx bx-code'></i>
+                <h3>Web Development</h3>
+
+                <p>
+                    I specialize in creating and optimizing websites with modern technologies like HTML, CSS, JavaScript, and responsive design. My focus is on building user-friendly, efficient, and visually appealing applications that provide a seamless experience across devices. Whether it's landing pages, websites, or projects, I am committed to delivering high-quality solutions tailored to your needs. 🚀
+                </p>
+            </div>
+
+            <div class="services-box">
+                <i class='bx bx-terminal'></i>
+                <h3>Programming</h3>
+    
+                <p>
+                    I have experience in Python and Java programming, focusing on problem-solving, clean code, and efficient algorithms. I enjoy developing logic-driven applications, automating processes, and optimizing performance.
+                    From backend development to scripting and software solutions, I am always looking for innovative ways to improve and create scalable systems. 🚀
+                </p>
+                </div>
+            </div>
+        </div>
+     </section>
+    <!-- /service section -->
+
+    <!-- portfolio section -->
+     <section class="portfolio" id="portfolio">
+        <h2>Latest <span>Projects</span></h2>
+
+        <div class="portfolio-container">
+            <div class="portfolio-box">
+                <img src="img/Captura de tela 2025-03-01 172933.png" alt="Portfolio 1">
+
+                <div class="portfolio-layer">
+                    <h4>VillesBurguer 🍔💻</h4>
+
+                    <p>
+                        A fictitious web system for managing burger orders, built with HTML, CSS (Tailwind), and JavaScript. Features a responsive interface and intuitive ordering system. 🚀
+                    </p>
+
+                    <a href="https://villes-buguer.vercel.app/" target="_blank"<i class='bx bx-link-external'></i></a>
+                </div>
+            </div>
+        </div>
+        </div>
+     </section>
+    <!-- /portfolio section -->
+
+    <!-- contact section -->
+     <section class="contact" id="contact">
+        <h2>Contact <span>Me!</span></h2>
+
+        <form action="">
+            <div class="input-box">
+                <input type="text" id="name"  placeholder="Full Name">
+                <input type="email" id="email" placeholder="E-mail">
+            </div>
+
+            <div class="input-box">
+                <input type="number" id="number"  placeholder="Phone Number">
+                <input type="" id="subject" placeholder="Subject">
+            </div>
+
+            <textarea cols="30" rows="8" placeholder="Message" id="message"></textarea>
+            <a href="#" class="btn" onclick="sendMail()">Send Message</a>
+        </form>
+
+     </section>
+    <!-- /contact section -->
+
+    <!-- about section -->
+     <section class="about" id="about">
+        <div class="about-img">
+            <img src="img/WhatsApp Image 2025-03-01 at 17.00.57.png" alt="About me">
+        </div>
+
+        <div class="about-content">
+            <h3>About Me</h3>
+            <h1>Full-Stack <span>Developer</span> and <span>Programer</span></h1>
+
+            <p>
+                I’m Davi Ramos Ferreira, a Systems Information student passionate about technology, programming, and web development. I have experience in Python and Java, as well as front-end technologies like HTML, CSS, and JavaScript.
+                I enjoy creating interactive websites and functional systems, always focusing on clean code, responsive design, and user experience. Some of my projects include VillesBurguer, a web-based order management system, and WebCoding, an interactive recipe platform.
+                I'm always looking to learn, improve, and take on new challenges in the world of technology. Feel free to explore my work and connect with me! 💡🚀
+            </p>
+        </div>
+     </section>
+    <!-- /about section -->
+
+    <footer>
+        <p>Copyright &copy; 2025 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved</p>
+    </footer>
+</body>
+<script src="js/script.js"></script>
+</html>
