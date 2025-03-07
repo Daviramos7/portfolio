@@ -436,6 +436,12 @@ footer {
     .services-box {
         width: 70%;
     }
+
+    .portfolio-container, .portfolio-layer {
+        max-width: 65%;
+        height: 65%;
+        
+    }
 }
 
 @media (min-width: 768px) {
