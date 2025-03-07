@@ -200,6 +200,10 @@ span {
     gap: 1.2rem;
 }
 
+.portfolio, h4 {
+    text-align: center;
+}
+
 .portfolio-box {
     position: relative;
     border-radius: 0.6rem;
@@ -435,12 +439,6 @@ footer {
 
     .services-box {
         width: 70%;
-    }
-
-    .portfolio-container, .portfolio-layer {
-        max-width: 65%;
-        height: 65%;
-        
     }
 }
 
