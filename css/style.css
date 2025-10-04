@@ -44,7 +44,7 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    padding: 1.1rem;
+    padding: 1.1rem 5%;
     background-color: var(--bg-color-01);
     display: flex;
     justify-content: space-between;
@@ -141,8 +141,9 @@ span {
 .portfolio h2,
 .contact h2 {
     font-size: 2.2rem;
-    margin-bottom: 1rem;
     text-align: center;
+    /* --- CORREÇÃO APLICADA --- */
+    margin-bottom: 4rem; 
 }
 
 .services-container {
@@ -197,11 +198,8 @@ span {
 
 .portfolio-container {
     display: grid;
-    gap: 1.2rem;
-}
-
-.portfolio, h4 {
-    text-align: center;
+    /* --- CORREÇÃO APLICADA --- */
+    gap: 2.5rem;
 }
 
 .portfolio-box {
@@ -234,7 +232,7 @@ span {
     flex-direction: column;
     text-align: center;
     padding: 0 4rem;
-    transform: translateY(30rem);
+    transform: translateY(100%);
     transition: 0.5s ease;
 }
 
@@ -244,6 +242,7 @@ span {
 
 .portfolio-layer h4 {
     font-size: 1.8rem;
+    margin-bottom: 0.5rem;
 }
 
 .portfolio-layer p {
@@ -329,7 +328,6 @@ footer {
 }
 
 /* Botão */
-
 .btn {
     display: inline-block;
     padding: 0.7rem 1.8rem;
@@ -347,6 +345,12 @@ footer {
     background-color: inherit;
     color: var(--main-color);
     cursor: pointer;
+}
+
+.header-controls {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
 }
 
 /* menu hamburguer */
@@ -399,7 +403,7 @@ footer {
 
     .home, .about {
         flex-direction: column;
-        gap: 1,2rem;
+        gap: 1.2rem;
     }
 
     .home-img, .about-img {
@@ -455,6 +459,8 @@ footer {
         display: none;
     }
 
+
+
     .home, .about {
         flex-direction: row;
         justify-content: space-evenly;
@@ -474,7 +480,7 @@ footer {
     }
 
     .portfolio-container{
-        grid-template-columns: auto auto;
+        grid-template-columns: 1fr 1fr;
     }
 
     form .input-box input {
@@ -508,6 +514,54 @@ footer {
     }
 
     .portfolio-container {
-        grid-template-columns: auto auto auto;
+        grid-template-columns: 1fr 1fr 1fr;
     }
+}
+
+
+/* --- Language Switcher Styles --- */
+.language-switcher {
+    position: relative;
+}
+
+.lang-toggle-label {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 5px;
+    width: 60px;
+    height: 30px;
+    background: var(--bg-color-02);
+    border-radius: 30px;
+    cursor: pointer;
+    border: 1px solid var(--main-color);
+    position: relative;
+}
+
+.lang-toggle-label::after { /* O botão deslizante */
+    content: '';
+    position: absolute;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: white;
+    top: 2px;
+    left: 2px;
+    transition: transform 0.3s ease;
+}
+
+.lang-toggle-checkbox {
+    display: none; /* Esconde o checkbox real */
+}
+
+/* Move o botão quando o checkbox está marcado */
+.lang-toggle-checkbox:checked + .lang-toggle-label::after {
+    transform: translateX(30px);
+}
+
+/* Estilos das bandeiras */
+.lang-toggle-label .flag-us,
+.lang-toggle-label .flag-br {
+    font-size: 14px;
+    line-height: 1;
 }

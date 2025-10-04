@@ -5,10 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Complete Portfolio Website</title>
     <link rel="shortcut icon" href="path/to/favicon.ico" type="image/x-icon">
-    <!-- Box icons -->
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-    <!-- custom css -->
-     <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/style.css">
      <script type="text/javascript"
      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
     </script>
@@ -26,40 +24,47 @@
         <a href="#" class="logo">Portfolio</a>
 
         <div class="nav">
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
+            <a href="#home" data-key="navHome">Home</a>
+            <a href="#services" data-key="navServices">Services</a>
+            <a href="#portfolio" data-key="navPortfolio">Portfolio</a>
+            <a href="#contact" data-key="navContact">Contact</a>
+            <a href="#about" data-key="navAbout">About</a>
+        </div>
+
+        <div class="header-controls">
+            <div class="language-switcher">
+                <input type="checkbox" id="lang-toggle-checkbox" class="lang-toggle-checkbox">
+                <label for="lang-toggle-checkbox" class="lang-toggle-label">
+                    <span class="flag-us">🇺🇸</span>
+                    <span class="flag-br">🇧🇷</span>
+                </label>
+            </div>
+
+            <div class="menu-hamburguer">
+                <div class="bar1"></div>
+                <div class="bar2"></div>
+                <div class="bar3"></div>
+            </div>
         </div>
 
         <div class="nav-responsive">
-            <a href="#home">Home</a>
-            <a href="#services">Services</a>
-            <a href="#portfolio">Portfolio</a>
-            <a href="#contact">Contact</a>
-            <a href="#about">About</a>
-        </div>
-
-
-        <div class="menu-hamburguer">
-            <div class="bar1"></div>
-            <div class="bar2"></div>
-            <div class="bar3"></div>
+            <a href="#home" data-key="navHome">Home</a>
+            <a href="#services" data-key="navServices">Services</a>
+            <a href="#portfolio" data-key="navPortfolio">Portfolio</a>
+            <a href="#contact" data-key="navContact">Contact</a>
+            <a href="#about" data-key="navAbout">About</a>
         </div>
     </header>
 
-    <!-- home section -->
     <section class="home" id="home">
         <div class="home-content">
-            <h3>Hello, I'm</h3>
-            <h1>Davi Ramos Ferreira</h1>
-            <h3>Full-Stack <span>Developer</span> and <span>Programmer</span></h3>
+            <h3 data-key="homeHello">Hello, I'm</h3>
+            <h1 data-key="homeTitle">Davi Ramos Ferreira</h1>
+            <h3 data-key="homeSubtitle"><span>Data</span> Science & <span>Analytics</span></h3>
 
-            <p>  
-                I'm Davi Ramos Ferreira, a Systems Information student passionate about technology and innovation. I have experience in web development (HTML, CSS, JavaScript), Python and Java programming, and SQL databases.
-                Here, you'll find some of my projects, including interactive websites, system development, and technology solutions. I'm always looking for new challenges and opportunities to grow.  
-                Feel free to explore my work and connect with me! 💡
+            <p data-key="homeDescription">  
+                Sou Davi Ramos Ferreira, um estudante de Sistemas de Informação apaixonado por transformar dados em soluções inovadoras. Meu foco atual é <strong>Ciência de Dados</strong>, aplicando minhas habilidades em <strong>Python, SQL, Power BI e Machine Learning</strong> para extrair insights valiosos.<br><br>
+                Minha base em programação e bancos de dados me dá uma fundação sólida para resolver problemas complexos. Aqui, você encontrará projetos que demonstram como eu uso a tecnologia para dar sentido aos dados. Estou sempre em busca de novos desafios para crescer no universo da análise de dados! 📊
             </p>
 
             <div class="social-media">
@@ -69,7 +74,7 @@
             </div>
 
             <div>
-                <a href="curriculo/Currículo Davi 2025.pdf" download="Curriculo_Davi_Ramos_Ferreira.pdf" class="btn">Download CV</a>
+                <a href="curriculo/Currículo Davi 2025.pdf" download="Curriculo_Davi_Ramos_Ferreira.pdf" class="btn" data-key="downloadCV">Download CV</a>
             </div>
         </div>
 
@@ -77,124 +82,104 @@
             <img src="img/Foto perfil.png" alt="Profile Picture">
         </div>
     </section>
-    <!-- /home section -->
-
-    <!-- service  section-->
-     <section class="services" id="services">
-        <h2>My <span>Services</span></h2>
+    <section class="services" id="services">
+        <h2 data-key="servicesTitle">My <span>Services</span></h2>
 
         <div class="services-container">
             <div class="services-box">
-                <i class='bx bx-code'></i>
-                <h3>Web Development</h3>
-
-                <p>
-                    I specialize in creating and optimizing websites with modern technologies like HTML, CSS, JavaScript, and responsive design. My focus is on building user-friendly, efficient, and visually appealing applications that provide a seamless experience across devices. Whether it's landing pages, websites, or projects, I am committed to delivering high-quality solutions tailored to your needs. 🚀
+                <i class='bx bxs-data'></i>
+                <h3 data-key="dataScienceTitle">Data Science</h3>
+                <p data-key="dataScienceDesc">
+                    Apaixonado por descobrir insights em dados. Utilizo Python, SQL e ferramentas como Power BI para realizar análises, criar modelos preditivos (Machine Learning) e transformar informações complexas em visualizações claras que impulsionam decisões estratégicas. 🚀
                 </p>
             </div>
 
             <div class="services-box">
                 <i class='bx bx-terminal'></i>
-                <h3>Programming</h3>
-    
-                <p>
-                    I have experience in Python and Java programming, focusing on problem-solving, clean code, and efficient algorithms. I enjoy developing logic-driven applications, automating processes, and optimizing performance.
-                    From backend development to scripting and software solutions, I am always looking for innovative ways to improve and create scalable systems. 🚀
+                <h3 data-key="programmingTitle">Programming</h3>
+                <p data-key="programmingDesc">
+                    Tenho experiência em programação Python e Java, com foco na resolução de problemas, código limpo e algoritmos eficientes. Gosto de desenvolver aplicações orientadas pela lógica, automatizar processos e otimizar o desempenho. Do desenvolvimento de backend a scripts e soluções de software, estou sempre procurando maneiras inovadoras de melhorar e criar sistemas escaláveis. 🚀
                 </p>
-                </div>
+            </div>
+
+            <div class="services-box">
+                <i class='bx bx-code'></i>
+                <h3 data-key="webDevTitle">Web Development</h3>
+                <p data-key="webDevDesc">
+                    Sou especialista na criação e otimização de sites com tecnologias modernas como HTML, CSS, JavaScript e design responsivo. Meu foco é construir aplicações fáceis de usar, eficientes e visualmente atraentes que proporcionem uma experiência perfeita em todos os dispositivos. Sejam landing pages, sites ou projetos, estou comprometido em entregar soluções de alta qualidade adaptadas às suas necessidades. 🚀
+                </p>
             </div>
         </div>
      </section>
-    <!-- /service section -->
-
-    <!-- portfolio section -->
     <section class="portfolio" id="portfolio">
-        <h2>Latest <span>Projects</span></h2>
-        <h4>Who are a Pokémon</h4>
+        <h2 data-key="portfolioTitle">Latest <span>Projects</span></h2>
+        
         <div class="portfolio-container">
             <div class="portfolio-box">
-                <img src="img/Who are a Pokémon.png" alt="Portfolio 1">
-
+                <img src="img/task_manager.png" alt="Task Manager Project">
                 <div class="portfolio-layer">
-                    
-
-                    <p>
-                        A Game where the player guesses the Pokémon, built with HTML, CSS, and JavaScript.
+                    <h4 data-key="taskManagerTitle">Task Manager</h4>
+                    <p data-key="taskManagerDesc">
+                        Um sistema de gerenciamento de tarefas para organizar e acompanhar atividades.
                     </p>
+                    <a href="https://github.com/Daviramos7/task_manager" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
+                </div>
+            </div>
 
+            <div class="portfolio-box">
+                <img src="img/Who are a Pokémon.png" alt="Who are a Pokémon Project">
+                <div class="portfolio-layer">
+                    <h4 data-key="whoArePokemonTitle">Who are a Pokémon</h4>
+                    <p data-key="whoArePokemonDesc">
+                        Um jogo onde o jogador adivinha o Pokémon, construído com HTML, CSS e JavaScript.
+                    </p>
                     <a href="https://who-are-a-pokemon.vercel.app/" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
                 </div>
             </div>
-        </div>
-        </div>
-        </section>
-    <!-- /portfolio section -->
 
-    <!-- portfolio section -->
-     <section class="portfolio" id="portfolio">
-        <h4>VillesBurguer</h4>
-        <div class="portfolio-container">
             <div class="portfolio-box">
-                <img src="img/VillesBurger.png" alt="Portfolio 2">
-
+                <img src="img/VillesBurger.png" alt="VillesBurguer Project">
                 <div class="portfolio-layer">
-                    
-
-                    <p>
-                        A fictitious web system for managing burger orders, built with HTML, CSS (Tailwind), and JavaScript.
+                    <h4 data-key="villesburguerTitle">VillesBurguer</h4>
+                    <p data-key="villesburguerDesc">
+                        Um sistema web fictício para gerenciar pedidos de hambúrgueres, construído com HTML, CSS (Tailwind) e JavaScript.
                     </p>
-
                     <a href="https://villes-buguer.vercel.app/" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
                 </div>
             </div>
         </div>
-        </div>
-     </section>
-    <!-- /portfolio section -->
-
-    <!-- contact section -->
-     <section class="contact" id="contact">
-        <h2>Contact <span>Me!</span></h2>
-
+    </section>
+    <section class="contact" id="contact">
+        <h2 data-key="contactTitle">Contact <span>Me!</span></h2>
         <form action="">
             <div class="input-box">
-                <input type="text" id="name"  placeholder="Full Name">
-                <input type="email" id="email" placeholder="E-mail">
+                <input type="text" id="name"  placeholder="Full Name" data-key="formName">
+                <input type="email" id="email" placeholder="E-mail" data-key="formEmail">
             </div>
-
             <div class="input-box">
-                <input type="number" id="number"  placeholder="Phone Number">
-                <input type="text" id="subject" placeholder="Subject">
+                <input type="number" id="number"  placeholder="Phone Number" data-key="formNumber">
+                <input type="text" id="subject" placeholder="Subject" data-key="formSubject">
             </div>
-
-            <textarea cols="30" rows="8" placeholder="Message" id="message"></textarea>
-            <a href="#" class="btn" onclick="sendMail()">Send Message</a>
+            <textarea cols="30" rows="8" placeholder="Message" id="message" data-key="formMessage"></textarea>
+            <a href="#" class="btn" onclick="sendMail()" data-key="formSend">Send Message</a>
         </form>
-
      </section>
-    <!-- /contact section -->
-
-    <!-- about section -->
-     <section class="about" id="about">
+    <section class="about" id="about">
         <div class="about-img">
             <img src="img/Foto perfil.png" alt="About me">
         </div>
-
         <div class="about-content">
-            <h3>About Me</h3>
-            <h1>Full-Stack <span>Developer</span> and <span>Programmer</span></h1>
-
-            <p>
-                I'm Davi Ramos Ferreira, a Systems Information student passionate about technology, programming, and web development. I have experience in Python and Java, as well as front-end technologies like HTML, CSS, and JavaScript.
-                I enjoy creating interactive websites and functional systems, always focusing on clean code, responsive design, and user experience. Some of my projects include VillesBurguer, a web-based order management system, and WebCoding, an interactive recipe platform.
-                I'm always looking to learn, improve, and take on new challenges in the world of technology. Feel free to explore my work and connect with me! 💡🚀
+            <h3 data-key="aboutTitle">About Me</h3>
+            <h1 data-key="aboutSubtitle"><span>Data</span> Science & <span>Analytics</span></h1>
+            <p data-key="aboutDescription">
+                Sou Davi Ramos Ferreira, um estudante de Sistemas de Informação movido pela curiosidade de desvendar histórias através dos dados. Minha paixão é a <strong>Ciência de Dados</strong>, e meu objetivo é utilizar a tecnologia para apoiar tomadas de decisão mais inteligentes.<br><br>
+                Atualmente, estou aprofundando minhas competências em todo o ciclo de vida dos dados: desde a extração e análise com <strong>Python e SQL</strong>, até a criação de dashboards interativos com <strong>Power BI</strong> e a construção de modelos de <strong>Machine Learning</strong>. Minha experiência prévia com desenvolvimento (Java, JavaScript, HTML/CSS) complementa minha jornada, permitindo-me não apenas analisar, mas também construir soluções completas.<br><br>
+                Estou em constante aprendizado, sempre buscando desafios que me permitam evoluir no fascinante mundo da tecnologia e dos dados. 🚀
             </p>
         </div>
      </section>
-    <!-- /about section -->
-
     <footer>
-        <p>Copyright &copy; 2025 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved</p>
+        <p data-key="footerText">Copyright &copy; 2025 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved</p>
     </footer>
 </body>
 <script src="js/script.js"></script>
