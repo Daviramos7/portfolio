@@ -1,6 +1,4 @@
-/* Imports the Poppins font from Google Fonts*/
 @import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-
 
 :root {
     --main-color: #00eeff;
@@ -8,9 +6,6 @@
     --bg-color-01: #1f242d;
     --bg-color-02: #323946;
     --color-00: #0000001a;
-
-
-    /* Extra */
     --color-01: #999999;
     --color-02: #009539;
     --color-03: #7950f2;
@@ -27,7 +22,6 @@
     outline: none;
     scroll-behavior: smooth;
 }
-
 
 html {
     font-family: 'Poppins', sans-serif;
@@ -89,7 +83,7 @@ span {
     color: var(--main-color);
 }
 
-.home, .about {
+.home {
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
@@ -102,37 +96,25 @@ span {
     border-image: linear-gradient(135deg, transparent 50%, var(--main-color)) 1;
 }
 
-
-.about-img {
-    border-left: solid 0.6rem var(--main-color);
-    border-bottom: solid 0.6rem var(--main-color);
-    border-image: linear-gradient(225deg, transparent 50%, var(--main-color)) 1;
-}
-
-
-.home-img img, .about-img img {
+.home-img img {
     width: 100%;
 }
 
-.about {
-    background-color: var(--bg-color-02);
-}
-
-.home-content, .about-content {
+.home-content {
     width: 45%;
 }
 
-.home-content h1, .about-content h1 {
+.home-content h1 {
     font-weight: 700;
     line-height: 1.3;
 }
 
-.home-content h3, .about-content h3 {
+.home-content h3 {
     font-weight: 700;
     font-size: 1.6rem;
 }
 
-.home-content p, .about-content p {
+.home-content p {
     margin-top: 1.2rem;
     text-align: justify;
 }
@@ -142,8 +124,7 @@ span {
 .contact h2 {
     font-size: 2.2rem;
     text-align: center;
-    /* --- CORREÇÃO APLICADA --- */
-    margin-bottom: 4rem; 
+    margin-bottom: 4rem;
 }
 
 .services-container {
@@ -198,7 +179,6 @@ span {
 
 .portfolio-container {
     display: grid;
-    /* --- CORREÇÃO APLICADA --- */
     gap: 2.5rem;
 }
 
@@ -212,11 +192,18 @@ span {
 
 .portfolio-box img {
     width: 100%;
+    height: 100%;
+    object-fit: cover;
     transition: 0.5s ease;
 }
 
-.portfolio-box img:hover {
+.portfolio-box:hover img {
     transform: scale(1.1);
+}
+
+.portfolio-links {
+    display: flex;
+    gap: 1rem; /* Cria um espaço entre os ícones */
 }
 
 .portfolio-box .portfolio-layer {
@@ -228,7 +215,7 @@ span {
     background: linear-gradient(transparent, var(--main-color));
     display: flex;
     justify-content: center;
-    align-items:center;
+    align-items: center;
     flex-direction: column;
     text-align: center;
     padding: 0 4rem;
@@ -271,7 +258,6 @@ form {
     margin-bottom: 2rem;
 }
 
-
 form .input-box {
     display: flex;
     justify-content: space-between;
@@ -302,7 +288,7 @@ footer {
     background-color: var(--bg-color-01);
 }
 
-.social-media img{
+.social-media img {
     width: 3.5rem;
 }
 
@@ -327,7 +313,6 @@ footer {
     box-shadow: 0 0 0.3rem var(--main-color);
 }
 
-/* Botão */
 .btn {
     display: inline-block;
     padding: 0.7rem 1.8rem;
@@ -353,7 +338,6 @@ footer {
     gap: 1.5rem;
 }
 
-/* menu hamburguer */
 .menu-hamburguer {
     display: none;
     cursor: pointer;
@@ -379,68 +363,55 @@ footer {
     transform: translate(0, -0.65rem) rotate(45deg);
 }
 
-
 /* media queries */
-/* Extra Small Smartphone */
 @media (min-width: 0px) {
     .menu-hamburguer {
         display: block;
     }
-
     .nav {
         display: none;
     }
-
     .nav-responsive a {
         display: block;
         font-size: 1.2rem;
         margin: 0.5rem 0;
     }
-
     section {
-        padding:6rem 2.5rem;
+        padding: 6rem 2.5rem;
     }
-
-    .home, .about {
+    .home {
         flex-direction: column;
         gap: 1.2rem;
     }
-
-    .home-img, .about-img {
+    .home-img {
         width: 80%;
         max-width: 80%;
     }
-
-    .home-content, .about-content {
+    .home-content {
         width: 100%;
     }
-
     .home-content div {
         text-align: center;
     }
-
-    .home-content h1, .about-content h1 {
+    .home-content h1 {
         font-size: 2.2rem;
         font-weight: 700;
         line-height: 1.3;
     }
-
     .services-container {
         flex-direction: column;
         align-items: center;
     }
-
     .services-box {
         width: 100%;
     }
 }
 
 @media (min-width: 576px) {
-    .home-img, .about-img {
+    .home-img {
         width: 65%;
         max-width: 65%;
     }
-
     .services-box {
         width: 70%;
     }
@@ -450,49 +421,38 @@ footer {
     .menu-hamburguer {
         display: none;
     }
-
-    .nav{
+    .nav {
         display: block;
     }
-
     .nav-responsive, .nav-responsive a {
         display: none;
     }
-
-
-
-    .home, .about {
+    .home {
         flex-direction: row;
         justify-content: space-evenly;
     }
-
-    .home-img, .about-img {
+    .home-img {
         max-width: 35%;
     }
-
-    .home-content, .about-content {
+    .home-content {
         width: 50%;
     }
-
     .services-box {
         width: 60%;
         margin-bottom: 2rem;
     }
-
-    .portfolio-container{
+    .portfolio-container {
         grid-template-columns: 1fr 1fr;
     }
-
     form .input-box input {
         width: 49%;
     }
 }
 
 @media (min-width: 992px) {
-    .home-img, .about-img {
+    .home-img {
         max-width: 35%;
     }
-
     .services-container {
         flex-direction: row;
         gap: 1.2rem;
@@ -500,24 +460,19 @@ footer {
 }
 
 @media (min-width: 1200px) {
-
-    .home-img, .about-img {
+    .home-img {
         max-width: 25%;
     }
-
     .home-content h1 {
         font-size: 2.7rem;
     }
-
     .home-content h2 {
         font-size: 2rem;
     }
-
     .portfolio-container {
-        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-columns: repeat(3, 1fr);
     }
 }
-
 
 /* --- Language Switcher Styles --- */
 .language-switcher {
@@ -529,7 +484,7 @@ footer {
     align-items: center;
     justify-content: space-between;
     padding: 0 5px;
-    width: 60px;
+    width: 70px;
     height: 30px;
     background: var(--bg-color-02);
     border-radius: 30px;
@@ -538,7 +493,7 @@ footer {
     position: relative;
 }
 
-.lang-toggle-label::after { /* O botão deslizante */
+.lang-toggle-label::after {
     content: '';
     position: absolute;
     width: 24px;
@@ -548,20 +503,35 @@ footer {
     top: 2px;
     left: 2px;
     transition: transform 0.3s ease;
+    z-index: 2;
 }
 
 .lang-toggle-checkbox {
-    display: none; /* Esconde o checkbox real */
+    display: none;
 }
 
-/* Move o botão quando o checkbox está marcado */
 .lang-toggle-checkbox:checked + .lang-toggle-label::after {
-    transform: translateX(30px);
+    transform: translateX(40px);
 }
 
-/* Estilos das bandeiras */
 .lang-toggle-label .flag-us,
 .lang-toggle-label .flag-br {
-    font-size: 14px;
-    line-height: 1;
+    height: 16px;
+    width: auto;
+    border-radius: 3px;
+    transition: opacity 0.3s ease;
+}
+
+.lang-toggle-label .flag-br {
+    opacity: 0.5;
+}
+.lang-toggle-label .flag-us {
+    opacity: 1;
+}
+
+.lang-toggle-checkbox:checked + .lang-toggle-label .flag-br {
+    opacity: 1;
+}
+.lang-toggle-checkbox:checked + .lang-toggle-label .flag-us {
+    opacity: 0.5;
 }

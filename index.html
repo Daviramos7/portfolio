@@ -7,8 +7,8 @@
     <link rel="shortcut icon" href="path/to/favicon.ico" type="image/x-icon">
     <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
     <link rel="stylesheet" href="css/style.css">
-     <script type="text/javascript"
-     src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
+      <script type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js">
     </script>
     <script type="text/javascript">
     (function(){
@@ -28,15 +28,14 @@
             <a href="#services" data-key="navServices">Services</a>
             <a href="#portfolio" data-key="navPortfolio">Portfolio</a>
             <a href="#contact" data-key="navContact">Contact</a>
-            <a href="#about" data-key="navAbout">About</a>
         </div>
 
         <div class="header-controls">
             <div class="language-switcher">
                 <input type="checkbox" id="lang-toggle-checkbox" class="lang-toggle-checkbox">
                 <label for="lang-toggle-checkbox" class="lang-toggle-label">
-                    <span class="flag-us">🇺🇸</span>
-                    <span class="flag-br">🇧🇷</span>
+                    <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/us.svg" alt="USA Flag" class="flag-us">
+                    <img src="https://cdnjs.cloudflare.com/ajax/libs/flag-icon-css/3.5.0/flags/4x3/br.svg" alt="Brazil Flag" class="flag-br">
                 </label>
             </div>
 
@@ -52,7 +51,6 @@
             <a href="#services" data-key="navServices">Services</a>
             <a href="#portfolio" data-key="navPortfolio">Portfolio</a>
             <a href="#contact" data-key="navContact">Contact</a>
-            <a href="#about" data-key="navAbout">About</a>
         </div>
     </header>
 
@@ -116,6 +114,16 @@
         
         <div class="portfolio-container">
             <div class="portfolio-box">
+                <img src="img/spfc-analysis.png" alt="SPFC Analysis Project">
+                <div class="portfolio-layer">
+                    <h4 data-key="spfcAnalysisTitle">Análise de Dados - SPFC</h4>
+                    <p data-key="spfcAnalysisDesc">
+                        Um projeto de análise de dados do São Paulo FC, utilizando Python e bibliotecas como Pandas e Matplotlib.
+                    </p>
+                    <a href="https://github.com/Daviramos7/Projeto-SPFC" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
+                </div>
+            </div>
+            <div class="portfolio-box">
                 <img src="img/task_manager.png" alt="Task Manager Project">
                 <div class="portfolio-layer">
                     <h4 data-key="taskManagerTitle">Task Manager</h4>
@@ -125,29 +133,18 @@
                     <a href="https://github.com/Daviramos7/task_manager" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
                 </div>
             </div>
-
             <div class="portfolio-box">
-                <img src="img/Who are a Pokémon.png" alt="Who are a Pokémon Project">
+                <img src="img/Who are a Pokémon.png" alt="Guess the Pokémon Project">
                 <div class="portfolio-layer">
-                    <h4 data-key="whoArePokemonTitle">Who are a Pokémon</h4>
+                    <h4 data-key="whoArePokemonTitle">Guess the Pokémon</h4>
                     <p data-key="whoArePokemonDesc">
                         Um jogo onde o jogador adivinha o Pokémon, construído com HTML, CSS e JavaScript.
                     </p>
-                    <a href="https://guess-the-pokemon-coral.vercel.app/" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
+                    <div class="portfolio-links"> <a href="https://guess-the-pokemon-coral.vercel.app/" target="_blank" rel="noopener" title="Ver site"><i class='bx bx-link-external'></i></a>
+                        <a href="https://github.com/Daviramos7/Guess-the-Pokemon" target="_blank" rel="noopener" title="Ver repositório"><i class='bx bxl-github'></i></a>
+                    </div>
                 </div>
             </div>
-
-            <div class="portfolio-box">
-                <img src="img/VillesBurger.png" alt="VillesBurguer Project">
-                <div class="portfolio-layer">
-                    <h4 data-key="villesburguerTitle">VillesBurguer</h4>
-                    <p data-key="villesburguerDesc">
-                        Um sistema web fictício para gerenciar pedidos de hambúrgueres, construído com HTML, CSS (Tailwind) e JavaScript.
-                    </p>
-                    <a href="https://villes-buguer.vercel.app/" target="_blank" rel="noopener"><i class='bx bx-link-external'></i></a>
-                </div>
-            </div>
-        </div>
     </section>
     <section class="contact" id="contact">
         <h2 data-key="contactTitle">Contact <span>Me!</span></h2>
@@ -163,21 +160,7 @@
             <textarea cols="30" rows="8" placeholder="Message" id="message" data-key="formMessage"></textarea>
             <a href="#" class="btn" onclick="sendMail()" data-key="formSend">Send Message</a>
         </form>
-     </section>
-    <section class="about" id="about">
-        <div class="about-img">
-            <img src="img/Foto perfil.png" alt="About me">
-        </div>
-        <div class="about-content">
-            <h3 data-key="aboutTitle">About Me</h3>
-            <h1 data-key="aboutSubtitle"><span>Data</span> Science & <span>Analytics</span></h1>
-            <p data-key="aboutDescription">
-                Sou Davi Ramos Ferreira, um estudante de Sistemas de Informação movido pela curiosidade de desvendar histórias através dos dados. Minha paixão é a <strong>Ciência de Dados</strong>, e meu objetivo é utilizar a tecnologia para apoiar tomadas de decisão mais inteligentes.<br><br>
-                Atualmente, estou aprofundando minhas competências em todo o ciclo de vida dos dados: desde a extração e análise com <strong>Python e SQL</strong>, até a criação de dashboards interativos com <strong>Power BI</strong> e a construção de modelos de <strong>Machine Learning</strong>. Minha experiência prévia com desenvolvimento (Java, JavaScript, HTML/CSS) complementa minha jornada, permitindo-me não apenas analisar, mas também construir soluções completas.<br><br>
-                Estou em constante aprendizado, sempre buscando desafios que me permitam evoluir no fascinante mundo da tecnologia e dos dados. 🚀
-            </p>
-        </div>
-     </section>
+      </section>
     <footer>
         <p data-key="footerText">Copyright &copy; 2025 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved</p>
     </footer>

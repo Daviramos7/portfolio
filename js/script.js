@@ -55,12 +55,12 @@ const translations = {
         webDevDesc: "I specialize in creating and optimizing websites with modern technologies like HTML, CSS, JavaScript, and responsive design. My focus is on building user-friendly, efficient, and visually appealing applications that provide a seamless experience across devices. Whether it's landing pages, websites, or projects, I am committed to delivering high-quality solutions tailored to your needs. 🚀",
         // Portfolio Section
         portfolioTitle: "Latest <span>Projects</span>",
+        spfcAnalysisTitle: "Data Analysis - SPFC", // ADICIONADO
+        spfcAnalysisDesc: "A data analysis project for São Paulo FC, using Python with libraries like Pandas and Selenium.", // ADICIONADO
         taskManagerTitle: "Task Manager",
         taskManagerDesc: "A task management system to organize and track activities.",
-        whoArePokemonTitle: "Who are a Pokémon",
-        whoArePokemonDesc: "A Game where the player guesses the Pokémon, built with HTML, CSS, and JavaScript.",
-        villesburguerTitle: "VillesBurguer",
-        villesburguerDesc: "A fictitious web system for managing burger orders, built with HTML, CSS (Tailwind), and JavaScript.",
+        whoArePokemonTitle: "Guess the Pokémon", // CORRIGIDO
+        whoArePokemonDesc: "A game where the player guesses the Pokémon, built with HTML, CSS, and JavaScript.",
         // Contact Section
         contactTitle: "Contact <span>Me!</span>",
         formName: "Full Name",
@@ -99,12 +99,12 @@ const translations = {
         webDevDesc: "Sou especialista na criação e otimização de sites com tecnologias modernas como HTML, CSS, JavaScript e design responsivo. Meu foco é construir aplicações fáceis de usar, eficientes e visualmente atraentes que proporcionem uma experiência perfeita em todos os dispositivos. Sejam landing pages, sites ou projetos, estou comprometido em entregar soluções de alta qualidade adaptadas às suas necessidades. 🚀",
         // Portfolio Section
         portfolioTitle: "Últimos <span>Projetos</span>",
+        spfcAnalysisTitle: "Análise de Dados - SPFC", // ADICIONADO
+        spfcAnalysisDesc: "Coleta e análise de dados de jogadores do São Paulo FC com Python, Selenium e Pandas. Apresenta um menu interativo e gráficos.", // ADICIONADO
         taskManagerTitle: "Gerenciador de Tarefas",
         taskManagerDesc: "Um sistema de gerenciamento de tarefas para organizar e acompanhar atividades.",
-        whoArePokemonTitle: "Quem é esse Pokémon",
+        whoArePokemonTitle: "Adivinhe o Pokémon", // CORRIGIDO
         whoArePokemonDesc: "Um jogo onde o jogador adivinha o Pokémon, construído com HTML, CSS e JavaScript.",
-        villesburguerTitle: "VillesBurguer",
-        villesburguerDesc: "Um sistema web fictício para gerenciar pedidos de hambúrgueres, construído com HTML, CSS (Tailwind) e JavaScript.",
         // Contact Section
         contactTitle: "Fale <span>Comigo!</span>",
         formName: "Nome Completo",
