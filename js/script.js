@@ -55,6 +55,8 @@ const translations = {
         webDevDesc: "I specialize in creating and optimizing websites with modern technologies like HTML, CSS, JavaScript, and responsive design. My focus is on building user-friendly, efficient, and visually appealing applications that provide a seamless experience across devices. Whether it's landing pages, websites, or projects, I am committed to delivering high-quality solutions tailored to your needs. 🚀",
         // Portfolio Section
         portfolioTitle: "Latest <span>Projects</span>",
+        stockDataPipelineTitle: "Stock Data Pipeline",
+        stockDataPipelineDesc: "A data pipeline project for stock analysis, using Python and ETL tools.",
         spfcAnalysisTitle: "Data Analysis - SPFC", // ADICIONADO
         spfcAnalysisDesc: "A data analysis project for São Paulo FC, using Python with libraries like Pandas and Selenium.", // ADICIONADO
         taskManagerTitle: "Task Manager",
@@ -99,6 +101,8 @@ const translations = {
         webDevDesc: "Sou especialista na criação e otimização de sites com tecnologias modernas como HTML, CSS, JavaScript e design responsivo. Meu foco é construir aplicações fáceis de usar, eficientes e visualmente atraentes que proporcionem uma experiência perfeita em todos os dispositivos. Sejam landing pages, sites ou projetos, estou comprometido em entregar soluções de alta qualidade adaptadas às suas necessidades. 🚀",
         // Portfolio Section
         portfolioTitle: "Últimos <span>Projetos</span>",
+        stockDataPipelineTitle: "Pipeline de Dados de Ações",
+        stockDataPipelineDesc: "Um projeto de pipeline de dados para análise de ações, utilizando Python e ferramentas de ETL.",
         spfcAnalysisTitle: "Análise de Dados - SPFC", // ADICIONADO
         spfcAnalysisDesc: "Coleta e análise de dados de jogadores do São Paulo FC com Python, Selenium e Pandas. Apresenta um menu interativo e gráficos.", // ADICIONADO
         taskManagerTitle: "Gerenciador de Tarefas",
