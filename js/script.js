@@ -36,7 +36,7 @@ const translations = {
         homeHello: "Hello, I'm",
         homeTitle: "Davi Ramos Ferreira",
         homeSubtitle: "<span>Data</span> Science & <span>Analytics</span>",
-        homeDescription: "I'm Davi Ramos Ferreira, an Information Systems student passionate about transforming data into innovative solutions. My current focus is <strong>Data Science</strong>, applying my skills in <strong>Python, SQL, Power BI, and Machine Learning</strong> to extract valuable insights.<br><br>My background in programming and databases gives me a solid foundation for solving complex problems. Here, you'll find projects that demonstrate how I use technology to make sense of data. I'm always looking for new challenges to grow in the world of data analytics!",
+        homeDescription: "I'm Davi Ramos Ferreira, a Computer Science student passionate about transforming data into innovative solutions. My current focus is <strong>Data Science</strong>, applying my skills in <strong>Python, SQL, Power BI, and Machine Learning</strong> to extract valuable insights.<br><br>My background in programming and databases gives me a solid foundation for solving complex problems. Here, you'll find projects that demonstrate how I use technology to make sense of data. I'm always looking for new challenges to grow in the world of data analytics!",
         downloadCV: "Download CV",
         servicesTitle: "My <span>Services</span>",
         dataScienceTitle: "Data Science",
@@ -65,7 +65,7 @@ const translations = {
         formSend: "Send Message",
         aboutTitle: "About Me",
         aboutSubtitle: "<span>Data</span> Science & <span>Analytics</span>",
-        aboutDescription: "I'm Davi Ramos Ferreira, an Information Systems student driven by the curiosity to uncover stories through data. My passion is <strong>Data Science</strong>, and my goal is to use technology to support smarter decision-making.<br><br>Currently, I'm deepening my skills across the entire data lifecycle: from extraction and analysis with <strong>Python and SQL</strong>, to creating interactive dashboards in <strong>Power BI</strong> and building <strong>Machine Learning</strong> models. My previous experience in development (Java, JavaScript, HTML/CSS) complements my journey, allowing me not only to analyze but also to build complete solutions.<br><br>I am a constant learner, always seeking challenges that allow me to evolve in the fascinating world of technology and data.",
+        aboutDescription: "I'm Davi Ramos Ferreira, a Computer Science student driven by the curiosity to uncover stories through data. My passion is <strong>Data Science</strong>, and my goal is to use technology to support smarter decision-making.<br><br>Currently, I'm deepening my skills across the entire data lifecycle: from extraction and analysis with <strong>Python and SQL</strong>, to creating interactive dashboards in <strong>Power BI</strong> and building <strong>Machine Learning</strong> models. My previous experience in development (Java, JavaScript, HTML/CSS) complements my journey, allowing me not only to analyze but also to build complete solutions.<br><br>I am a constant learner, always seeking challenges that allow me to evolve in the fascinating world of technology and data.",
         footerText: "Copyright &copy; 2025 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved",
     },
     pt: {
@@ -77,7 +77,7 @@ const translations = {
         homeHello: "Olá, eu sou",
         homeTitle: "Davi Ramos Ferreira",
         homeSubtitle: "Ciência de <span>Dados</span> & <span>Analytics</span>",
-        homeDescription: "Sou Davi Ramos Ferreira, um estudante de Sistemas de Informação apaixonado por transformar dados em soluções inovadoras. Meu foco atual é <strong>Ciência de Dados</strong>, aplicando minhas habilidades em <strong>Python, SQL, Power BI e Machine Learning</strong> para extrair insights valiosos.<br><br>Minha base em programação e bancos de dados me dá uma fundação sólida para resolver problemas complexos. Aqui, você encontrará projetos que demonstram como eu uso a tecnologia para dar sentido aos dados. Estou sempre em busca de novos desafios para crescer no universo da análise de dados!",
+        homeDescription: "Sou Davi Ramos Ferreira, um estudante de Ciência da Computação apaixonado por transformar dados em soluções inovadoras. Meu foco atual é <strong>Ciência de Dados</strong>, aplicando minhas habilidades em <strong>Python, SQL, Power BI e Machine Learning</strong> para extrair insights valiosos.<br><br>Minha base em programação e bancos de dados me dá uma fundação sólida para resolver problemas complexos. Aqui, você encontrará projetos que demonstram como eu uso a tecnologia para dar sentido aos dados. Estou sempre em busca de novos desafios para crescer no universo da análise de dados!",
         downloadCV: "Baixar CV",
         servicesTitle: "Meus <span>Serviços</span>",
         dataScienceTitle: "Ciência de Dados",
@@ -106,7 +106,7 @@ const translations = {
         formSend: "Enviar Mensagem",
         aboutTitle: "Sobre Mim",
         aboutSubtitle: "Ciência de <span>Dados</span> & <span>Analytics</span>",
-        aboutDescription: "Sou Davi Ramos Ferreira, um estudante de Sistemas de Informação movido pela curiosidade de desvendar histórias através dos dados. Minha paixão é a <strong>Ciência de Dados</strong>, e meu objetivo é utilizar a tecnologia para apoiar tomadas de decisão mais inteligentes.<br><br>Atualmente, estou aprofundando minhas competências em todo o ciclo de vida dos dados: desde a extração e análise com <strong>Python e SQL</strong>, até a criação de dashboards interativos com <strong>Power BI</strong> e a construção de modelos de <strong>Machine Learning</strong>. Minha experiência prévia com desenvolvimento (Java, JavaScript, HTML/CSS) complementa minha jornada, permitindo-me não apenas analisar, mas também construir soluções completas.<br><br>Estou em constante aprendizado, sempre buscando desafios que me permitam evoluir no fascinante mundo da tecnologia e dos dados.",
+        aboutDescription: "Sou Davi Ramos Ferreira, um estudante de Ciência da Computação movido pela curiosidade de desvendar histórias através dos dados. Minha paixão é a <strong>Ciência de Dados</strong>, e meu objetivo é utilizar a tecnologia para apoiar tomadas de decisão mais inteligentes.<br><br>Atualmente, estou aprofundando minhas competências em todo o ciclo de vida dos dados: desde a extração e análise com <strong>Python e SQL</strong>, até a criação de dashboards interativos com <strong>Power BI</strong> e a construção de modelos de <strong>Machine Learning</strong>. Minha experiência prévia com desenvolvimento (Java, JavaScript, HTML/CSS) complementa minha jornada, permitindo-me não apenas analisar, mas também construir soluções completas.<br><br>Estou em constante aprendizado, sempre buscando desafios que me permitam evoluir no fascinante mundo da tecnologia e dos dados.",
         footerText: "Copyright &copy; 2025 por &lt;/Davi Ramos Ferreira&gt;, Todos os Direitos Reservados",
     }
 };
