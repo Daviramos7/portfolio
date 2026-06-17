@@ -1,30 +1,21 @@
+const EMAILJS_PUBLIC_KEY = "k4v5bBnrqZ9qnsu51";
+const EMAILJS_SERVICE_ID = "service_1r6yipm";
+const EMAILJS_TEMPLATE_ID = "template_g5tskxc";
+
 const menuHamburguer = document.querySelector('.menu-hamburguer');
-menuHamburguer.addEventListener('click', () => {
-    toggleMenu();
-});
+const navResponsive = document.querySelector('.nav-responsive');
+const languageToggle = document.getElementById('lang-toggle-checkbox');
+const projectsContainer = document.getElementById('projects-container');
+const contactForm = document.getElementById('contact-form');
+const formStatus = document.getElementById('form-status');
+const submitButton = contactForm ? contactForm.querySelector('.form-submit') : null;
+const navLinks = document.querySelectorAll('.nav a, .nav-responsive a');
+const reducedMotionQuery = window.matchMedia('(prefers-reduced-motion: reduce)');
 
-function toggleMenu() {
-    const nav = document.querySelector('.nav-responsive');
-    menuHamburguer.classList.toggle('change');
-
-    if (menuHamburguer.classList.contains('change')) {
-        nav.style.display = 'block';
-    } else {
-        nav.style.display = 'none';
-    }
-}
-
-function sendMail() {
-    let parms = {
-        name : document.getElementById("name").value,
-        email : document.getElementById("email").value, 
-        subject : document.getElementById("subject").value,
-        number : document.getElementById("number").value,
-        message : document.getElementById ("message").value
-    }
-
-    emailjs.send("service_1r6yipm","template_g5tskxc",parms).then(alert("Email sent!!"))
-}
+let revealObserver = null;
+let revealAnimationsReady = false;
+let emailInitialized = false;
+let isSubmitting = false;
 
 const translations = {
     en: {
@@ -32,11 +23,12 @@ const translations = {
         navServices: "Services",
         navPortfolio: "Portfolio",
         navContact: "Contact",
-        navAbout: "About",
         homeHello: "Hello, I'm",
         homeTitle: "Davi Ramos Ferreira",
         homeSubtitle: "<span>Data</span> Engineering & <span>Full Stack</span>",
-        homeDescription: "I'm Davi Ramos Ferreira, a Computer Science student (Uninassau, 2027) focused on <strong>Data Engineering</strong> and Full Stack Development. Currently interning at SEFAZ Jaboatão dos Guararapes, where I build a fiscal management system from scratch — <strong>Python/FastAPI</strong> backend, <strong>Angular</strong> frontend, and <strong>ETL pipelines with Pandas</strong>.<br><br>Passionate about building efficient pipelines, automating processes, and turning raw data into decisions. Here you'll find real projects with concrete metrics. Always looking for new challenges in the data and tech world!",
+        homeDescriptionIntro: "I'm Davi Ramos Ferreira, a Computer Science student (Uninassau, 2027) focused on <strong>Data Engineering</strong> and Full Stack Development. Currently interning at SEFAZ Jaboatão dos Guararapes, where I build a fiscal management system from scratch — <strong>Python/FastAPI</strong> backend, <strong>Angular</strong> frontend, and <strong>ETL pipelines with Pandas</strong>.",
+        homeDescriptionMore: "Passionate about building efficient pipelines, automating processes, and turning raw data into decisions. Here you'll find real projects with concrete metrics. Always looking for new challenges in the data and tech world!",
+        viewProjects: "View Projects",
         downloadCV: "Download CV",
         servicesTitle: "My <span>Services</span>",
         dataScienceTitle: "Data Engineering",
@@ -48,14 +40,6 @@ const translations = {
         webDevTitle: "Web Development",
         webDevDesc: "I specialize in creating and optimizing websites with modern technologies like HTML, CSS, JavaScript, and responsive design. My focus is on building user-friendly, efficient, and visually appealing applications that provide a seamless experience across devices. Whether it's landing pages, websites, or projects, I am committed to delivering high-quality solutions tailored to your needs.",
         portfolioTitle: "Latest <span>Projects</span>",
-        stockDataPipelineTitle: "Stock Data Pipeline",
-        stockDataPipelineDesc: "A data pipeline project for stock analysis, using Python and ETL tools.",
-        spfcAnalysisTitle: "Data Analysis - SPFC",
-        spfcAnalysisDesc: "Data collection and analysis of São Paulo FC players using Python, Selenium, and Pandas. Features an interactive menu and charts.",
-        taskManagerTitle: "Task Manager",
-        taskManagerDesc: "A task management system to organize and track activities.",
-        whoArePokemonTitle: "Guess the Pokémon",
-        whoArePokemonDesc: "A game where the player guesses the Pokémon, built with HTML, CSS, and JavaScript.",
         contactTitle: "Contact <span>Me!</span>",
         formName: "Full Name",
         formEmail: "E-mail",
@@ -63,22 +47,32 @@ const translations = {
         formSubject: "Subject",
         formMessage: "Message",
         formSend: "Send Message",
-        aboutTitle: "About Me",
-        aboutSubtitle: "<span>Data</span> Engineering & <span>Full Stack</span>",
-        aboutDescription: "I'm Davi Ramos Ferreira, a Computer Science student driven by the challenge of building systems that turn raw data into real decisions. My focus is <strong>Data Engineering</strong>, and I'm passionate about every layer of the data stack — from pipeline architecture to the final dashboard.<br><br>Currently interning at SEFAZ Jaboatão dos Guararapes, building a full fiscal management system using <strong>Angular, FastAPI, Python, and Pandas</strong>. My projects include ETL pipelines with PySpark, web scraping automation with Selenium, and REST APIs optimized for performance.<br><br>I'm a constant learner, always seeking challenges that push me forward in the world of data and technology.",
         footerText: "Copyright &copy; 2026 by &lt;/Davi Ramos Ferreira&gt;, All Rights Reserved",
+        menuOpen: "Open menu",
+        menuClose: "Close menu",
+        featuredProject: "Featured",
+        technologiesLabel: "Technologies",
+        demoLabel: "Demo",
+        repositoryLabel: "Repository",
+        imageFallback: "Image unavailable",
+        formSending: "Sending...",
+        formSuccess: "Message sent successfully.",
+        formError: "Message could not be sent. Please try again.",
+        formInvalid: "Please complete the required fields.",
+        emailUnavailable: "Email service is unavailable. Please try again later."
     },
     pt: {
         navHome: "Início",
         navServices: "Serviços",
         navPortfolio: "Portfólio",
         navContact: "Contato",
-        navAbout: "Sobre",
         homeHello: "Olá, eu sou",
         homeTitle: "Davi Ramos Ferreira",
         homeSubtitle: "Engenharia de <span>Dados</span> & <span>Full Stack</span>",
-        homeDescription: "Sou Davi Ramos Ferreira, estudante de Ciências da Computação (Uninassau, 2027) com foco em <strong>Engenharia de Dados</strong> e Desenvolvimento Full Stack. Atualmente estagiário na SEFAZ de Jaboatão dos Guararapes, onde desenvolvo um sistema de gestão fiscal municipal do zero — backend em <strong>Python/FastAPI</strong>, frontend em <strong>Angular</strong> e pipeline <strong>ETL com Pandas</strong>.<br><br>Apaixonado por construir pipelines eficientes, automatizar processos e transformar dados brutos em decisões estratégicas. Aqui você encontra projetos reais com métricas concretas. Sempre em busca de novos desafios no universo de dados e tecnologia!",
-        downloadCV: "Baixar CV",
+        homeDescriptionIntro: "Sou Davi Ramos Ferreira, estudante de Ciências da Computação (Uninassau, 2027) com foco em <strong>Engenharia de Dados</strong> e Desenvolvimento Full Stack. Atualmente estagiário na SEFAZ de Jaboatão dos Guararapes, onde desenvolvo um sistema de gestão fiscal municipal do zero — backend em <strong>Python/FastAPI</strong>, frontend em <strong>Angular</strong> e pipeline <strong>ETL com Pandas</strong>.",
+        homeDescriptionMore: "Apaixonado por construir pipelines eficientes, automatizar processos e transformar dados brutos em decisões estratégicas. Aqui você encontra projetos reais com métricas concretas. Sempre em busca de novos desafios no universo de dados e tecnologia!",
+        viewProjects: "Ver projetos",
+        downloadCV: "Baixar currículo",
         servicesTitle: "Meus <span>Serviços</span>",
         dataScienceTitle: "Engenharia de Dados",
         dataScienceDesc: "Foco na construção de pipelines de dados de alta performance e processos ETL. Utilizo Python, Pandas e PySpark para coletar, limpar e processar grandes volumes de dados — incluindo um pipeline que processou 127.119 registros de despesas públicas em 10,25 segundos com otimização total de memória.",
@@ -89,14 +83,6 @@ const translations = {
         webDevTitle: "Desenvolvimento Web",
         webDevDesc: "Sou especialista na criação e otimização de sites com tecnologias modernas como HTML, CSS, JavaScript e design responsivo. Meu foco é construir aplicações fáceis de usar, eficientes e visualmente atraentes que proporcionem uma experiência perfeita em todos os dispositivos. Sejam landing pages, sites ou projetos, estou comprometido em entregar soluções de alta qualidade adaptadas às suas necessidades.",
         portfolioTitle: "Últimos <span>Projetos</span>",
-        stockDataPipelineTitle: "Pipeline de Dados de Ações",
-        stockDataPipelineDesc: "Um projeto de pipeline de dados para análise de ações, utilizando Python e ferramentas de ETL.",
-        spfcAnalysisTitle: "Análise de Dados - SPFC",
-        spfcAnalysisDesc: "Coleta e análise de dados de jogadores do São Paulo FC com Python, Selenium e Pandas. Apresenta um menu interativo e gráficos.",
-        taskManagerTitle: "Gerenciador de Tarefas",
-        taskManagerDesc: "Um sistema de gerenciamento de tarefas para organizar e acompanhar atividades.",
-        whoArePokemonTitle: "Adivinhe o Pokémon",
-        whoArePokemonDesc: "Um jogo onde o jogador adivinha o Pokémon, construído com HTML, CSS e JavaScript.",
         contactTitle: "Fale <span>Comigo!</span>",
         formName: "Nome Completo",
         formEmail: "E-mail",
@@ -104,39 +90,364 @@ const translations = {
         formSubject: "Assunto",
         formMessage: "Mensagem",
         formSend: "Enviar Mensagem",
-        aboutTitle: "Sobre Mim",
-        aboutSubtitle: "Engenharia de <span>Dados</span> & <span>Full Stack</span>",
-        aboutDescription: "Sou Davi Ramos Ferreira, estudante de Ciências da Computação movido pelo desafio de construir sistemas que transformam dados brutos em decisões reais. Meu foco é <strong>Engenharia de Dados</strong>, e sou apaixonado por cada camada da stack de dados — da arquitetura do pipeline ao dashboard final.<br><br>Atualmente estagiário na SEFAZ Jaboatão dos Guararapes, desenvolvendo um sistema de gestão fiscal completo com <strong>Angular, FastAPI, Python e Pandas</strong>. Meus projetos incluem pipelines ETL com PySpark, automação de scraping com Selenium e APIs REST otimizadas para performance.<br><br>Estou em constante evolução, sempre buscando desafios que me façam crescer no universo de dados e tecnologia.",
-        footerText: "Copyright &copy; 2025 por &lt;/Davi Ramos Ferreira&gt;, Todos os Direitos Reservados",
+        footerText: "Copyright &copy; 2026 por &lt;/Davi Ramos Ferreira&gt;, Todos os Direitos Reservados",
+        menuOpen: "Abrir menu",
+        menuClose: "Fechar menu",
+        featuredProject: "Destaque",
+        technologiesLabel: "Tecnologias",
+        demoLabel: "Demonstração",
+        repositoryLabel: "Repositório",
+        imageFallback: "Imagem indisponível",
+        formSending: "Enviando...",
+        formSuccess: "Mensagem enviada com sucesso.",
+        formError: "Não foi possível enviar a mensagem. Tente novamente.",
+        formInvalid: "Preencha os campos obrigatórios.",
+        emailUnavailable: "Serviço de e-mail indisponível. Tente novamente mais tarde."
     }
 };
 
-const languageToggle = document.getElementById('lang-toggle-checkbox');
+function getCurrentLanguage() {
+    return languageToggle.checked ? 'pt' : 'en';
+}
 
-const setLanguage = (lang) => {
-    document.querySelectorAll('[data-key]').forEach(element => {
-        const key = element.getAttribute('data-key');
-        if (translations[lang][key]) {
-            if (element.hasAttribute('placeholder')) {
-                element.setAttribute('placeholder', translations[lang][key]);
-            } else {
-                element.innerHTML = translations[lang][key];
-            }
+function initializeEmailService() {
+    if (emailInitialized || !window.emailjs) {
+        return;
+    }
+
+    window.emailjs.init({ publicKey: EMAILJS_PUBLIC_KEY });
+    emailInitialized = true;
+}
+
+function toggleMenu(forceOpen) {
+    const lang = getCurrentLanguage();
+    const shouldOpen = typeof forceOpen === "boolean"
+        ? forceOpen
+        : !menuHamburguer.classList.contains('change');
+
+    menuHamburguer.classList.toggle('change', shouldOpen);
+    navResponsive.classList.toggle('is-open', shouldOpen);
+    menuHamburguer.setAttribute('aria-expanded', String(shouldOpen));
+    menuHamburguer.setAttribute('aria-label', shouldOpen ? translations[lang].menuClose : translations[lang].menuOpen);
+}
+
+function createIcon(className) {
+    const icon = document.createElement('i');
+    icon.className = className;
+    icon.setAttribute('aria-hidden', 'true');
+    return icon;
+}
+
+function createProjectLink(url, label, iconClass, projectTitle) {
+    const link = document.createElement('a');
+    link.href = url;
+    link.target = "_blank";
+    link.rel = "noopener";
+    link.className = "project-link";
+    link.setAttribute('aria-label', `${label}: ${projectTitle}`);
+
+    const text = document.createElement('span');
+    text.textContent = label;
+
+    link.append(createIcon(iconClass), text);
+    return link;
+}
+
+function registerRevealElement(element, index = 0) {
+    if (!element) {
+        return;
+    }
+
+    element.classList.add('reveal');
+    element.style.setProperty('--reveal-delay', `${Math.min(index * 45, 180)}ms`);
+
+    if (reducedMotionQuery.matches || !revealObserver) {
+        element.classList.add('is-visible');
+        return;
+    }
+
+    revealObserver.observe(element);
+}
+
+function renderProjects(lang) {
+    if (!projectsContainer || !Array.isArray(window.projects)) {
+        return;
+    }
+
+    projectsContainer.textContent = "";
+
+    window.projects.forEach((project, index) => {
+        const title = project.title[lang];
+        const article = document.createElement('article');
+        article.className = project.featured ? "portfolio-box is-featured" : "portfolio-box";
+        article.id = `project-${project.id}`;
+
+        const media = document.createElement('div');
+        media.className = "project-media";
+
+        const image = document.createElement('img');
+        image.src = project.image;
+        image.alt = project.alt[lang];
+        image.width = 800;
+        image.height = 450;
+        image.loading = "lazy";
+        image.decoding = "async";
+        image.addEventListener('error', () => {
+            media.classList.add('project-media--fallback');
+            media.textContent = "";
+            const fallbackText = document.createElement('span');
+            fallbackText.textContent = translations[lang].imageFallback;
+            media.appendChild(fallbackText);
+        }, { once: true });
+
+        media.appendChild(image);
+
+        const content = document.createElement('div');
+        content.className = "project-content";
+
+        if (project.featured) {
+            const badge = document.createElement('span');
+            badge.className = "project-badge";
+            badge.textContent = translations[lang].featuredProject;
+            content.appendChild(badge);
+        }
+
+        const heading = document.createElement('h3');
+        heading.textContent = title;
+
+        const description = document.createElement('p');
+        description.textContent = project.description[lang];
+
+        const techList = document.createElement('ul');
+        techList.className = "project-tech";
+        techList.setAttribute('aria-label', translations[lang].technologiesLabel);
+
+        project.technologies.forEach(technology => {
+            const item = document.createElement('li');
+            item.textContent = technology;
+            techList.appendChild(item);
+        });
+
+        const links = document.createElement('div');
+        links.className = "portfolio-links";
+
+        if (project.demoUrl) {
+            links.appendChild(createProjectLink(project.demoUrl, translations[lang].demoLabel, 'bx bx-link-external', title));
+        }
+
+        if (project.repositoryUrl) {
+            links.appendChild(createProjectLink(project.repositoryUrl, translations[lang].repositoryLabel, 'bx bxl-github', title));
+        }
+
+        content.append(heading, description, techList, links);
+        article.append(media, content);
+        projectsContainer.appendChild(article);
+
+        if (revealAnimationsReady) {
+            registerRevealElement(article, index);
         }
     });
-    document.documentElement.lang = lang;
-};
+}
 
-const handleLanguageChange = () => {
-    const lang = languageToggle.checked ? 'pt' : 'en';
+function setFormStatus(message, type = "") {
+    if (!formStatus) {
+        return;
+    }
+
+    formStatus.textContent = message;
+    formStatus.dataset.status = type;
+}
+
+function setSubmitState(isSending) {
+    if (!submitButton) {
+        return;
+    }
+
+    const lang = getCurrentLanguage();
+    submitButton.disabled = isSending;
+    submitButton.setAttribute('aria-busy', String(isSending));
+    submitButton.textContent = isSending ? translations[lang].formSending : translations[lang].formSend;
+}
+
+async function handleContactSubmit(event) {
+    event.preventDefault();
+
+    if (!contactForm || isSubmitting) {
+        return;
+    }
+
+    const lang = getCurrentLanguage();
+
+    if (!contactForm.checkValidity()) {
+        setFormStatus(translations[lang].formInvalid, "error");
+        contactForm.reportValidity();
+        return;
+    }
+
+    initializeEmailService();
+
+    if (!window.emailjs || !emailInitialized) {
+        setFormStatus(translations[lang].emailUnavailable, "error");
+        return;
+    }
+
+    isSubmitting = true;
+    contactForm.setAttribute('aria-busy', 'true');
+    setSubmitState(true);
+    setFormStatus(translations[lang].formSending, "info");
+
+    const parms = {
+        name: document.getElementById("name").value.trim(),
+        email: document.getElementById("email").value.trim(),
+        subject: document.getElementById("subject").value.trim(),
+        number: document.getElementById("number").value.trim(),
+        message: document.getElementById("message").value.trim()
+    };
+
+    try {
+        await window.emailjs.send(EMAILJS_SERVICE_ID, EMAILJS_TEMPLATE_ID, parms);
+        contactForm.reset();
+        setFormStatus(translations[lang].formSuccess, "success");
+    } catch (error) {
+        setFormStatus(translations[lang].formError, "error");
+    } finally {
+        isSubmitting = false;
+        contactForm.removeAttribute('aria-busy');
+        setSubmitState(false);
+    }
+}
+
+function setActiveNavLink(sectionId) {
+    navLinks.forEach(link => {
+        const isActive = link.getAttribute('href') === `#${sectionId}`;
+        link.classList.toggle('is-active', isActive);
+        if (isActive) {
+            link.setAttribute('aria-current', 'page');
+        } else {
+            link.removeAttribute('aria-current');
+        }
+    });
+}
+
+function initializeActiveSectionTracking() {
+    const sections = document.querySelectorAll('section[id]');
+
+    if (!('IntersectionObserver' in window)) {
+        setActiveNavLink('home');
+        return;
+    }
+
+    const sectionObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                setActiveNavLink(entry.target.id);
+            }
+        });
+    }, {
+        rootMargin: '-45% 0px -45% 0px',
+        threshold: 0
+    });
+
+    sections.forEach(section => sectionObserver.observe(section));
+}
+
+function initializeRevealAnimations() {
+    const revealTargets = [
+        document.querySelector('.home-content'),
+        document.querySelector('.home-img'),
+        ...document.querySelectorAll('.services, .portfolio, .contact'),
+        ...document.querySelectorAll('.services-box'),
+        ...document.querySelectorAll('.portfolio-box'),
+        contactForm
+    ].filter(Boolean);
+
+    revealAnimationsReady = true;
+
+    if (!('IntersectionObserver' in window) || reducedMotionQuery.matches) {
+        revealTargets.forEach(element => {
+            element.classList.add('reveal', 'is-visible');
+        });
+        return;
+    }
+
+    revealObserver = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('is-visible');
+                revealObserver.unobserve(entry.target);
+            }
+        });
+    }, {
+        rootMargin: '0px 0px -12% 0px',
+        threshold: 0.12
+    });
+
+    revealTargets.forEach((element, index) => registerRevealElement(element, index));
+}
+
+function setLanguage(lang) {
+    document.querySelectorAll('[data-key]').forEach(element => {
+        const key = element.getAttribute('data-key');
+        if (!translations[lang][key]) {
+            return;
+        }
+
+        if (element.hasAttribute('placeholder')) {
+            element.setAttribute('placeholder', translations[lang][key]);
+        } else {
+            element.innerHTML = translations[lang][key];
+        }
+    });
+
+    document.documentElement.lang = lang;
+    menuHamburguer.setAttribute('aria-label', menuHamburguer.classList.contains('change') ? translations[lang].menuClose : translations[lang].menuOpen);
+    renderProjects(lang);
+
+    if (isSubmitting) {
+        setSubmitState(true);
+    }
+}
+
+function handleLanguageChange() {
+    const lang = getCurrentLanguage();
     localStorage.setItem('language', lang);
-    setLanguage(lang);
-};
+
+    if (reducedMotionQuery.matches) {
+        setLanguage(lang);
+        return;
+    }
+
+    document.body.classList.add('is-language-changing');
+    window.setTimeout(() => {
+        setLanguage(lang);
+        document.body.classList.remove('is-language-changing');
+    }, 120);
+}
+
+menuHamburguer.addEventListener('click', () => {
+    toggleMenu();
+});
+
+navResponsive.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', () => {
+        toggleMenu(false);
+    });
+});
 
 languageToggle.addEventListener('change', handleLanguageChange);
 
+if (contactForm) {
+    contactForm.addEventListener('submit', handleContactSubmit);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
+    initializeEmailService();
+
     const savedLang = localStorage.getItem('language') || 'en';
     languageToggle.checked = savedLang === 'pt';
     setLanguage(savedLang);
+    toggleMenu(false);
+    setActiveNavLink('home');
+    initializeActiveSectionTracking();
+    initializeRevealAnimations();
 });

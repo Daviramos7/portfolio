@@ -77,6 +77,52 @@ Acesse em: [portfolio-eight-ivory-17.vercel.app](https://portfolio-eight-ivory-1
 
 ---
 
+## 🧩 Como adicionar projetos
+
+Este portfólio é estático e não usa npm, Node.js, Canva, frameworks ou ferramentas de build.
+
+Para adicionar um projeto novo:
+
+1. Salve uma screenshot do projeto na pasta `img/`.
+2. Prefira imagem em proporção 16:9, por exemplo `1280x720` ou `1920x1080`.
+3. Abra `js/projects.js`.
+4. Adicione um novo objeto no array `projects`.
+5. Preencha os campos:
+
+```js
+{
+    id: "meu-projeto",
+    title: {
+        en: "Project title",
+        pt: "Título do projeto"
+    },
+    description: {
+        en: "Short project description.",
+        pt: "Descrição curta do projeto."
+    },
+    image: "img/minha-screenshot.png",
+    alt: {
+        en: "Project screenshot description",
+        pt: "Descrição da screenshot do projeto"
+    },
+    technologies: ["HTML", "CSS", "JavaScript"],
+    repositoryUrl: "https://github.com/usuario/repositorio",
+    demoUrl: "https://link-da-demo.com",
+    featured: false
+}
+```
+
+Observações:
+
+- Use texto real nos campos `title`, `description` e `technologies`; não escreva essas informações dentro da imagem.
+- Se o projeto não tiver demonstração publicada, deixe `demoUrl` como string vazia: `""`.
+- Se o projeto não tiver repositório público, deixe `repositoryUrl` como string vazia: `""`.
+- O site renderiza os cards automaticamente com uma coluna no celular, duas no tablet e três no desktop.
+- As imagens são exibidas em 16:9 com `object-fit: cover`, `object-position: top`, lazy loading e fallback para erro de carregamento.
+- Após editar, teste pelo Live Server e verifique menu, links, currículo, troca de idioma e console do navegador.
+
+---
+
 ## 📄 Licença
 
 Copyright © 2026 por Davi Ramos Ferreira. Todos os Direitos Reservados.
