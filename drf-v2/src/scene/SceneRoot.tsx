@@ -32,26 +32,18 @@ export function SceneRoot({ state, contentIndex, onEvent, ref }: SceneProps & { 
   if (state.mode !== 'immersive') return null
   return (
     <div className="drf-scene" data-scene-root data-scene-status={state.renderStatus}
-      data-scene-zone={state.target.zoneId} hidden={state.mode !== 'immersive'}>
+      data-scene-zone={state.target.zoneId} data-panel-open={state.panelOpen} hidden={state.mode !== 'immersive'}>
       <div className="drf-scene__viewport" hidden={unavailable}>
         <canvas ref={canvasRef} className="drf-scene__canvas" aria-hidden="true" />
-        <div className="drf-scene__identity" aria-hidden="true">
-          <span>DRF / ENGINEERING</span>
-          <span>RECIFE · BRASIL &nbsp; / &nbsp; DRF-01</span>
-        </div>
-        <p className="drf-scene__caption">
-          {state.locale === 'pt' ? 'Equipe fictícia · monoposto original' : 'Fictional team · original single-seater'}
-        </p>
-        <span className="drf-scene__frame" aria-hidden="true">01 / R&D</span>
       </div>
       <nav className="drf-scene__zones" aria-label={state.locale === 'pt' ? 'Zonas da garagem' : 'Garage zones'}>
         {zones.map((entry, index) => (
           <button key={entry.zoneId} type="button" data-scene-hotspot={entry.zoneId}
+            aria-label={entry.label[state.locale]}
             aria-current={state.target.zoneId === entry.zoneId ? 'location' : undefined}
             onClick={() => onEvent({ type: 'SELECT_TARGET', target: { zoneId: entry.zoneId, projectId: null } })}>
             <span className="drf-scene__zone-number" aria-hidden="true">0{index + 1}</span>
-            {entry.label[state.locale]}
-            <span aria-hidden="true">↗</span>
+            <span className="drf-scene__hotspot-label" aria-hidden="true">{entry.label[state.locale]}</span>
           </button>
         ))}
       </nav>

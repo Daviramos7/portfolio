@@ -1,16 +1,18 @@
 import { ACESFilmicToneMapping, BoxGeometry, Color, DirectionalLight, Fog, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
+import type { CatmullRomCurve3, WebGLRenderTarget } from 'three'
 import type { ExperienceState, SceneEvent, SceneProps, ZoneId } from '../contracts/index.ts'
 import { createResources } from './garage/resources.ts'
 import { createGarage } from './garage/Garage.ts'
-import { cameraDurationMs, cameraEase, framings, hotspotVolumes } from './camera/framing.ts'
+import { buildCameraPath, cameraEase, framings, hotspotVolumes, mobileFramings } from './camera/framing.ts'
 import { createTrackOpening } from './trackside/TrackOpening.ts'
+import { createWorkshopEnvironment } from './garage/environment.ts'
 
 type Transition = {
   sequence: number
-  startMs: number
-  fromPosition: Vector3
+  elapsedMs: number
+  durationMs: number
+  path: CatmullRomCurve3
   fromLookAt: Vector3
-  toPosition: Vector3
   toLookAt: Vector3
 }
 export type GarageRenderer = {
@@ -28,6 +30,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let latestSequence = -1, settledSequence = -1
   let previousIndex: SceneProps['contentIndex'] | null = null
   let previousLocale: ExperienceState['locale'] | null = null
+  let previousProject: string | null = null
+  let environmentTarget: WebGLRenderTarget | null = null
+  let lastTimestamp: number | null = null, lastRenderedAt = 0, ambientTimeMs = 0
+  let mobileFrame = false
   const resources = createResources()
   const scene = new Scene()
   const camera = new PerspectiveCamera(46, 1, .1, 85)
@@ -36,6 +42,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const sun = new DirectionalLight('#edf2fa', 3)
   const workshopLight = new PointLight('#f3f5ff', 32, 18, 2)
   const redBounce = new PointLight('#b32441', 16, 12, 2)
+  const rimLight = new PointLight('#b9d4ee', 42, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
   let opening: ReturnType<typeof createTrackOpening> | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()
@@ -51,6 +58,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     disposed = true
     cancelFrame()
     transition = null
+    lastTimestamp = null
     resizeObserver?.disconnect()
     canvas.removeEventListener('webglcontextlost', contextLost)
     canvas.removeEventListener('click', selectHotspot)
@@ -58,6 +66,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     canvas.removeEventListener('pointerleave', clearHover)
     canvas.style.cursor = ''
     opening?.restore()
+    scene.environment = null
+    environmentTarget?.dispose()
     scene.clear()
     sun.shadow.map?.dispose()
     renderer?.dispose()
@@ -76,6 +86,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     fail('unavailable')
   }
   function active() { return !disposed && !failed && state?.mode === 'immersive' && state.documentVisible }
+  function ambientActive() { return active() && state?.ambientEnabled && !state.reducedMotion && !state.panelOpen }
   function pick(event: MouseEvent): ZoneId | null {
     if (!active() || !ready || state?.panelOpen) return null
     const bounds = canvas.getBoundingClientRect()
@@ -100,7 +111,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     renderer.setPixelRatio(dpr)
     renderer.setSize(width, height, false)
     camera.aspect = width / height
-    camera.fov = camera.aspect < 1 ? 66 : 46
+    camera.fov = camera.aspect < .42 ? 74 : camera.aspect < 1 ? 63 : 43
+    const nextMobile = camera.aspect < 1
+    if (nextMobile !== mobileFrame) {
+      mobileFrame = nextMobile
+      moveCamera(!ready || state.reducedMotion)
+    }
     camera.updateProjectionMatrix()
     canvas.dataset.sceneDpr = String(dpr)
     requestFrame()
@@ -110,18 +126,42 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     if (!renderer || !state || !active()) return
     try {
       // This RAF timestamp is the only future Trackside monotonic clock as well.
+      const delta = lastTimestamp === null ? 0 : Math.max(0, Math.min(100, nowMs - lastTimestamp))
+      lastTimestamp = nowMs
       const current = transition
       if (current && current.sequence === state.navigationSeq) {
-        const progress = Math.min(1, (nowMs - current.startMs) / cameraDurationMs)
+        current.elapsedMs += delta
+        const progress = Math.min(1, current.elapsedMs / current.durationMs)
         const eased = cameraEase(progress)
-        camera.position.lerpVectors(current.fromPosition, current.toPosition, eased)
+        camera.position.copy(current.path.getPointAt(eased))
         lookAt.lerpVectors(current.fromLookAt, current.toLookAt, eased)
         if (progress >= 1) transition = null
       }
+      const animate = ambientActive()
+      if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs) }
+      // Idle ambience is capped at 30 rendered fps; camera travel retains native pacing.
+      if (!current && ready && animate && nowMs - lastRenderedAt < 1000 / 30) { requestFrame(); return }
       camera.lookAt(lookAt)
       renderer.render(scene, camera)
+      lastRenderedAt = nowMs
       canvas.dataset.sceneDrawCalls = String(renderer.info.render.calls)
       canvas.dataset.sceneTriangles = String(renderer.info.render.triangles)
+      canvas.dataset.sceneGeometryCount = String(renderer.info.memory.geometries)
+      canvas.dataset.sceneTextureCount = String(renderer.info.memory.textures)
+      canvas.dataset.sceneCameraPosition = camera.position.toArray().map(n => n.toFixed(4)).join(',')
+      canvas.dataset.sceneAmbient = animate ? 'running' : 'paused'
+      canvas.dataset.sceneAmbientMs = String(Math.round(ambientTimeMs))
+      // Local scene-owned anchors only: never scroll, focus or move the UI's panels.
+      const projected = new Vector3()
+      for (const [id, volume] of Object.entries(hotspotVolumes)) {
+        const button = canvas.parentElement?.parentElement?.querySelector<HTMLElement>('[data-scene-hotspot="' + id + '"]')
+        if (!button) continue
+        projected.set(...volume.anchor).project(camera)
+        const inside = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) < .88 && Math.abs(projected.y) < .76
+        button.style.visibility = inside ? '' : 'hidden'
+        button.style.left = ((projected.x + 1) * 50) + '%'
+        button.style.top = ((1 - projected.y) * 50) + '%'
+      }
       if (!ready) {
         ready = true
         onEvent({ type: 'SCENE_STATUS', status: 'ready' })
@@ -131,17 +171,28 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         canvas.dataset.sceneCameraSeq = String(settledSequence)
         onEvent({ type: 'CAMERA_SETTLED', navigationSeq: settledSequence })
       }
-      if (transition) requestFrame()
+      if (transition || animate) requestFrame()
+      else lastTimestamp = null
     } catch { fail('error') }
   }
   function requestFrame() {
     if (frameId === null && active()) frameId = requestAnimationFrame(render)
   }
+  function moveCamera(instant: boolean) {
+    if (!state) return
+    const framing = (mobileFrame ? mobileFramings : framings)[state.target.zoneId]
+    destination.set(...framing.position); target.set(...framing.lookAt)
+    if (instant) { transition = null; camera.position.copy(destination); lookAt.copy(target) }
+    else if (camera.position.distanceTo(destination) < .02 && lookAt.distanceTo(target) < .02) transition = null
+    else transition = { sequence: state.navigationSeq, elapsedMs: 0,
+      ...buildCameraPath(camera.position, destination), fromLookAt: lookAt.clone(), toLookAt: target.clone() }
+  }
 
   onEvent({ type: 'SCENE_STATUS', status: 'loading' })
   try {
     // Check actual WebGL2 availability without letting Three log a thrown creation error.
-    const context = canvas.getContext('webgl2', { alpha: false, antialias: false, powerPreference: 'low-power' })
+    const msaa = canvas.clientWidth > 820
+    const context = canvas.getContext('webgl2', { alpha: false, antialias: msaa, powerPreference: msaa ? 'high-performance' : 'low-power' })
     if (!context) {
       fail('unavailable')
       return { update: () => {}, dispose }
@@ -150,23 +201,28 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     canvas.addEventListener('click', selectHotspot)
     canvas.addEventListener('pointermove', hoverHotspot)
     canvas.addEventListener('pointerleave', clearHover)
-    renderer = new WebGLRenderer({ canvas, context, antialias: false, alpha: false })
+    renderer = new WebGLRenderer({ canvas, context, antialias: msaa, alpha: false })
+    canvas.dataset.sceneMsaa = String(context.getContextAttributes()?.antialias ?? false)
     renderer.toneMapping = ACESFilmicToneMapping
-    renderer.toneMappingExposure = 1.1
+    renderer.toneMappingExposure = 1.05
     renderer.shadowMap.type = PCFShadowMap
-    scene.background = new Color('#343f4f')
-    scene.fog = new Fog('#343f4f', 26, 65)
-    scene.add(new HemisphereLight('#c6d9ee', '#333138', 1.65))
-    sun.position.set(-4, 10, 7)
+    scene.background = new Color('#536a7b')
+    scene.fog = new Fog('#536a7b', 32, 65)
+    environmentTarget = createWorkshopEnvironment(renderer)
+    scene.environment = environmentTarget.texture
+    scene.environmentIntensity = .7
+    scene.add(new HemisphereLight('#b4c5de', '#28202a', .55))
+    sun.position.set(-5, 4.1, 4)
     sun.castShadow = true
     sun.shadow.mapSize.set(1024, 1024)
     Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 1, far: 30 })
     sun.shadow.bias = -.0005
     sun.shadow.normalBias = .04
     scene.add(sun)
-    workshopLight.position.set(-3, 4.5, -2)
-    redBounce.position.set(3, 2.5, 3)
-    scene.add(workshopLight, redBounce)
+    workshopLight.position.set(-4, 3.3, -1)
+    redBounce.position.set(5, 2.5, 3)
+    rimLight.position.set(1, 3.8, -5.5)
+    scene.add(workshopLight, redBounce, rimLight)
     garage = createGarage(resources)
     opening = createTrackOpening(resources)
     resources.batch(garage.garage)
@@ -196,43 +252,32 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       if (nextState.navigationSeq < latestSequence) return
       const previous = state
       state = nextState
-      if (previousIndex !== index || previousLocale !== state.locale) {
+      if (previousIndex !== index || previousLocale !== state.locale || previousProject !== state.target.projectId) {
         availableZones.clear()
         for (const entry of index) if (entry.projectId === null) availableZones.add(entry.zoneId)
-        garage.updateLabels(index, state.locale)
+        garage.updateLabels(index, state.locale, state.target.projectId)
         previousIndex = index
         previousLocale = state.locale
+        previousProject = state.target.projectId
       }
       if (previous?.quality !== state.quality) {
         const shadows = state.quality === 'balanced'
         renderer.shadowMap.enabled = shadows
         renderer.shadowMap.needsUpdate = shadows
         renderer.shadowMap.autoUpdate = false
-        workshopLight.visible = shadows
+        workshopLight.visible = true
         redBounce.visible = shadows
+        rimLight.visible = shadows
         resize()
       }
       const sequenceChanged = latestSequence !== state.navigationSeq
-      const instant = !previous || state.reducedMotion || state.panelOpen || !state.documentVisible || state.mode !== 'immersive'
+      const instant = !previous || state.reducedMotion
       if (sequenceChanged || (instant && transition)) {
         latestSequence = state.navigationSeq
-        const framing = framings[state.target.zoneId]
-        destination.set(...framing.position)
-        target.set(...framing.lookAt)
         opening?.restore()
-        if (instant) {
-          transition = null
-          camera.position.copy(destination)
-          lookAt.copy(target)
-        } else {
-          transition = {
-            sequence: state.navigationSeq, startMs: performance.now(),
-            fromPosition: camera.position.clone(), fromLookAt: lookAt.clone(),
-            toPosition: destination.clone(), toLookAt: target.clone(),
-          }
-        }
+        moveCamera(instant)
       }
-      if (!active()) { cancelFrame(); opening?.restore(); return }
+      if (!active()) { cancelFrame(); lastTimestamp = null; opening?.restore(); return }
       if (!previous?.documentVisible) resize()
       requestFrame()
     },

@@ -1,86 +1,102 @@
-import { BufferGeometry, CylinderGeometry, Float32BufferAttribute, Group, TorusGeometry } from 'three'
+import { BufferGeometry, CatmullRomCurve3, CylinderGeometry, Float32BufferAttribute, Group, LatheGeometry, Shape, TorusGeometry, TubeGeometry, Vector2, Vector3, ExtrudeGeometry } from 'three'
 import type { Material } from 'three'
-import type { Resources } from '../garage/resources.ts'
+import type { Resources, Vec3 } from '../garage/resources.ts'
 
-// Authored cross sections; not a scan/model of an existing racing car.
 type Section = readonly [z: number, halfWidth: number, bottom: number, top: number]
-function bodyGeometry(sections: readonly Section[]): BufferGeometry {
-  const vertices: number[] = [], indices: number[] = []
-  for (const [z, w, bottom, top] of sections) vertices.push(-w, bottom, z, w, bottom, z, w, top, z, -w, top, z)
-  for (let n = 0; n < sections.length - 1; n++) {
-    for (let side = 0; side < 4; side++) {
-      const a = n * 4 + side, b = n * 4 + (side + 1) % 4, c = a + 4, d = b + 4
-      indices.push(a, b, c, b, d, c)
+function loft(sections: readonly Section[]) {
+  const bottom = new CatmullRomCurve3(sections.map(([z, w, b]) => new Vector3(w, b, z)), false, 'catmullrom', .25)
+  const top = new CatmullRomCurve3(sections.map(([z, w, , t]) => new Vector3(w, t, z)), false, 'catmullrom', .25)
+  const vertices: number[] = [], indices: number[] = [], rings = 36, sides = 20
+  for (let i = 0; i <= rings; i++) {
+    const a = bottom.getPoint(i / rings), b = top.getPoint(i / rings)
+    for (let j = 0; j < sides; j++) {
+      const angle = j / sides * Math.PI * 2, s = Math.sin(angle), c = Math.cos(angle)
+      vertices.push(a.x * Math.sign(s) * Math.abs(s) ** .75, (a.y + b.y) / 2 + (b.y - a.y) / 2 * Math.sign(c) * Math.abs(c) ** .7, a.z)
     }
   }
-  indices.push(0, 2, 1, 0, 3, 2)
-  const end = (sections.length - 1) * 4
-  indices.push(end, end + 1, end + 2, end, end + 2, end + 3)
-  const shape = new BufferGeometry()
-  shape.setAttribute('position', new Float32BufferAttribute(vertices, 3))
-  shape.setIndex(indices)
-  shape.computeVertexNormals()
-  return shape
+  for (let i = 0; i < rings; i++) for (let j = 0; j < sides; j++) {
+    const a = i * sides + j, b = i * sides + (j + 1) % sides
+    indices.push(a, a + sides, b, b, a + sides, b + sides)
+  }
+  for (const end of [0, rings]) for (let j = 1; j < sides - 1; j++) {
+    const a = end * sides
+    if (end === 0) indices.push(a, a + j, a + j + 1)
+    else indices.push(a, a + j + 1, a + j)
+  }
+  const geometry = new BufferGeometry()
+  geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3))
+  geometry.setIndex(indices); geometry.computeVertexNormals(); return geometry
 }
 
-export function createDRF01(r: Resources): Group {
-  const car = new Group()
-  car.name = 'DRF-01-original-procedural'
-  const { carbon, red, white, black, metal, tire } = r.palette
-  const body = (sections: readonly Section[], surface: Material) => r.mesh(car, r.geometry(bodyGeometry(sections)), surface)
-  r.box(car, [1.95, .09, 4.25], [0, .22, -.15], carbon)
-  body([[-2.15, .27, .3, .55], [-1.2, .48, .29, .98], [-.45, .48, .28, .83], [.45, .36, .28, .65], [2.5, .16, .26, .39]], red)
+export function createDRF01(r: Resources) {
+  const car = new Group(); car.name = 'DRF-01-original-refined-prototype'
+  const { carbon, red, black, metal, tire } = r.palette
+  const body = (sections: readonly Section[], mat: Material, p: Vec3 = [0, 0, 0]) => r.mesh(car, r.geometry(loft(sections)), mat, p)
+  body([[-2.05, .4, .17, .23], [-1, .99, .17, .25], [.3, .96, .17, .25], [1.8, .39, .18, .24]], carbon)
+  // Continuous sculpted nose, raised shoulders and separated cockpit opening.
+  body([[-.05, .37, .29, .72], [.45, .35, .28, .71], [1.35, .24, .29, .54], [2.4, .14, .24, .4], [2.72, .1, .23, .34]], red)
+  body([[-2.02, .18, .29, .64], [-1.54, .34, .29, .83], [-1.2, .39, .28, .87]], red)
   for (const side of [-1, 1]) {
-    const pod = r.mesh(car, r.geometry(bodyGeometry([[-1.9, .26, .27, .56], [-.85, .36, .27, .72], [.45, .3, .28, .66], [.8, .2, .29, .52]])), carbon, [side * .67, 0, 0])
-    pod.rotation.y = side * -.045
-    r.box(car, [.5, .025, 1.2], [side * .68, .72, -.5], red)
-    r.box(car, [.32, .24, .025], [side * .67, .48, .8], black)
-    r.rod(car, [side * .4, .58, -1], [side * .98, .55, -.95], .022, metal)
-    r.box(car, [.19, .08, .32], [side * 1.02, .58, -.94], red)
+    body([[-1.9, .13, .28, .51], [-1.15, .24, .29, .8], [-.12, .13, .29, .74], [.3, .04, .28, .64]], red, [side * .46, 0, 0])
+    body([[-1.9, .17, .27, .39], [-1.2, .32, .3, .62], [-.4, .4, .32, .7], [.4, .32, .33, .69], [.63, .28, .37, .61]], carbon, [side * .81, 0, 0])
+    body([[-1.7, .16, .42, .5], [-.9, .25, .6, .65], [.26, .27, .62, .68], [.57, .22, .57, .63]], red, [side * .81, 0, 0])
+    const inlet = r.mesh(car, r.geometry(new CylinderGeometry(.16, .16, .02, 20)), black, [side * .82, .5, .64])
+    inlet.rotation.x = Math.PI / 2; inlet.scale.x = 1.4; inlet.scale.z = .7
+    r.rod(car, [side * .44, .71, -.1], [side * .99, .68, .13], .018, metal)
+    body([[.0, .09, .65, .73], [.27, .09, .65, .75], [.4, .04, .68, .73]], red, [side * 1.05, 0, 0])
+    for (let i = 0; i < 5; i++) r.box(car, [.16, .012, .018], [side * .8, .69 - i * .006, -.1 - i * .1], black)
   }
-  // Recessed cockpit, original simple roll structure, no driver character.
-  r.box(car, [.61, .065, .92], [0, .87, -.5], black)
-  r.box(car, [.4, .3, .18], [0, 1.03, -.93], carbon)
-  for (const side of [-1, 1]) {
-    r.rod(car, [side * .32, .87, -.97], [side * .36, 1.24, -.7], .035, black)
-    r.rod(car, [side * .36, 1.24, -.7], [side * .24, 1.13, .03], .035, black)
-    r.rod(car, [side * .24, 1.13, .03], [0, 1.1, .22], .035, black)
-  }
-  r.rod(car, [0, 1.1, .22], [0, .65, .38], .04, black)
-  body([[-1.8, .12, .79, 1.06], [-1.25, .17, .95, 1.46], [-1.02, .1, 1.02, 1.38]], carbon)
-  r.box(car, [.16, .04, .3], [0, 1.48, -1.23], white)
+  // Seat and cockpit walls sit below the lip; no character/model or protected livery.
+  r.box(car, [.43, .08, .74], [0, .46, -.64], black)
+  const seat = r.box(car, [.39, .45, .11], [0, .72, -1.12], black); seat.rotation.x = -.18
+  const haloPoints = [[-.34, .87, -1.06], [-.38, 1.18, -.83], [-.32, 1.22, -.28], [0, 1.17, .03], [.32, 1.22, -.28], [.38, 1.18, -.83], [.34, .87, -1.06]].map(p => new Vector3(...p))
+  r.mesh(car, r.geometry(new TubeGeometry(new CatmullRomCurve3(haloPoints), 32, .035, 8, false)), carbon)
+  r.rod(car, [0, 1.17, .03], [0, .7, .23], .025, carbon)
+  body([[-1.85, .08, .73, .92], [-1.45, .18, .89, 1.46], [-1.23, .14, 1.02, 1.4], [-1.12, .08, 1.06, 1.25]], carbon)
+  r.box(car, [.06, .02, .48], [0, 1.42, -1.48], red)
 
-  const wheelShape = r.geometry(new CylinderGeometry(.58, .58, .42, 24))
-  const rimShape = r.geometry(new CylinderGeometry(.31, .31, .435, 16))
-  const sidewall = r.geometry(new TorusGeometry(.46, .012, 4, 24))
-  for (const z of [-1.6, 1.5]) {
-    for (const side of [-1, 1]) {
-      const x = side * 1.23
-      const wheel = r.mesh(car, wheelShape, tire, [x, .6, z])
-      wheel.rotation.z = Math.PI / 2
-      const rim = r.mesh(car, rimShape, metal, [x, .6, z])
-      rim.rotation.z = Math.PI / 2
-      const ring = r.mesh(car, sidewall, white, [x + side * .214, .6, z])
-      ring.rotation.y = Math.PI / 2
-      r.rod(car, [x + side * .23, .6, z], [x + side * .25, .6, z], .12, black)
-      for (const offset of [-.35, .35]) {
-        r.rod(car, [side * .3, .48, z + offset], [x, .53, z], .026, carbon)
-        r.rod(car, [side * .3, .72, z + offset], [x, .73, z], .02, metal)
-      }
+  // Rounded tire shoulder profile, recessed rim, spokes, brake disc and central hub.
+  const profile = [new Vector2(.28, -.23), new Vector2(.5, -.23), new Vector2(.565, -.19), new Vector2(.59, -.13), new Vector2(.6, .13), new Vector2(.565, .21), new Vector2(.5, .235), new Vector2(.28, .235)]
+  const wheelShape = r.geometry(new LatheGeometry(profile, 48))
+  const rimShape = r.geometry(new CylinderGeometry(.305, .305, .37, 32))
+  const shoulder = r.geometry(new TorusGeometry(.505, .007, 5, 48))
+  const hubShape = r.geometry(new CylinderGeometry(.095, .095, .075, 20))
+  const brake = r.geometry(new CylinderGeometry(.25, .25, .02, 32))
+  for (const z of [-1.6, 1.55]) for (const side of [-1, 1]) {
+    const x = side * 1.3
+    const wheel = r.mesh(car, wheelShape, tire, [x, .605, z]); wheel.rotation.z = Math.PI / 2
+    const rim = r.mesh(car, rimShape, black, [x, .605, z]); rim.rotation.z = Math.PI / 2
+    const disc = r.mesh(car, brake, metal, [x + side * .15, .605, z]); disc.rotation.z = Math.PI / 2
+    const ring = r.mesh(car, shoulder, metal, [x + side * .225, .605, z]); ring.rotation.y = Math.PI / 2
+    const hub = r.mesh(car, hubShape, metal, [x + side * .245, .605, z]); hub.rotation.z = Math.PI / 2
+    for (let n = 0; n < 8; n++) {
+      const a = n / 8 * Math.PI * 2
+      r.rod(car, [x + side * .24, .605, z], [x + side * .22, .605 + Math.cos(a) * .27, z + Math.sin(a) * .27], .018, carbon)
+    }
+    for (const offset of [-.35, .35]) {
+      r.rod(car, [side * .3, .39, z + offset], [x, .48, z], .026, carbon)
+      r.rod(car, [side * .33, .67, z + offset], [x, .68, z], .018, metal)
     }
   }
-  // Multi-element front/rear wings and separated endplates establish the silhouette.
-  for (const z of [2.38, 2.65, 2.87]) r.box(car, [2.9, .055, .2], [0, .24 + (2.87 - z) * .12, z], carbon)
-  for (const side of [-1, 1]) r.box(car, [.065, .38, .82], [side * 1.46, .38, 2.62], red)
-  for (const y of [1.31, 1.54]) r.box(car, [2.45, .065, .39], [0, y, -2.24], carbon)
-  for (const side of [-1, 1]) {
-    r.box(car, [.065, .65, .72], [side * 1.23, 1.32, -2.21], red)
-    r.rod(car, [side * .22, .46, -1.98], [side * .22, 1.3, -2.22], .045, metal)
+  // Airfoil cross-sections, curved tips and bevelled end plates replace rectangular slabs.
+  const foil = new Shape(); foil.moveTo(-.2, 0); foil.quadraticCurveTo(-.05, .065, .2, .025); foil.quadraticCurveTo(.05, -.03, -.2, 0)
+  const frontFoil = r.geometry(new ExtrudeGeometry(foil, { depth: 2.85, bevelEnabled: false, steps: 1, curveSegments: 10 }))
+  for (let n = 0; n < 3; n++) {
+    const wing = r.mesh(car, frontFoil, carbon, [-1.425, .26 + n * .06, 2.54 - n * .24]); wing.rotation.y = Math.PI / 2
   }
-  r.box(car, [1.4, .045, .45], [0, .25, -2.13], black)
-  const number = r.sign(car, '01', [.32, .3], [0, .48, 1.5])
-  number.object.rotation.x = -Math.PI / 2
-  const plaque = r.sign(car, 'DRF-01', [.85, .2], [0, 1.585, -2.24])
-  plaque.object.rotation.x = -Math.PI / 2
+  const rearFoil = r.geometry(new ExtrudeGeometry(foil, { depth: 2.45, bevelEnabled: false, steps: 1, curveSegments: 10 }))
+  for (let n = 0; n < 2; n++) {
+    const wing = r.mesh(car, rearFoil, carbon, [-1.225, 1.31 + n * .23, -2.08 - n * .18]); wing.rotation.y = Math.PI / 2
+  }
+  const end = new Shape(); end.moveTo(-.4, -.15); end.lineTo(.3, -.15); end.quadraticCurveTo(.45, -.08, .36, .23); end.lineTo(-.32, .25); end.quadraticCurveTo(-.45, .23, -.4, -.15)
+  const plate = r.geometry(new ExtrudeGeometry(end, { depth: .04, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: .016, bevelThickness: .012, curveSegments: 8 }))
+  for (const side of [-1, 1]) {
+    const tip = r.mesh(car, plate, red, [side * 1.44, .37, 2.49]); tip.rotation.y = Math.PI / 2
+    const rear = r.mesh(car, plate, red, [side * 1.24, 1.35, -2.17]); rear.rotation.y = Math.PI / 2; rear.scale.y = 1.6
+    r.rod(car, [side * .23, .44, -1.97], [side * .23, 1.29, -2.15], .035, metal)
+  }
+  for (const x of [-.7, -.35, 0, .35, .7]) r.box(car, [.035, .18, .7], [x, .26, -1.97], carbon)
+  const number = r.sign(car, '01', [.32, .23], [0, .5, 1.65]); number.object.rotation.x = -Math.PI / 2
+  const plaque = r.sign(car, 'DRF-01', [.83, .2], [0, 1.59, -2.26]); plaque.object.rotation.x = -Math.PI / 2
   return car
 }

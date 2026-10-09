@@ -10,6 +10,16 @@ export function createTrackOpening(r: Resources) {
   for (const z of [-8.3, -13.7]) r.box(track, [60, .015, .1], [0, .025, z], white)
   for (let x = -24; x <= 24; x += 2) r.box(track, [2, .03, .4], [x, .045, -8.6], x % 4 === 0 ? red : white)
   r.box(track, [60, .7, .25], [0, .35, -15], metal)
+  // Static testing paddock beyond the pit lane: canopy, stepped seating and safety fence.
+  for (let row = 0; row < 7; row++) {
+    r.box(track, [45, .25, 1], [0, .25 + row * .32, -17 - row], row % 2 === 0 ? carbon : metal)
+  }
+  r.box(track, [46, .16, 7.8], [0, 4.2, -21], carbon)
+  for (let x = -20; x <= 20; x += 4) {
+    r.rod(track, [x, .2, -24], [x, 4.15, -24], .08, metal)
+    r.rod(track, [x, .8, -15.1], [x, 2.4, -15.1], .025, metal)
+  }
+  for (const y of [1.1, 1.45, 1.8, 2.15]) r.rod(track, [-24, y, -15.1], [24, y, -15.1], .012, metal)
   // Abstract local horizon; original low-poly industrial/coastal forms.
   for (let n = 0; n < 12; n++) {
     const height = 1 + (n * 7 % 5) * .45
