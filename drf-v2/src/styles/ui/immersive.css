@@ -15,11 +15,9 @@
 .drf-immersive-stage { position: absolute; inset: 0; z-index: -1; width: 100%; height: 100%; }
 .drf-immersive-stage > .drf-visual { width: 100%; height: 100%; margin: 0; }
 .drf-immersive-stage::after { content: ''; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, #090a0cb3 0%, transparent 22%, transparent 65%, #090a0ca6 100%); }
-/* Compatibility for the integrated blockout. The scene worker will remove its
-   duplicate header/bar; the slot still fills the viewport in this checkout. */
+/* The scene owns projected world anchors; the shell owns the perimeter HUD. */
 .drf-immersive-stage [data-scene-root] { width: 100%; height: 100%; border: 0; }
 .drf-immersive-stage .drf-scene__viewport { width: 100%; height: 100%; }
-.drf-immersive-stage :is(.drf-scene__identity,.drf-scene__caption,.drf-scene__frame,.drf-scene__zones) { display: none; }
 .drf-ui[data-view-mode=immersive] :is(button,select,a) { touch-action: manipulation; }
 .drf-hud-header { position: absolute; z-index: 3; top: max(var(--hud-edge),env(safe-area-inset-top)); left: var(--hud-edge); right: var(--hud-edge); display: flex; justify-content: space-between; align-items: center; gap: 12px; min-height: 60px; padding-bottom: 12px; border-bottom: 1px solid #73798280; }
 .drf-hud-brand { display: flex; align-items: center; gap: 12px; padding: 4px 10px 4px 0; }
