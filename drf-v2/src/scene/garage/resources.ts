@@ -1,5 +1,6 @@
 import { BoxGeometry, CanvasTexture, CylinderGeometry, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
 import type { BufferGeometry, Group, Material, Texture } from 'three'
+import { createFloorSurface } from './floorSurface.ts'
 
 export type Vec3 = readonly [number, number, number]
 
@@ -9,7 +10,7 @@ export function createResources() {
   function geometry<T extends BufferGeometry>(resource: T): T { geometries.add(resource); return resource }
   function material<T extends Material>(resource: T): T { materials.add(resource); return resource }
   function texture(resource: Texture) { textures.add(resource); return resource }
-  function surface(kind: 'carbon' | 'metal' | 'floor' | 'rubber') {
+  function surface(kind: 'carbon' | 'metal' | 'rubber') {
     const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256
     const ctx = canvas.getContext('2d')
     if (ctx) {
@@ -20,7 +21,7 @@ export function createResources() {
         const weave = ((Math.floor(x / 4) + Math.floor(y / 4)) % 2) * 17
         const value = kind === 'carbon' ? 190 + weave + random() * 8 :
           kind === 'metal' ? 200 + Math.sin(y * 3) * 16 + random() * 8 :
-          kind === 'rubber' ? 148 + random() * 22 : 222 + random() * 20
+          148 + random() * 22
         const i = (y * 256 + x) * 4
         pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = value
         pixels.data[i + 3] = 255
@@ -28,23 +29,25 @@ export function createResources() {
       ctx.putImageData(pixels, 0, 0)
     }
     const map = texture(new CanvasTexture(canvas)); map.wrapS = map.wrapT = RepeatWrapping
-    map.repeat.set(kind === 'floor' ? 12 : 3, kind === 'floor' ? 12 : 3)
+    map.repeat.set(3, 3)
     return map
   }
-  const carbonMap = surface('carbon'), metalMap = surface('metal'), floorMap = surface('floor'), rubberMap = surface('rubber')
+  const carbonMap = surface('carbon'), metalMap = surface('metal'), rubberMap = surface('rubber')
+  const floorSurface = createFloorSurface(texture)
   // Tangent-space normals from our own height field, wrapped at texture boundaries.
   function normalFromHeight(height: Texture, strength: number) {
     const source = height.image as HTMLCanvasElement
-    const pixels = source.getContext('2d')?.getImageData(0, 0, 256, 256).data
-    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256
+    const size = source.width
+    const pixels = source.getContext('2d')?.getImageData(0, 0, size, size).data
+    const canvas = document.createElement('canvas'); canvas.width = canvas.height = size
     const ctx = canvas.getContext('2d')
     if (ctx && pixels) {
-      const output = ctx.createImageData(256, 256)
-      const value = (x: number, y: number) => pixels[(((y + 256) % 256) * 256 + (x + 256) % 256) * 4] / 255
-      for (let y = 0; y < 256; y++) for (let x = 0; x < 256; x++) {
+      const output = ctx.createImageData(size, size)
+      const value = (x: number, y: number) => pixels[(((y + size) % size) * size + (x + size) % size) * 4] / 255
+      for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
         const nx = (value(x - 1, y) - value(x + 1, y)) * strength
         const ny = (value(x, y - 1) - value(x, y + 1)) * strength
-        const length = Math.hypot(nx, ny, 1), i = (y * 256 + x) * 4
+        const length = Math.hypot(nx, ny, 1), i = (y * size + x) * 4
         output.data[i] = (nx / length * .5 + .5) * 255
         output.data[i + 1] = (ny / length * .5 + .5) * 255
         output.data[i + 2] = (1 / length * .5 + .5) * 255
@@ -56,17 +59,20 @@ export function createResources() {
     normal.repeat.copy(height.repeat); return normal
   }
   const carbonNormal = normalFromHeight(carbonMap, 2), rubberNormal = normalFromHeight(rubberMap, .8)
+  const floorNormal = normalFromHeight(floorSurface.height, 2.5)
   const cube = geometry(new BoxGeometry(1, 1, 1)), cylinder = geometry(new CylinderGeometry(1, 1, 1, 20))
   const palette = {
-    carbon: material(new MeshStandardMaterial({ color: '#181e25', metalness: .06, roughness: .65, envMapIntensity: .55, normalMap: carbonNormal, normalScale: new Vector2(.18, .18), roughnessMap: carbonMap })),
+    carbon: material(new MeshPhysicalMaterial({ specularIntensity: .18, color: '#0a0e13', metalness: .02, roughness: .85, envMapIntensity: .25, normalMap: carbonNormal, normalScale: new Vector2(.18, .18), roughnessMap: carbonMap })),
     paint: material(new MeshPhysicalMaterial({ color: '#930e29', metalness: .08, roughness: .34, clearcoat: .6, clearcoatRoughness: .25 })),
     black: material(new MeshStandardMaterial({ color: '#11141a', roughness: .59, metalness: .22 })),
     red: material(new MeshStandardMaterial({ color: '#930e29', metalness: .55, roughness: .23 })),
     white: material(new MeshStandardMaterial({ color: '#d8e1e3', metalness: .42, roughness: .26 })),
     metal: material(new MeshStandardMaterial({ color: '#8b97a1', metalness: .88, roughness: .35, bumpMap: metalMap, bumpScale: .004, roughnessMap: metalMap })),
-    floor: material(new MeshStandardMaterial({ color: '#363b40', metalness: .02, roughness: .88, bumpMap: floorMap, bumpScale: .008, roughnessMap: floorMap })),
+    floor: material(new MeshStandardMaterial({ color: '#a5a6a2', map: floorSurface.map, metalness: .015, roughness: .93, roughnessMap: floorSurface.roughness, normalMap: floorNormal, normalScale: new Vector2(.55, .55) })),
+    concrete: material(new MeshStandardMaterial({ color: '#81878a', metalness: .02, roughness: .93 })),
     tire: material(new MeshStandardMaterial({ color: '#161819', roughness: .94, normalMap: rubberNormal, normalScale: new Vector2(.3, .3) })),
-    light: material(new MeshBasicMaterial({ color: '#d9edff', toneMapped: false })),
+    light: material(new MeshBasicMaterial({ color: '#8eaebb', toneMapped: false })),
+    taskLight: material(new MeshBasicMaterial({ color: '#ffdfa8', toneMapped: false })),
     redLight: material(new MeshBasicMaterial({ color: '#e33352', toneMapped: false })),
     glass: material(new MeshStandardMaterial({ color: '#0b1a23', metalness: .55, roughness: .19 })),
   }

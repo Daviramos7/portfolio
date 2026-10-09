@@ -58,3 +58,18 @@ Limite do worktree: Vite dev retorna 403 para Geist via junction fora da allow
 list; configuração é do Lead. No preview do build, Geist carregou e não houve
 erros de console/rede. O driver emitiu aviso X4122 de precisão no shader PMREM
 do Three. Nenhum arquivo de configuração foi alterado.
+
+
+## C2 — superfícies e luz autorais, 09/10/2026
+
+Piso epóxi gerado em `src/scene/garage/floorSurface.ts`: albedo, roughness e
+altura 512×512, normal derivada 512×512. Noise determinístico em escala da sala,
+marcas de pneus no acesso à baia e abrasão localizada de manutenção. Sombra de
+contato radial original 128×128 em Garage.ts. Carbono/borracha/metal mantêm seus
+mapas procedurais originais 256×256. Tudo é produzido em Canvas pelo código
+DRF, sem fotografias, downloads, modelos externos ou licença CC0 atribuída.
+Aplicam-se os termos do próprio repositório; nenhuma licença de terceiros nova.
+SHA256 do gerador de piso desta entrega:
+`fd80e00887ea1fd944d730b960c7b100f21f1192c6e60c8ed0912294dbd83d83`.
+As texturas e materiais entram no registro existente de dispose. Não há
+requisições de assets adicionais; detalhes e limites desta rodada em C2.md.

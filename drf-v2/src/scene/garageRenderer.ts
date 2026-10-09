@@ -39,10 +39,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const camera = new PerspectiveCamera(46, 1, .1, 85)
   const lookAt = new Vector3(...framings.garage.lookAt)
   const destination = new Vector3(), target = new Vector3()
-  const sun = new DirectionalLight('#edf2fa', 3)
-  const workshopLight = new PointLight('#f3f5ff', 32, 18, 2)
-  const redBounce = new PointLight('#b32441', 16, 12, 2)
-  const rimLight = new PointLight('#b9d4ee', 42, 16, 2)
+  const sun = new DirectionalLight('#d8edff', 2.3)
+  const workshopLight = new PointLight('#ffdfb8', 65, 12, 2)
+  const benchLight = new PointLight('#ffd4ac', 18, 8, 2)
+  const rimLight = new PointLight('#c5e7ff', 85, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
   let opening: ReturnType<typeof createTrackOpening> | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()
@@ -208,23 +208,25 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     renderer.toneMapping = ACESFilmicToneMapping
     renderer.toneMappingExposure = 1.05
     renderer.shadowMap.type = PCFShadowMap
-    scene.background = new Color('#536a7b')
-    scene.fog = new Fog('#536a7b', 32, 65)
+    scene.background = new Color('#a6bdc9')
+    scene.fog = new Fog('#a6bdc9', 32, 65)
     environmentTarget = createWorkshopEnvironment(renderer)
     scene.environment = environmentTarget.texture
-    scene.environmentIntensity = .7
-    scene.add(new HemisphereLight('#b4c5de', '#28202a', .55))
-    sun.position.set(-5, 4.1, 4)
+    scene.environmentIntensity = .55
+    scene.add(new HemisphereLight('#b4c5de', '#28202a', .4))
+    sun.position.set(1.5, 6, -12)
+    sun.target.position.set(0, .5, 0); scene.add(sun.target)
+    sun.shadow.intensity = .45
     sun.castShadow = true
     sun.shadow.mapSize.set(1024, 1024)
     Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 1, far: 30 })
     sun.shadow.bias = -.0005
     sun.shadow.normalBias = .04
     scene.add(sun)
-    workshopLight.position.set(-4, 3.3, -1)
-    redBounce.position.set(5, 2.5, 3)
-    rimLight.position.set(1, 3.8, -5.5)
-    scene.add(workshopLight, redBounce, rimLight)
+    workshopLight.position.set(-3.25, 1.6, 1.5)
+    benchLight.position.set(-6.2, 2.5, -2.8)
+    rimLight.position.set(2.6, 2.6, -3.5)
+    scene.add(workshopLight, benchLight, rimLight)
     garage = createGarage(resources)
     opening = createTrackOpening(resources)
     resources.batch(garage.garage)
@@ -268,7 +270,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         renderer.shadowMap.needsUpdate = shadows
         renderer.shadowMap.autoUpdate = false
         workshopLight.visible = true
-        redBounce.visible = shadows
+        benchLight.visible = shadows
         rimLight.visible = shadows
         resize()
       }

@@ -52,6 +52,9 @@ export function createDRF01(r: Resources) {
     body([[-1.7, .16, .42, .5], [-.9, .25, .6, .65], [.26, .27, .62, .68], [.57, .22, .57, .63]], red, [side * .81, 0, 0])
     const inlet = r.mesh(car, r.geometry(new CylinderGeometry(.16, .16, .02, 20)), black, [side * .82, .5, .64])
     inlet.rotation.x = Math.PI / 2; inlet.scale.x = 1.4; inlet.scale.z = .7
+    const lip = r.mesh(car, r.geometry(new TorusGeometry(.16, .012, 6, 24)), metal, [side * .82, .5, .66])
+    lip.scale.set(1.4, .7, 1)
+    for (const z of [-.9, -.6, -.3]) r.rod(car, [side * .9, .67, z], [side * .9, .68, z], .016, metal)
     r.rod(car, [side * .44, .71, -.1], [side * .99, .68, .13], .018, metal)
     body([[.0, .09, .65, .73], [.27, .09, .65, .75], [.4, .04, .68, .73]], red, [side * 1.05, 0, 0])
     for (let i = 0; i < 5; i++) r.box(car, [.16, .012, .018], [side * .8, .69 - i * .006, -.1 - i * .1], black)
@@ -68,7 +71,7 @@ export function createDRF01(r: Resources) {
   // Rounded tire shoulder profile, recessed rim, spokes, brake disc and central hub.
   const profile = [new Vector2(.28, -.23), new Vector2(.5, -.23), new Vector2(.565, -.19), new Vector2(.59, -.13), new Vector2(.6, .13), new Vector2(.565, .21), new Vector2(.5, .235), new Vector2(.28, .235)]
   const wheelShape = r.geometry(new LatheGeometry(profile, 48))
-  const rimShape = r.geometry(new CylinderGeometry(.305, .305, .37, 32))
+  const rimShape = r.geometry(new LatheGeometry([new Vector2(.28, -.18), new Vector2(.335, -.18), new Vector2(.335, .18), new Vector2(.28, .18)], 32))
   const shoulder = r.geometry(new TorusGeometry(.505, .007, 5, 48))
   const hubShape = r.geometry(new CylinderGeometry(.095, .095, .075, 20))
   const brake = r.geometry(new CylinderGeometry(.25, .25, .02, 32))
@@ -77,11 +80,12 @@ export function createDRF01(r: Resources) {
     const wheel = r.mesh(car, wheelShape, tire, [x, .605, z]); wheel.rotation.z = Math.PI / 2
     const rim = r.mesh(car, rimShape, black, [x, .605, z]); rim.rotation.z = Math.PI / 2
     const disc = r.mesh(car, brake, metal, [x + side * .15, .605, z]); disc.rotation.z = Math.PI / 2
+    const innerDisc = r.mesh(car, brake, metal, [x - side * .15, .605, z]); innerDisc.rotation.z = Math.PI / 2
     const ring = r.mesh(car, shoulder, metal, [x + side * .225, .605, z]); ring.rotation.y = Math.PI / 2
     const hub = r.mesh(car, hubShape, metal, [x + side * .245, .605, z]); hub.rotation.z = Math.PI / 2
     for (let n = 0; n < 8; n++) {
       const a = n / 8 * Math.PI * 2
-      r.rod(car, [x + side * .24, .605, z], [x + side * .22, .605 + Math.cos(a) * .27, z + Math.sin(a) * .27], .018, carbon)
+      r.rod(car, [x + side * .24, .605, z], [x + side * .22, .605 + Math.cos(a) * .27, z + Math.sin(a) * .27], .018, metal)
     }
     for (const offset of [-.35, .35]) {
       r.rod(car, [side * .3, .39, z + offset], [x, .48, z], .026, carbon)

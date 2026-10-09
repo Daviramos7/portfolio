@@ -4,7 +4,7 @@ import type { Resources } from '../garage/resources.ts'
 export function createTrackOpening(r: Resources) {
   const track = new Group()
   track.name = 'trackside-static-opening'
-  const { carbon, red, white, metal, floor } = r.palette
+  const { carbon, red, white, metal, concrete: floor } = r.palette
   r.box(track, [60, .1, 18], [0, -.1, -13], floor)
   r.box(track, [60, .07, 5], [0, -.02, -11], carbon)
   for (const z of [-8.3, -13.7]) r.box(track, [60, .015, .1], [0, .025, z], white)
