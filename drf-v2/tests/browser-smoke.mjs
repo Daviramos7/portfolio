@@ -8,6 +8,7 @@ import { tmpdir } from 'node:os'
 import { basename, dirname, join, resolve } from 'node:path'
 import { PerspectiveCamera, Vector3 } from 'three'
 import { framings, hotspotVolumes } from '../src/scene/camera/framing.ts'
+import { portfolioContent } from '../src/content/portfolio.ts'
 
 const base = process.argv[2] ?? 'http://127.0.0.1:5173/'
 const chromePath = process.argv[3] ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe'
@@ -16,6 +17,7 @@ const screenshots = process.env.DRF_SCREENSHOT_DIR
   : await mkdtemp(join(tmpdir(), 'drf-integrated-evidence-'))
 await mkdir(screenshots, { recursive: true })
 const checks = []
+const expectedMetrics = portfolioContent.metrics.filter(metric => metric.state !== 'missing').length
 const sceneMeasures = []
 const fonts = new Map()
 
@@ -207,7 +209,7 @@ async function runBrowser(disableWebGL) {
       assert.ok(distance(await pose(), framings.telemetry.position) > 1, 'Opening the workstation does not snap the camera')
       await settled(before + 1)
       assert.equal(await evaluate('document.querySelector("canvas").dataset.sceneAmbient'), 'paused')
-      await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === 2')
+      await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === ' + expectedMetrics)
       assert.ok(await evaluate('document.querySelector("#drf-reading").textContent.includes("127.119")'))
       assert.ok(await evaluate('document.querySelector("#drf-reading").textContent.includes("7.803.361.234,91")'))
       await snapshot('integrated-telemetry')
@@ -293,7 +295,8 @@ async function runBrowser(disableWebGL) {
       assert.equal(await evaluate('document.querySelectorAll(".drf-recruiter-zone").length'), 5)
       assert.equal(await evaluate('document.querySelectorAll(".drf-project-card").length'), 9)
       assert.equal(await evaluate('location.hash'), '#garage/atleta-hibrido')
-      assert.equal(await evaluate('document.querySelectorAll(".drf-facts dt").length'), 0, 'Absent optional facts are omitted in the initial catalogue')
+      const expectedFacts = portfolioContent.projects.reduce((count, project) => count + [project.problem, project.contribution, project.productStatus].filter(Boolean).length, 0)
+      assert.equal(await evaluate('document.querySelectorAll(".drf-facts dt").length'), expectedFacts, 'Only verified optional facts are rendered')
       assert.ok(await evaluate('!document.body.innerText.includes("Not documented in the available content")'))
       await evaluate('scrollTo(0, document.documentElement.scrollHeight * .65)')
       await pause(200)
@@ -355,7 +358,7 @@ async function runBrowser(disableWebGL) {
         await command('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
         await zone('telemetry')
         await inspect()
-        await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === 2')
+        await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === ' + expectedMetrics)
         assert.equal(await noOverflow(), true)
         assert.equal(await fullStage(), true)
         await snapshot('mobile-telemetry-' + width)

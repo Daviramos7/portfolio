@@ -34,10 +34,17 @@ function fixture(initial = 'https://drf.example/', saved = {}) {
   }
 }
 
-test('catalogue preserves nine bilingual records and only sourced documentary metrics', () => {
+test('catalogue preserves nine bilingual records and scoped execution evidence', () => {
   assert.doesNotThrow(() => validatePortfolioContent(portfolioContent))
   assert.equal(portfolioContent.projects.length, 9)
-  assert.deepEqual(portfolioContent.metrics.map(metric => [metric.value, metric.state]), [[127119, 'documented'], [7803361234.91, 'documented']])
+  assert.deepEqual(portfolioContent.metrics.slice(0, 2).map(metric => [metric.value, metric.state]), [[127119, 'reproduced'], [7803361234.91, 'reproduced']])
+  assert.equal(new Set(portfolioContent.metrics.map(metric => metric.projectId)).size, 5)
+  for (const metric of portfolioContent.metrics) {
+    assert.equal(metric.state, 'reproduced')
+    assert.ok(metric.context.pt && metric.context.en)
+    assert.ok(metric.evidenceIds.length > 0)
+  }
+  assert.equal(portfolioContent.projects.find(project => project.id === 'brasilscore').contribution, null)
   const horta = portfolioContent.projects.find(project => project.id === 'horta-inteligente')
   assert.equal(horta.contentStatus, 'pending-evidence')
   assert.equal(horta.productStatus, null)
@@ -69,7 +76,7 @@ test('content boundary rejects broken references, metric ownership and non-finit
 test('URL preferences override storage; malformed and unrelated targets fall back safely', () => {
   const selection = resolveLocation(new URL('https://drf.example/?lang=en&mode=immersive#driver-profile/atleta-hibrido'), portfolioContent, { locale: 'pt', mode: 'recruiter' })
   assert.deepEqual(selection, { locale: 'en', mode: 'immersive', target: { zoneId: 'driver-profile', projectId: 'atleta-hibrido' } })
-  for (const hash of ['#unknown', '#garage/unknown', '#garage/%E0%A4', '#telemetry/atleta-hibrido', '#garage/task-manager/extra']) {
+  for (const hash of ['#unknown', '#garage/unknown', '#garage/%E0%A4', '#telemetry/horta-inteligente', '#garage/task-manager/extra']) {
     assert.deepEqual(resolveLocation(new URL(`https://drf.example/${hash}`), portfolioContent).target, { zoneId: 'garage', projectId: null })
   }
   assert.equal(resolveLocation(new URL('https://drf.example/?lang=invalid'), portfolioContent, { locale: 'en' }).locale, 'en')

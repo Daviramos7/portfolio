@@ -1,4 +1,5 @@
 import type { Evidence, Localized, PortfolioContent, Project } from '../contracts/index.ts'
+import { applyAuditEvidence } from './auditEvidence.ts'
 
 const text = (pt: string, en: string): Localized => ({ pt, en })
 const github = 'https://github.com/Daviramos7'
@@ -21,7 +22,7 @@ const project = (entry: Pick<Project, 'id' | 'title' | 'summary' | 'technologies
   ...entry,
 })
 
-export const portfolioContent: PortfolioContent = {
+const baselineContent: PortfolioContent = {
   schemaVersion: 1,
   profile: {
     name: 'Davi Ramos Ferreira',
@@ -164,3 +165,5 @@ export const portfolioContent: PortfolioContent = {
     evidence('horta-user-brief', text('Informação fornecida por Davi; material pendente', 'Information supplied by Davi; materials pending'), null, null),
   ],
 }
+
+export const portfolioContent = applyAuditEvidence(baselineContent)

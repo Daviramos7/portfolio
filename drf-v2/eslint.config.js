@@ -7,7 +7,8 @@ import tseslint from 'typescript-eslint'
 import { defineConfig, globalIgnores } from 'eslint/config'
 
 export default defineConfig([
-  globalIgnores(['dist']),
+  // Research repro files are immutable snapshots of other projects, not V2 source.
+  globalIgnores(['dist', 'docs/research/**']),
   {
     files: ['**/*.{ts,tsx}'],
     extends: [
