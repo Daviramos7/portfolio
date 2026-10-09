@@ -10,6 +10,7 @@ import { ZoneContent } from './ZoneContent.tsx'
 import { uiLabels } from './uiLabels.ts'
 import '../styles/ui/portfolio.css'
 import '../styles/ui/immersive.css'
+import './nightShift.css'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.
 export function PortfolioShell({ content, state, actions, children }: PortfolioShellProps & { children?: ReactNode }) {

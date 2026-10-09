@@ -1,0 +1,29 @@
+/* Local additions to the approved HUD, using the existing DRF surfaces. */
+.drf-hud-environment { display: flex; gap: 6px; }
+.drf-hud-environment button { display: flex; align-items: center; gap: 8px; min-height: 44px; padding: 6px 10px; background: var(--drf-carbon); border: 1px solid var(--drf-metal); text-align: left; font-size: .75rem; line-height: 1.25; }
+.drf-hud-environment button > span { display: grid; gap: 3px; }
+.drf-hud-environment small { font-size: .65rem; }
+.drf-hud-environment button[aria-pressed=true] { border-bottom: 2px solid var(--drf-white); }
+.drf-hud-environment button:disabled { opacity: .75; }
+.drf-readout-project { font-size: .7rem; color: var(--drf-metal); margin-bottom: 8px !important; }
+.drf-readout-caption { flex-wrap: wrap; }
+.drf-telemetry-readout { min-width: 0; }
+.drf-telemetry-number { overflow-wrap: anywhere; }
+.drf-readout-context { margin-top: 14px !important; font-size: .85rem; color: var(--drf-metal); }
+.drf-readout-context .drf-field-label { display: block; margin-bottom: 4px; }
+.drf-readout-evidence { margin-top: 14px; }
+.drf-readout-evidence summary:focus-visible { outline-offset: -2px; }
+.drf-readout-evidence summary > span { width: 24px; flex-shrink: 0; text-align: center; }
+.drf-readout-evidence summary > span::before { content: '+'; }
+.drf-readout-evidence[open] summary > span { transform: none; }
+.drf-readout-evidence[open] summary > span::before { content: '−'; }
+.drf-readout-evidence[open] + .drf-readout-source { display: none; }
+.drf-readout-source { font-size: .7rem; color: var(--drf-metal); overflow-wrap: anywhere; }
+@media (max-width: 600px) {
+  .drf-hud-header { display: grid; grid-template-columns: minmax(0,1fr) auto; row-gap: 8px; }
+  .drf-hud-tools { grid-column: 2; grid-row: 1; }
+  .drf-hud-environment { grid-column: 1 / -1; justify-content: end; }
+  .drf-hud-environment button { flex: 0 1 auto; min-width: 0; }
+  .drf-hud-status, .drf-zone-coordinate { top: 146px; }
+  .drf-workstation { top: 198px; }
+}
