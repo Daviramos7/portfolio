@@ -6,31 +6,41 @@ type Section = readonly [z: number, halfWidth: number, bottom: number, top: numb
 function loft(sections: readonly Section[]) {
   const bottom = new CatmullRomCurve3(sections.map(([z, w, b]) => new Vector3(w, b, z)), false, 'catmullrom', .25)
   const top = new CatmullRomCurve3(sections.map(([z, w, , t]) => new Vector3(w, t, z)), false, 'catmullrom', .25)
-  const vertices: number[] = [], indices: number[] = [], rings = 36, sides = 20
+  const vertices: number[] = [], uvs: number[] = [], indices: number[] = [], rings = 36, sides = 20, stride = sides + 1
   for (let i = 0; i <= rings; i++) {
     const a = bottom.getPoint(i / rings), b = top.getPoint(i / rings)
-    for (let j = 0; j < sides; j++) {
+    for (let j = 0; j <= sides; j++) {
       const angle = j / sides * Math.PI * 2, s = Math.sin(angle), c = Math.cos(angle)
       vertices.push(a.x * Math.sign(s) * Math.abs(s) ** .75, (a.y + b.y) / 2 + (b.y - a.y) / 2 * Math.sign(c) * Math.abs(c) ** .7, a.z)
+      uvs.push(j / sides, i / rings)
     }
   }
   for (let i = 0; i < rings; i++) for (let j = 0; j < sides; j++) {
-    const a = i * sides + j, b = i * sides + (j + 1) % sides
-    indices.push(a, a + sides, b, b, a + sides, b + sides)
+    const a = i * stride + j, b = a + 1
+    indices.push(a, a + stride, b, b, a + stride, b + stride)
   }
   for (const end of [0, rings]) for (let j = 1; j < sides - 1; j++) {
-    const a = end * sides
+    const a = end * stride
     if (end === 0) indices.push(a, a + j, a + j + 1)
     else indices.push(a, a + j + 1, a + j)
   }
   const geometry = new BufferGeometry()
   geometry.setAttribute('position', new Float32BufferAttribute(vertices, 3))
-  geometry.setIndex(indices); geometry.computeVertexNormals(); return geometry
+  geometry.setAttribute('uv', new Float32BufferAttribute(uvs, 2))
+  geometry.setIndex(indices); geometry.computeVertexNormals()
+  const normals = geometry.getAttribute('normal'), normal = new Vector3()
+  // UV seam stays split, but the surface normal remains continuous across it.
+  for (let i = 0; i <= rings; i++) {
+    const first = i * stride, last = first + sides
+    normal.set(normals.getX(first) + normals.getX(last), normals.getY(first) + normals.getY(last), normals.getZ(first) + normals.getZ(last)).normalize()
+    normals.setXYZ(first, normal.x, normal.y, normal.z); normals.setXYZ(last, normal.x, normal.y, normal.z)
+  }
+  return geometry
 }
 
 export function createDRF01(r: Resources) {
   const car = new Group(); car.name = 'DRF-01-original-refined-prototype'
-  const { carbon, red, black, metal, tire } = r.palette
+  const { carbon, paint: red, black, metal, tire } = r.palette
   const body = (sections: readonly Section[], mat: Material, p: Vec3 = [0, 0, 0]) => r.mesh(car, r.geometry(loft(sections)), mat, p)
   body([[-2.05, .4, .17, .23], [-1, .99, .17, .25], [.3, .96, .17, .25], [1.8, .39, .18, .24]], carbon)
   // Continuous sculpted nose, raised shoulders and separated cockpit opening.

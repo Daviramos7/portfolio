@@ -1,5 +1,9 @@
 # Assets da cena DRF
 
+Marco C de 09/10/2026: ver [NIGHT-C.md](NIGHT-C.md) para a revisão de materiais,
+correção de oclusão, enquadramentos de programas e medidas atuais. As medidas
+de 08/10 abaixo pertencem à rodada visual anterior.
+
 Todos os modelos, sinais e materiais desta entrega são procedurais, escritos em
 `src/scene/` para DRF Engineering por Codex, a pedido de Davi Ramos Ferreira.
 Não há GLB, imagem, fonte remota, som, marca ou modelo de terceiros incorporado.

@@ -16,6 +16,11 @@ export const mobileFramings: Readonly<Record<ZoneId, Framing>> = {
   'driver-profile': { position: [-1.6, 1.85, 3.7], lookAt: [-7.65, 1.75, 2.1] },
   'strategy-room': { position: [1.6, 1.85, 4.4], lookAt: [7.65, 2, 1.9] },
 }
+// Selection remains Garage in the contract; the camera reads the supplied project intent.
+export const programmeFramings: Readonly<Record<'desktop' | 'mobile', Framing>> = {
+  desktop: { position: [-3.7, 1.9, -.6], lookAt: [-8.045, 1.7, -3] },
+  mobile: { position: [-2.9, 1.85, -1.05], lookAt: [-8.045, 1.7, -3] },
+}
 export const hotspotVolumes: Readonly<Record<ZoneId, Readonly<{ position: Point; size: Point; anchor: Point }>>> = {
   garage: { position: [0, .85, 0], size: [3.2, 1.9, 6.2], anchor: [0, 1.1, 1.4] },
   telemetry: { position: [-5.7, 1.7, -4.75], size: [3.8, 2.4, 1.3], anchor: [-5.7, 2.22, -4.6] },
@@ -30,9 +35,12 @@ export function cameraEase(progress: number) {
 // Transit through the front service aisle keeps every route clear of the car and furniture.
 export function buildCameraPath(from: Vector3, to: Vector3) {
   const points = [from.clone()]
-  if (from.x * to.x < 0) {
-    if (from.z < 4.9) points.push(new Vector3(from.x, 2.05, 5.2))
-    points.push(new Vector3(to.x, 2.05, 5.2))
+  if (from.x * to.x < 0 || Math.min(Math.abs(from.x), Math.abs(to.x)) < 2.75) {
+    // Also route canceled mid-aisle poses and the closer mobile profile via clearance.
+    const fromRail = Math.sign(from.x || to.x) * Math.max(3.2, Math.abs(from.x))
+    const toRail = Math.sign(to.x || from.x) * Math.max(3.2, Math.abs(to.x))
+    if (from.z < 4.9) points.push(new Vector3(fromRail, 2.05, 5.4))
+    points.push(new Vector3(toRail, 2.05, 5.4))
   } else {
     points.push(new Vector3((from.x + to.x) / 2 + Math.sign(to.x) * .18, 2.02, (from.z + to.z) / 2))
   }

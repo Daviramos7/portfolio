@@ -3,7 +3,7 @@ import type { CatmullRomCurve3, WebGLRenderTarget } from 'three'
 import type { ExperienceState, SceneEvent, SceneProps, ZoneId } from '../contracts/index.ts'
 import { createResources } from './garage/resources.ts'
 import { createGarage } from './garage/Garage.ts'
-import { buildCameraPath, cameraEase, framings, hotspotVolumes, mobileFramings } from './camera/framing.ts'
+import { buildCameraPath, cameraEase, framings, hotspotVolumes, mobileFramings, programmeFramings } from './camera/framing.ts'
 import { createTrackOpening } from './trackside/TrackOpening.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
 
@@ -180,7 +180,9 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   }
   function moveCamera(instant: boolean) {
     if (!state) return
-    const framing = (mobileFrame ? mobileFramings : framings)[state.target.zoneId]
+    const framing = state.target.zoneId === 'garage' && state.target.projectId !== null
+      ? programmeFramings[mobileFrame ? 'mobile' : 'desktop']
+      : (mobileFrame ? mobileFramings : framings)[state.target.zoneId]
     destination.set(...framing.position); target.set(...framing.lookAt)
     if (instant) { transition = null; camera.position.copy(destination); lookAt.copy(target) }
     else if (camera.position.distanceTo(destination) < .02 && lookAt.distanceTo(target) < .02) transition = null
