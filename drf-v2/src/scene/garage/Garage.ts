@@ -120,17 +120,21 @@ export function createGarage(r: Resources) {
   garage.add(strategy); zoneSign('strategy-room', [7.66, 3.45, 1.9], -Math.PI / 2)
 
   // Real workshop scale: drawer chests, lift stands, spares, tool silhouettes and coiled hose.
-  const chest = new Group(); chest.position.set(-6.3, 0, -.65)
+  // Wall-mounted tool station: no freestanding board across the programme sightline.
+  const tools = new Group(); tools.position.set(-8.05, 0, -.65); tools.rotation.y = Math.PI / 2
+  const chest = new Group(); chest.position.set(0, 0, .45)
   r.box(chest, [1.6, .9, .7], [0, .56, 0], red)
   r.box(chest, [1.68, .08, .76], [0, 1.05, 0], metal)
   for (let y = .32; y < 1; y += .14) r.box(chest, [1.42, .035, .04], [0, y, .38], metal)
   for (const x of [-.62, .62]) for (const z of [-.24, .24]) r.rod(chest, [x, .09, z], [x, .22, z], .08, tire)
-  garage.add(chest)
-  r.box(garage, [2.1, 1.4, .08], [-6.3, 2, -.96], black)
-  for (let x = -7.1; x < -5.4; x += .22) {
-    r.rod(garage, [x, 1.65, -.89], [x, 2.1 + (Math.round(x * 10) % 3) * .07, -.89], .016, metal)
-    r.box(garage, [.07, .16, .055], [x, 1.7, -.86], red)
+  tools.add(chest)
+  r.box(tools, [2.1, 1.4, .08], [0, 2, 0], black)
+  for (let n = 0; n < 8; n++) {
+    const x = -.8 + n * .22
+    r.rod(tools, [x, 1.65, .07], [x, 2.1 + (n % 3) * .07, .07], .016, metal)
+    r.box(tools, [.07, .16, .055], [x, 1.7, .1], red)
   }
+  garage.add(tools)
   const hoseShape = r.geometry(new TorusGeometry(.4, .022, 6, 40))
   for (let n = 0; n < 4; n++) r.mesh(garage, hoseShape, black, [-7.8, .7, -.7 + n * .05]).rotation.y = Math.PI / 2
   r.rod(garage, [-7.8, .31, -.5], [-7.2, .05, .5], .018, black)
@@ -141,12 +145,12 @@ export function createGarage(r: Resources) {
   }
   // Index-derived project plaques, never a parallel catalogue.
   const projectSigns = [
-    r.sign(garage, '', [1.65, .4], [-8.045, 2.1, -2.6]),
-    r.sign(garage, '', [1.65, .4], [-8.045, 1.65, -2.6]),
-    r.sign(garage, '', [1.65, .4], [-8.045, 1.2, -2.6]),
+    r.sign(garage, '', [2.2, .58], [-8.045, 2.38, -3]),
+    r.sign(garage, '', [2.2, .58], [-8.045, 1.7, -3]),
+    r.sign(garage, '', [2.2, .58], [-8.045, 1.02, -3]),
   ]
-  projectSigns.forEach(sign => { sign.object.rotation.y = Math.PI / 2 })
-  r.box(garage, [.1, 1.58, 1.85], [-8.13, 1.65, -2.6], carbon)
+  projectSigns.forEach((sign, index) => { sign.object.rotation.y = Math.PI / 2; sign.object.name = 'programme-display-' + index })
+  r.box(garage, [.1, 2.05, 2.4], [-8.13, 1.7, -3], carbon)
 
   // Functional ventilation and a slow instrumentation sweep: the renderer owns their one clock.
   const fanAssembly = new Group(); fanAssembly.position.set(-8.03, 3.72, -.15); fanAssembly.rotation.y = Math.PI / 2
