@@ -1,0 +1,23 @@
+.drf-scene { width: 100%; color: #f5f5f2; background: #111315; border: 1px solid #444a50; }
+.drf-scene[hidden], .drf-scene [hidden] { display: none; }
+.drf-scene__viewport { position: relative; height: clamp(22rem, 58vw, 42rem); overflow: hidden; background: #171d24; }
+.drf-scene__canvas { display: block; width: 100%; height: 100%; }
+.drf-scene__identity { position: absolute; top: 1.4rem; left: 1.4rem; display: grid; gap: .35rem; pointer-events: none; font-size: clamp(.7rem, 1.5vw, .85rem); letter-spacing: .12em; text-shadow: 0 1px 6px #000; }
+.drf-scene__identity span:first-child { font-weight: 750; font-size: clamp(.95rem, 2vw, 1.35rem); }
+.drf-scene__caption { position: absolute; left: 1.4rem; bottom: 1rem; margin: 0; font-size: .75rem; padding: .4rem .65rem; background: #0c1014e6; border-left: 2px solid #a71930; }
+.drf-scene__frame { position: absolute; bottom: 1.4rem; right: 1.4rem; font-size: .75rem; color: #e2e5e8; letter-spacing: .15em; }
+.drf-scene__zones { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 1px; background: #444a50; }
+.drf-scene__zones button { appearance: none; display: flex; align-items: center; justify-content: space-between; gap: .5rem; min-height: 4rem; min-width: 0; padding: .85rem; color: #f5f5f2; background: #191d22; border: 0; border-top: 3px solid transparent; text-align: left; font: inherit; font-size: .8rem; cursor: pointer; }
+.drf-scene__zones button:hover { background: #2a3037; }
+.drf-scene__zones button[aria-current] { background: #30171e; border-top-color: #c62b47; }
+.drf-scene__zones button:focus-visible { position: relative; z-index: 1; outline: 2px solid #fff; outline-offset: -4px; }
+.drf-scene__zone-number { color: #bbc2ca; font-size: .7rem; font-variant-numeric: tabular-nums; white-space: nowrap; flex-shrink: 0; }
+.drf-scene__zones button > span:last-child { flex-shrink: 0; }
+@media (max-width: 640px) {
+  .drf-scene__viewport { height: 26rem; }
+  .drf-scene__zones { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .drf-scene__zones button:last-child { grid-column: 1 / -1; }
+  .drf-scene__identity { top: 1rem; left: 1rem; }
+  .drf-scene__caption { left: 1rem; bottom: 1rem; font-size: .65rem; }
+  .drf-scene__frame { display: none; }
+}
