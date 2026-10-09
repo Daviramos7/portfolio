@@ -1,0 +1,21 @@
+[
+  {
+    "command": "pnpm install --frozen-lockfile --ignore-scripts --store-dir ./pnpm-store --reporter append-only",
+    "exitcode": 1,
+    "wall_seconds": 1.4587669,
+    "error": "ERR_PNPM_LOCKFILE_CONFIG_MISMATCH",
+    "classification": "harness copy omitted pnpm-workspace.yaml; corrected before successful frozen installation"
+  },
+  {
+    "command": "npm install --prefix ./browser-tools --ignore-scripts --no-audit --no-fund playwright@1.58.2",
+    "exitcode": 0,
+    "npm_reported_seconds": 12,
+    "wall_seconds": null,
+    "conditions": "isolated browser-tools; scripts suppressed; duration from npm rounded report, not monotonic full-run measurement"
+  },
+  {
+    "command": "open https://supabase.com/changelog.md",
+    "result": "web fetch unsupported markdown content type",
+    "conditions": "skill reading only, no Supabase implementation or production access"
+  }
+]

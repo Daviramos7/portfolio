@@ -1,0 +1,38 @@
+[
+  {
+    "label": "install",
+    "command": "pnpm.cmd install --frozen-lockfile --ignore-scripts --store-dir ./pnpm-store --reporter append-only",
+    "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\atleta-hibrido\\run-20261009-1410",
+    "started_at": "2026-10-09T14:10:56.477266-03:00",
+    "exitcode": 0,
+    "wall_seconds": 7.446914500000048,
+    "conditions": "isolated source; TZ America/Sao_Paulo; no VITE/SUPABASE inherited variables; no env files; ignore install scripts"
+  },
+  {
+    "label": "test",
+    "command": "pnpm.cmd test",
+    "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\atleta-hibrido\\run-20261009-1410",
+    "started_at": "2026-10-09T14:11:03.925096-03:00",
+    "exitcode": 0,
+    "wall_seconds": 6.0391994000000295,
+    "conditions": "isolated source; TZ America/Sao_Paulo; no VITE/SUPABASE inherited variables; no env files; ignore install scripts"
+  },
+  {
+    "label": "lint",
+    "command": "pnpm.cmd run lint",
+    "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\atleta-hibrido\\run-20261009-1410",
+    "started_at": "2026-10-09T14:11:09.964862-03:00",
+    "exitcode": 0,
+    "wall_seconds": 24.121813899999893,
+    "conditions": "isolated source; TZ America/Sao_Paulo; no VITE/SUPABASE inherited variables; no env files; ignore install scripts"
+  },
+  {
+    "label": "build",
+    "command": "pnpm.cmd run build",
+    "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\atleta-hibrido\\run-20261009-1410",
+    "started_at": "2026-10-09T14:11:34.087352-03:00",
+    "exitcode": 0,
+    "wall_seconds": 11.841982799999982,
+    "conditions": "isolated source; TZ America/Sao_Paulo; no VITE/SUPABASE inherited variables; no env files; ignore install scripts"
+  }
+]

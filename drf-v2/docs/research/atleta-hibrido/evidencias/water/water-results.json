@@ -1,0 +1,24 @@
+{
+  "results": [
+    {
+      "screen": "390-water-increment",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 255
+    }
+  ],
+  "errors": [],
+  "waterMl": 1400,
+  "rpcWrites": [
+    {
+      "table": "increment_daily_water",
+      "payload": {
+        "p_user_id": "00000000-0000-4000-8000-000000000001",
+        "p_log_date": "2026-10-09",
+        "p_delta": 200
+      }
+    }
+  ]
+}

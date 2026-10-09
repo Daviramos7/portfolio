@@ -1,0 +1,32 @@
+$ vitest run
+
+ RUN  v3.2.4 C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/.agent-grid/labs/mission06/atleta-hibrido/run-20261009-1410
+
+ ✓ src/domain/workoutDraft.test.ts (12 tests) 7ms
+ ✓ src/data/defaultPlan.test.ts (9 tests) 7ms
+ ✓ src/domain/weeklyGym.test.ts (36 tests) 42ms
+ ✓ src/domain/adaptiveWorkout.test.ts (33 tests) 52ms
+ ✓ src/domain/gymSession.test.ts (62 tests) 33ms
+ ✓ src/domain/flexibleGymMigration.test.ts (11 tests) 6ms
+ ✓ src/domain/readiness.test.ts (4 tests) 25ms
+ ✓ src/services/workoutService.test.ts (8 tests) 8ms
+ ✓ src/domain/dailyRules.test.ts (8 tests) 5ms
+ ✓ src/utils/cardioProgression.test.ts (22 tests) 47ms
+ ✓ src/services/imports.test.ts (11 tests) 13ms
+ ✓ src/utils/importSecurity.test.ts (7 tests) 10ms
+ ✓ src/utils/strengthProgression.test.ts (5 tests) 5ms
+ ✓ src/domain/exerciseTracking.test.ts (23 tests) 13ms
+ ✓ src/components/StrengthHistoryView.test.ts (6 tests) 15ms
+ ✓ src/services/authService.test.ts (3 tests) 6ms
+ ✓ src/domain/publicReleaseSecurityMigration.test.ts (7 tests) 7ms
+ ✓ src/domain/exerciseCatalog.test.ts (3 tests) 4ms
+ ✓ src/utils/notices.test.ts (3 tests) 4ms
+ ✓ src/services/checkinService.test.ts (3 tests) 3ms
+ ✓ src/utils/dates.test.ts (3 tests) 4ms
+ ✓ src/utils/durations.test.ts (4 tests) 3ms
+
+ Test Files  22 passed (22)
+      Tests  283 passed (283)
+   Start at  14:11:06
+   Duration  2.87s (transform 938ms, setup 0ms, collect 5.35s, tests 318ms, environment 5ms, prepare 7.27s)
+

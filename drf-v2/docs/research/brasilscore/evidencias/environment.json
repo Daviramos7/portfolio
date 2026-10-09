@@ -1,0 +1,18 @@
+{
+  "OS": "Windows 11 Home 10.0.26200",
+  "logical_threads": 8,
+  "RAM_bytes": 34278518784,
+  "node": "22.21.0",
+  "npm_default": "11.6.2",
+  "npm_isolated_success": "10.9.4",
+  "python": "3.13.9",
+  "Chrome": "155.0.8059.39",
+  "Playwright_read_only_previous_lab": "1.58.2",
+  "ports": [
+    5280,
+    5281,
+    5282
+  ],
+  "host_conditions": "shared; no CPU affinity/thermal/ambient-load control",
+  "install_lifecycle": "ignore-scripts; none enabled"
+}

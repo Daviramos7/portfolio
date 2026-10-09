@@ -1,0 +1,14 @@
+{
+  "sha": "27f0c933e83c2e426248bf397659c88b02fe072e",
+  "initial_status": "",
+  "lab": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\auditoria-despesas-pyspark\\run-20261009-1441",
+  "hashes": {
+    "README.md": "a4fdff52785ff261ff7e40e836800d6906a4fc8d5aedc127a37bc8b367c419d7",
+    "analise.ipynb": "b1155327c24ff26060e6ffafaf30b172666836fd2dd2274c9cfeef2f2b4bab67"
+  },
+  "code_cell": 2,
+  "code_lines": 979,
+  "code_sha256": "9035d6349a8834c3cc8b613ef0475a3ef925bd5e798cab840efcfa7e53279092",
+  "started_at": "2026-10-09T14:41:10.580856-03:00",
+  "excluded": "outputs not executed; no datasets/env/deps copied"
+}

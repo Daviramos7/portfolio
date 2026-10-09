@@ -1,0 +1,33 @@
+{
+  "adaptation": {
+    "cell": 2,
+    "source_sha256": "9035d6349a8834c3cc8b613ef0475a3ef925bd5e798cab840efcfa7e53279092",
+    "adapted_sha256": "781b4e7ebe850ba1791458a43c6e987b78b931f1ace4da67d99c3ebb957bf767",
+    "removed_module_install_lines": [
+      52,
+      53,
+      54,
+      55
+    ],
+    "master": "local[2]",
+    "driver_memory": "2g",
+    "bind": "loopback",
+    "ports": [
+      5283,
+      5284
+    ],
+    "ui": false,
+    "upload": false,
+    "download_during_pipeline": false,
+    "matplotlib": "Agg via process env",
+    "ansi_off": false,
+    "transformations": "unchanged; original preparar_dataframe and executar_pipeline"
+  },
+  "input": "public-dataset.csv",
+  "output": "public-output",
+  "exitcode": 0,
+  "wall_seconds": 12.841904899999918,
+  "spark_startup_seconds": [
+    6.737281299999722
+  ]
+}

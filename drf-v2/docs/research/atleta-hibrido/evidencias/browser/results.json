@@ -1,0 +1,717 @@
+{
+  "results": [
+    {
+      "screen": "390-Hoje",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 449
+    },
+    {
+      "screen": "390-Registrar",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "390-Academia",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 780
+    },
+    {
+      "screen": "390-Progresso",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 829
+    },
+    {
+      "screen": "390-Saúde",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 603
+    },
+    {
+      "screen": "390-Perfil",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 444
+    },
+    {
+      "screen": "390-registrar-Comida",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 530
+    },
+    {
+      "screen": "390-registrar-Água",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "390-registrar-Check-in",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 619
+    },
+    {
+      "screen": "390-registrar-Cardio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 963
+    },
+    {
+      "screen": "390-registrar-JSON",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 431
+    },
+    {
+      "screen": "390-progresso-Sono",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 1417
+    },
+    {
+      "screen": "390-progresso-Força",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 462
+    },
+    {
+      "screen": "390-progresso-Relógio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 582
+    },
+    {
+      "screen": "390-progresso-Cardio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 555
+    },
+    {
+      "screen": "390-progresso-Semana",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 2431
+    },
+    {
+      "screen": "390-editor",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 1233
+    },
+    {
+      "screen": "360-Hoje",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 449
+    },
+    {
+      "screen": "360-Registrar",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "360-Academia",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 780
+    },
+    {
+      "screen": "360-Progresso",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 829
+    },
+    {
+      "screen": "360-Saúde",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 603
+    },
+    {
+      "screen": "360-Perfil",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 444
+    },
+    {
+      "screen": "360-registrar-Comida",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 530
+    },
+    {
+      "screen": "360-registrar-Água",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "360-registrar-Check-in",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 619
+    },
+    {
+      "screen": "360-registrar-Cardio",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 963
+    },
+    {
+      "screen": "360-registrar-JSON",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 431
+    },
+    {
+      "screen": "360-progresso-Sono",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 1417
+    },
+    {
+      "screen": "360-progresso-Força",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 462
+    },
+    {
+      "screen": "360-progresso-Relógio",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 582
+    },
+    {
+      "screen": "360-progresso-Cardio",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 555
+    },
+    {
+      "screen": "360-progresso-Semana",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 2431
+    },
+    {
+      "screen": "360-editor",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 1233
+    },
+    {
+      "screen": "412-Hoje",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 449
+    },
+    {
+      "screen": "412-Registrar",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "412-Academia",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 780
+    },
+    {
+      "screen": "412-Progresso",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 829
+    },
+    {
+      "screen": "412-Saúde",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 603
+    },
+    {
+      "screen": "412-Perfil",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 444
+    },
+    {
+      "screen": "412-registrar-Comida",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 530
+    },
+    {
+      "screen": "412-registrar-Água",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 255
+    },
+    {
+      "screen": "412-registrar-Check-in",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 619
+    },
+    {
+      "screen": "412-registrar-Cardio",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 963
+    },
+    {
+      "screen": "412-registrar-JSON",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 431
+    },
+    {
+      "screen": "412-progresso-Sono",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 1417
+    },
+    {
+      "screen": "412-progresso-Força",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 462
+    },
+    {
+      "screen": "412-progresso-Relógio",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 582
+    },
+    {
+      "screen": "412-progresso-Cardio",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 555
+    },
+    {
+      "screen": "412-progresso-Semana",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 2431
+    },
+    {
+      "screen": "412-editor",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 1233
+    },
+    {
+      "screen": "1440-Hoje",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 471
+    },
+    {
+      "screen": "1440-Registrar",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 282
+    },
+    {
+      "screen": "1440-Academia",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 806
+    },
+    {
+      "screen": "1440-Progresso",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 856
+    },
+    {
+      "screen": "1440-Saúde",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 626
+    },
+    {
+      "screen": "1440-Perfil",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 468
+    },
+    {
+      "screen": "1440-registrar-Comida",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 557
+    },
+    {
+      "screen": "1440-registrar-Água",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 282
+    },
+    {
+      "screen": "1440-registrar-Check-in",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 695
+    },
+    {
+      "screen": "1440-registrar-Cardio",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 990
+    },
+    {
+      "screen": "1440-registrar-JSON",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 458
+    },
+    {
+      "screen": "1440-progresso-Sono",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 1444
+    },
+    {
+      "screen": "1440-progresso-Força",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 488
+    },
+    {
+      "screen": "1440-progresso-Relógio",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 609
+    },
+    {
+      "screen": "1440-progresso-Cardio",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 582
+    },
+    {
+      "screen": "1440-progresso-Semana",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 2458
+    },
+    {
+      "screen": "1440-editor",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 1259
+    },
+    {
+      "screen": "390-sessao-ativa",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 899
+    },
+    {
+      "screen": "390-transicao-cardio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 314
+    },
+    {
+      "screen": "390-historico-sessao",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 1132
+    },
+    {
+      "screen": "390-confirmacao",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 588
+    },
+    {
+      "screen": "360-sessao-ativa",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 899
+    },
+    {
+      "screen": "360-transicao-cardio",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 314
+    },
+    {
+      "screen": "360-historico-sessao",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 1128
+    },
+    {
+      "screen": "360-confirmacao",
+      "viewport": 360,
+      "document": 360,
+      "body": 360,
+      "overlay": false,
+      "content": 588
+    },
+    {
+      "screen": "412-sessao-ativa",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 899
+    },
+    {
+      "screen": "412-transicao-cardio",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 314
+    },
+    {
+      "screen": "412-historico-sessao",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 1116
+    },
+    {
+      "screen": "412-confirmacao",
+      "viewport": 412,
+      "document": 412,
+      "body": 412,
+      "overlay": false,
+      "content": 588
+    },
+    {
+      "screen": "390-preview-Comida",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 933
+    },
+    {
+      "screen": "390-preview-Sono",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 657
+    },
+    {
+      "screen": "390-preview-Cardio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 660
+    },
+    {
+      "screen": "390-preview-Força relógio",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 662
+    },
+    {
+      "screen": "1440-logout-global",
+      "viewport": 1440,
+      "document": 1440,
+      "body": 1440,
+      "overlay": false,
+      "content": 168
+    },
+    {
+      "screen": "390-login",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 168
+    },
+    {
+      "screen": "390-hoje-sem-dados",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 518
+    },
+    {
+      "screen": "390-checkin-sem-dados",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 574
+    },
+    {
+      "screen": "390-peso-sem-dados",
+      "viewport": 390,
+      "document": 390,
+      "body": 390,
+      "overlay": false,
+      "content": 602
+    }
+  ],
+  "errors": []
+}

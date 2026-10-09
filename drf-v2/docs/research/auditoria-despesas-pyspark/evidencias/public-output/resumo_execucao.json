@@ -1,0 +1,15 @@
+{
+  "projeto": "Auditoria de Despesas Públicas — Recife 2023",
+  "fontes_tentadas": [],
+  "registros_processados": 127119,
+  "valor_empenhado": 8162834911.140102,
+  "valor_liquidado": 7803361234.910011,
+  "valor_pago": 7339449931.790025,
+  "percentual_pago_sobre_liquidado": 94.05498106322977,
+  "tempo_processamento_spark_segundos": 5.4249,
+  "tamanho_arquivo_mb": 82.69,
+  "particoes_dataframe": 2,
+  "orgaos_ausentes": 0,
+  "valores_liquidados_invalidos": 0,
+  "spark_version": "4.0.4"
+}

@@ -1,0 +1,12 @@
+{
+  "classification": "Confirmado por execução",
+  "activity": "ast.parse original cell; CSV/PNG/ZIP/hash/original Git validation; then console print",
+  "command": "PowerShell here-string Python via mission venv, recorded in session",
+  "python_exitcode": 1,
+  "powershell_exitcode": 0,
+  "powershell_wall_seconds": 1.2190223,
+  "result": "FAIL instrumental console print only; closure-validation.json written before exception",
+  "exception": "UnicodeEncodeError: cp1252 cannot encode U+FEFF from UTF8-BOM CSV header",
+  "pipeline_rerun": false,
+  "validated_output": "closure-validation.json"
+}

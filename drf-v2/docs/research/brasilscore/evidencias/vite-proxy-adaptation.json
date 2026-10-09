@@ -1,0 +1,6 @@
+{
+  "before": "http://127.0.0.1:3001",
+  "after": "http://127.0.0.1:5281",
+  "file": "vite.config.js",
+  "scope": "lab only; no source repo changes"
+}

@@ -1,0 +1,81 @@
+{
+  "sha": "aadc1e996de265e1e053a1c25567ecdb6bf7bc71",
+  "files": {
+    "package.json": {
+      "lines": 33,
+      "blob": "1ed119947821e5af57dda07c5f68820ec21fd9aa"
+    },
+    "package-lock.json": {
+      "lines": 11898,
+      "blob": "df1fceea3d77e828a450703e071c50d021678d68"
+    },
+    "vite.config.js": {
+      "lines": 26,
+      "blob": "ad8e4d11780958c7ce6b55d76c1a817198c83f71"
+    },
+    ".hintrc": {
+      "lines": 14,
+      "blob": "529ba022011cf7589311a7d52446e400e120802f"
+    },
+    "README.md": {
+      "lines": 234,
+      "blob": "b906182ba5d50c135476c1dd854e4386368a5868"
+    },
+    "server/app.js": {
+      "lines": 15,
+      "blob": "ec21f2ff2a23a2617973de88eebf0953a4b168c4"
+    },
+    "server/index.js": {
+      "lines": 19,
+      "blob": "117e2e595be6b237ae148d02936351dea3d98d0c"
+    },
+    "server/routes/footballRoutes.js": {
+      "lines": 66,
+      "blob": "59190f804655da6ff8b9818eb9d2c9ce50f8b062"
+    },
+    "server/lib/footballDataClient.js": {
+      "lines": 74,
+      "blob": "49363a54f58626693039165fd39615a93b631a51"
+    },
+    "server/lib/asyncRequestCache.js": {
+      "lines": 45,
+      "blob": "0e6f9053e32f0ee705c174afc736cde1f8070923"
+    },
+    "server/lib/footballDataAdapter.js": {
+      "lines": 96,
+      "blob": "61e75ac8bbef52499d907c8721869b9a084f9851"
+    },
+    "assets/js/auth.js": {
+      "lines": 197,
+      "blob": "1232c8c76fdd0391ceb4da27c8f9f1c29b5987d7"
+    },
+    "assets/js/search.js": {
+      "lines": 171,
+      "blob": "44b556de54d4d1d059db43bc7b6fabd446df5b65"
+    },
+    "assets/js/favorites.js": {
+      "lines": 173,
+      "blob": "025c2e71b74fb0373a7b94ef859e17cd6a31c9ec"
+    },
+    "assets/js/favorites-page.js": {
+      "lines": 94,
+      "blob": "8663b385bda3413bfbe3e8fd6808edbae4fbee7b"
+    },
+    "assets/js/main.js": {
+      "lines": 211,
+      "blob": "82ab5bf882a1b428058168d14146ff92016474fd"
+    },
+    "assets/js/football/internalFootballProvider.js": {
+      "lines": 44,
+      "blob": "39fda430999ff105c5970712910a1f02c53c2908"
+    },
+    "assets/css/global.css": {
+      "lines": 325,
+      "blob": "d4eea03ba6c53840879f3d9799321606d1720f37"
+    },
+    "docs/WORKFLOW.md": {
+      "lines": 236,
+      "blob": "8d81bc9899857f801e31f29a525a153c6e9ddb16"
+    }
+  }
+}

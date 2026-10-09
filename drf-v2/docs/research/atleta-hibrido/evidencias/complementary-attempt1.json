@@ -1,0 +1,6 @@
+{
+  "command": "pnpm exec vitest run mission06.test.ts --maxWorkers=1",
+  "exitcode": 1,
+  "wall_seconds": 2.3850424999999404,
+  "conditions": "TZ America/Sao_Paulo; mocked Supabase; synthetic fixtures; no network; 3 intended regression assertions"
+}

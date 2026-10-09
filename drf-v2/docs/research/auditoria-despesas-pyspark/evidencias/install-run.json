@@ -1,0 +1,7 @@
+{
+  "command": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\mission06\\auditoria-despesas-pyspark\\run-20261009-1441\\.venv\\Scripts\\python.exe -m pip install pyspark>=3.5,<4.1 pandas matplotlib requests psutil --report C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\worktrees\\drf-portfolio-intelligence\\drf-v2\\docs\\research\\auditoria-despesas-pyspark\\evidencias\\install-report.json --disable-pip-version-check",
+  "exitcode": 0,
+  "wall_seconds": 152.02198269999963,
+  "conditions": "mission venv only; notebook PySpark constraint >=3.5,<4.1; psutil instrumentation extra; no global config changes",
+  "finished_at": "2026-10-09T14:44:27.443725-03:00"
+}

@@ -1,0 +1,23 @@
+{
+  "checked_at": "2026-10-09T14:39:09.330711-03:00",
+  "original_sha_final": "aadc1e996de265e1e053a1c25567ecdb6bf7bc71",
+  "original_branch_final": "main",
+  "original_status_initial": "",
+  "original_status_final": "",
+  "verification_command": "git rev-parse HEAD; git status --porcelain; git branch --show-current",
+  "exitcode": 0,
+  "verification_wall_seconds": 0.08154239999976198,
+  "conditions": "read-only original final check",
+  "lab_wall_seconds_since_copy": 761.751938,
+  "pre_copy_reading": "not timed",
+  "lab_ports_5280_5289_no_listeners_at_final_check": true,
+  "owned_benchmark_servers_stopped": true,
+  "owned_browser_servers_stopped": true,
+  "portfolio_branch": "feat/drf-engineering-research",
+  "portfolio_status": "?? drf-v2/docs/research/\n",
+  "evidence_bytes": 995015,
+  "Atleta_edits_authorized_by_Lead": [
+    "repro/README.md selective encoding correction and duplicate console note removal",
+    "RELATORIO.md explicit-zero fixture note; no rerun or harness change"
+  ]
+}

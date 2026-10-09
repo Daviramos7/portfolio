@@ -1,0 +1,73 @@
+Set-PSReadLineOption : The predictive suggestion feature cannot be enabled because the console output doesn't support 
+virtual terminal processing or it's redirected.
+No C:\Users\davir\OneDrive\Documentos\WindowsPowerShell\Microsoft.PowerShell_profile.ps1:3 caractere:1
++ Set-PSReadLineOption -PredictionSource History
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Set-PSReadLineOption], ArgumentException
+    + FullyQualifiedErrorId : System.ArgumentException,Microsoft.PowerShell.SetPSReadLineOption
+ 
+Set-PSReadLineOption : Identificador inv�lido.
+No C:\Users\davir\OneDrive\Documentos\WindowsPowerShell\Microsoft.PowerShell_profile.ps1:6 caractere:5
++     Set-PSReadLineOption -PredictionViewStyle ListView
++     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (:) [Set-PSReadLineOption], IOException
+    + FullyQualifiedErrorId : System.IO.IOException,Microsoft.PowerShell.SetPSReadLineOption
+ 
+WARNING: Using incubator modules: jdk.incubator.vector
+26/10/09 14:45:01 WARN Shell: Did not find winutils.exe: java.io.FileNotFoundException: java.io.FileNotFoundException: HADOOP_HOME and hadoop.home.dir are unset. -see https://cwiki.apache.org/confluence/display/HADOOP2/WindowsProblems
+Using Spark's default log4j profile: org/apache/spark/log4j2-defaults.properties
+Setting default log level to "WARN".
+To adjust logging level use sc.setLogLevel(newLevel). For SparkR, use setLogLevel(newLevel).
+26/10/09 14:45:01 WARN SparkConf: Note that spark.local.dir will be overridden by the value set by the cluster manager (via SPARK_LOCAL_DIRS in standalone/kubernetes and LOCAL_DIRS in YARN).
+26/10/09 14:45:02 WARN NativeCodeLoader: Unable to load native-hadoop library for your platform... using builtin-java classes where applicable
+26/10/09 14:45:02 WARN Utils: The configured local directories are not expected to be URIs; however, got suspicious values [C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/.agent-grid/labs/mission06/auditoria-despesas-pyspark/run-20261009-1441/spark-local]. Please check your configured local directories.
+26/10/09 14:45:06 WARN SparkStringUtils: Truncated the string representation of a plan since it was too large. This behavior can be adjusted by setting 'spark.sql.debug.maxToStringFields'.
+analise.ipynb:cell2:local-bootstrap:682: UserWarning: FigureCanvasAgg is non-interactive, and thus cannot be shown
+✅ Dataset local válido encontrado: C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\auditoria-despesas-pyspark\run-20261009-1441\public-dataset.csv (82.69 MB)
+🔎 Separador detectado: ';'
+⚡ Iniciando motor de processamento distribuído...
+   Spark: 4.0.4
+   Paralelismo padrão: 2
+📖 Lendo CSV com Spark...
+✅ 127.119 registros carregados.
+✅ 42 colunas disponíveis.
+📊 Calculando ranking dos órgãos...
+
+========================================================================
+🏛️  RELATÓRIO DE AUDITORIA FINANCEIRA — RECIFE 2023
+========================================================================
+📂 Registros processados: 127.119
+🧾 Valor empenhado:      R$ 8.162.834.911,14
+💰 Valor liquidado:      R$ 7.803.361.234,91
+✅ Valor pago:            R$ 7.339.449.931,79
+📈 Pago/liquidado:        94.05%
+------------------------------------------------------------------------
+🏆 TOP 5 ÓRGÃOS POR VALOR LIQUIDADO:
+   1. SECRETARIA DE SAÚDE - ADMINISTRAÇÃO SUPERVISIONADA: R$ 1.668.250.043,27
+   2. SECRETARIA DE EDUCAÇÃO: R$ 1.564.218.920,32
+   3. SECRETARIA DE INFRAESTRUTURA - ADMINISTRAÇÃO SUPERVISIO: R$ 1.274.893.472,20
+   4. SECRETARIA DE PLANEJAMENTO, GESTÃO E TRANSFORMAÇÃO DIGI: R$ 928.018.667,95
+   5. ENCARGOS GERAIS DO MUNICÍPIO: R$ 806.929.638,80
+
+========================================================================
+🚀 MÉTRICAS DO PIPELINE
+========================================================================
+⏱️  Processamento Spark: 5.4249 segundos
+💾 Arquivo de entrada:   82.69 MB
+🧩 Partições do DataFrame: 2
+⚠️  Órgãos ausentes:     0
+⚠️  Valores inválidos:   0
+========================================================================
+🖼️  Gerando portfolio...
+
+✅ PIPELINE CONCLUÍDO
+🖼️ Dashboard: C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\auditoria-despesas-pyspark\run-20261009-1441\public-output\04_dashboard_portfolio.png
+📄 Ranking:   C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\auditoria-despesas-pyspark\run-20261009-1441\public-output\top_10_orgaos_por_valor_liquidado.csv
+📋 Resumo:    C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\auditoria-despesas-pyspark\run-20261009-1441\public-output\resumo_execucao.json
+📦 ZIP:       C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\auditoria-despesas-pyspark\run-20261009-1441\public-output.zip
+⏱️ Tempo total: 12.44 segundos
+🛑 Sessão Spark encerrada.
+ERRO: o processo com PID 23064 (processo filho de PID 19348) n�o p�de ser finalizado.
+Raz�o: N�o h� ocorr�ncia da tarefa em execu��o.
+�XITO: o processo com PID 19348 (processo filho de PID 20964) foi finalizado.
+�XITO: o processo com PID 20964 (processo filho de PID 5288) foi finalizado.

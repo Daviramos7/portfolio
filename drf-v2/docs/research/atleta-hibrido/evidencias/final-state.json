@@ -1,0 +1,15 @@
+{
+  "checked_at": "2026-10-09T14:24:31.499149-03:00",
+  "original_sha_final": "0ae9190b15b9da943c3c640eddd9fd5e9ecf0b84",
+  "original_branch_final": "main",
+  "original_status_final": "",
+  "portfolio_sha": "175820af7937840f4a7367bfd5dedc2a76ae8269",
+  "portfolio_branch": "feat/drf-engineering-research",
+  "scope_status": "?? drf-v2/docs/research/\n",
+  "lab_wall_seconds_since_copy": 845.492566,
+  "status_command": "git status --porcelain",
+  "status_exitcode": 0,
+  "status_wall_seconds": 0.03877379999994446,
+  "lab_ports_5280_5289_no_listener": true,
+  "console_server_stopped": true
+}

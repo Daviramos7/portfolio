@@ -1,0 +1,249 @@
+{
+  "adaptation": {
+    "cell": 2,
+    "source_sha256": "9035d6349a8834c3cc8b613ef0475a3ef925bd5e798cab840efcfa7e53279092",
+    "adapted_sha256": "781b4e7ebe850ba1791458a43c6e987b78b931f1ace4da67d99c3ebb957bf767",
+    "removed_module_install_lines": [
+      52,
+      53,
+      54,
+      55
+    ],
+    "master": "local[2]",
+    "driver_memory": "2g",
+    "bind": "loopback",
+    "ports": [
+      5283,
+      5284
+    ],
+    "ui": false,
+    "upload": false,
+    "download_during_pipeline": false,
+    "matplotlib": "Agg via process env",
+    "ansi_off": false,
+    "transformations": "unchanged; original preparar_dataframe and executar_pipeline"
+  },
+  "checks": [
+    {
+      "name": "semicolon validation",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "semicolon sniff",
+      "expected": ";",
+      "actual": ";",
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "comma validation",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "comma sniff",
+      "expected": ",",
+      "actual": ",",
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "tab validation",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "tab sniff",
+      "expected": "\t",
+      "actual": "\t",
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "HTML rejected",
+      "expected": false,
+      "actual": false,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "small valid CSV accepted",
+      "expected": true,
+      "actual": false,
+      "pass": false,
+      "kind": "edge expectation; code minimum1024 bytes"
+    },
+    {
+      "name": "malformed monetary token under default ANSI",
+      "expected": "null and counted invalid",
+      "actual": "NumberFormatException",
+      "pass": false,
+      "kind": "runtime FAIL; conversion aborts under Spark4 ANSI"
+    },
+    {
+      "name": "BR symbol, decimal-point, null, invalid",
+      "expected": [
+        1234.56,
+        10.0,
+        2.5,
+        null,
+        null,
+        5.0,
+        3.0,
+        10.0
+      ],
+      "actual": [
+        1234.56,
+        10.0,
+        2.5,
+        null,
+        null,
+        5.0,
+        3.0,
+        10.0
+      ],
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "duplicate rows retained; no dedupe contract",
+      "expected": 8,
+      "actual": 8,
+      "pass": true,
+      "kind": "characterization, not bug"
+    },
+    {
+      "name": "missing required column rejected",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "checked below"
+    }
+  ],
+  "benchmarks": [
+    {
+      "n": 1000,
+      "warmup_runs": 1,
+      "repetitions": 3,
+      "raw_seconds": [
+        0.47871159999976953,
+        0.4401629999997567,
+        0.39670920000025944
+      ],
+      "internal_notebook_seconds": [
+        0.47870640000019193,
+        0.4401585000000523,
+        0.39670580000029076
+      ],
+      "median_seconds": 0.4401629999997567,
+      "p95_nearest_rank_seconds": 0.47871159999976953,
+      "p95_limit": "only3samples: p95 equals observed maximum; weak tail estimate",
+      "rows_per_second_from_median": 2271.8856423655616,
+      "input_bytes": 26039,
+      "input_partitions": [
+        1,
+        1,
+        1
+      ],
+      "shuffle_partitions_config": 8,
+      "top_pandas_rows": [
+        10,
+        10,
+        10
+      ],
+      "cache": "unpersist+clear between runs, cold Spark persisted DF; same JVM and warm OS file cache; within each run persisted DF reused for agg and ranking",
+      "correct": true
+    },
+    {
+      "n": 10000,
+      "warmup_runs": 1,
+      "repetitions": 3,
+      "raw_seconds": [
+        0.4202304999998887,
+        0.4494924999999057,
+        0.36188250000031985
+      ],
+      "internal_notebook_seconds": [
+        0.42022729999962394,
+        0.4494886000002225,
+        0.3618787999998858
+      ],
+      "median_seconds": 0.4202304999998887,
+      "p95_nearest_rank_seconds": 0.4494924999999057,
+      "p95_limit": "only3samples: p95 equals observed maximum; weak tail estimate",
+      "rows_per_second_from_median": 23796.46408340815,
+      "input_bytes": 260039,
+      "input_partitions": [
+        1,
+        1,
+        1
+      ],
+      "shuffle_partitions_config": 8,
+      "top_pandas_rows": [
+        10,
+        10,
+        10
+      ],
+      "cache": "unpersist+clear between runs, cold Spark persisted DF; same JVM and warm OS file cache; within each run persisted DF reused for agg and ranking",
+      "correct": true
+    },
+    {
+      "n": 100000,
+      "warmup_runs": 1,
+      "repetitions": 3,
+      "raw_seconds": [
+        0.6197897000001831,
+        0.6114747000001444,
+        0.5967497000001458
+      ],
+      "internal_notebook_seconds": [
+        0.6197864999999183,
+        0.6114706999996997,
+        0.5967456999997012
+      ],
+      "median_seconds": 0.6114747000001444,
+      "p95_nearest_rank_seconds": 0.6197897000001831,
+      "p95_limit": "only3samples: p95 equals observed maximum; weak tail estimate",
+      "rows_per_second_from_median": 163539.06384021512,
+      "input_bytes": 2600039,
+      "input_partitions": [
+        1,
+        1,
+        1
+      ],
+      "shuffle_partitions_config": 8,
+      "top_pandas_rows": [
+        10,
+        10,
+        10
+      ],
+      "cache": "unpersist+clear between runs, cold Spark persisted DF; same JVM and warm OS file cache; within each run persisted DF reused for agg and ranking",
+      "correct": true
+    }
+  ],
+  "fixture_id": 6092026,
+  "fixture_generation": "deterministic sequence, no RNG",
+  "startup_seconds": 5.152919699999984,
+  "spark_version": "4.0.4",
+  "initial_ansi": "true",
+  "ansi_error_excerpt": "[CAST_INVALID_INPUT] The value '1.2.3' of the type \"STRING\" cannot be cast to \"DOUBLE\" because it is malformed. Correct the value as per the syntax, or change its target type. Use `try_cast` to tolerate malformed input and return NULL instead. SQLSTATE: 22018\n== DataFrame ==\n\"cast\" was called from\nanalise.ipynb:cell2:local-bootstrap:450\n",
+  "recovery": "session-only ANSI=false for subsequent diagnostic/benchmark; no transformation rewrite",
+  "precision": {
+    "n": 1000,
+    "input_per_row": "0,10",
+    "expected_decimal": "100.00",
+    "double_total": 100.00000000000088,
+    "decimal_cast_sum": "100.00",
+    "double_minus_decimal": "8.8E-13",
+    "scope": "synthetic constant cents; diagnostic only, no claim of material public accounting error"
+  },
+  "stage_scope": "Exact AST nodes cell2 lines755-841; CSV IO+normalization+persist/count+aggregate+top10 toPandas; no charts/exports/download/startup. Cold Spark cache each repeat; warm OS/JVM; source CSV read1partition; shuffle8 + AQE.",
+  "spark_stopped": true
+}

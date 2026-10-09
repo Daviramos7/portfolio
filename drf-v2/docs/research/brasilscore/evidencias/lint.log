@@ -1,0 +1,102 @@
+
+> brasil-score@1.0.0 lint
+> hint index.html main.html search.html favorites.html profile.html listing.html registre.html
+
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-index-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-main-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-search-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-favorites-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-profile-html.html"
+button-type  2 hints
+× Found a total of 0 errors, 0 warnings, 2 hints and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-listing-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations
+Error: Not implemented: HTMLCanvasElement.prototype.getContext (without installing the canvas npm package)
+    at module.exports (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\browser\not-implemented.js:9:17)
+    at HTMLCanvasElementImpl.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\nodes\HTMLCanvasElement-impl.js:42:5)
+    at HTMLCanvasElement.getContext (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\node_modules\jsdom\lib\jsdom\living\generated\HTMLCanvasElement.js:131:58)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16713:49)
+    at Object.get (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:11229:23)
+    at _isIconLigature (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:16712:41)
+    at eval (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28278:54)
+    at Array.some (<anonymous>)
+    at hasRealTextChildren (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28277:35)
+    at Rule.colorContrastMatches [as matches] (eval at evaluate (C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\node_modules\@hint\connector-local\dist\src\connector.js:244:38), <anonymous>:28239:12) undefined
+You can view the HTML report in "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\mission06\brasilscore\run-20261009-1427\hint-report\file--C--Users-davir-OneDrive-Documentos-GitHub-portfolio--agent-grid-labs-mission06-brasilscore-run-20261009-1427-registre-html.html"
+button-type  1 hint
+× Found a total of 0 errors, 0 warnings, 1 hint and 0 informations

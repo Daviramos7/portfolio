@@ -1,0 +1,6 @@
+{
+  "command": "node node_modules/vitest/vitest.mjs run mission06.test.ts --maxWorkers=1 --testTimeout=30000",
+  "exitcode": 1,
+  "wall_seconds": 8.869691500000044,
+  "conditions": "TZ America/Sao_Paulo; mocked Supabase; synthetic fixtures; regression assertions preserved; owned UI server/Chrome smoke stopped; ambient host load uncontrolled"
+}

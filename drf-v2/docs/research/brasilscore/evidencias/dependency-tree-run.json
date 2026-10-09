@@ -1,0 +1,6 @@
+{
+  "command": "node tooling/package/bin/npm-cli.js ls --all --json",
+  "exitcode": 0,
+  "wall_seconds": 1.3729354999998122,
+  "conditions": "read-only installed lab tree; stderr omitted unless needed"
+}

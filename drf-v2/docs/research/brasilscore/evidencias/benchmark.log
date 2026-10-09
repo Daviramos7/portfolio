@@ -1,0 +1,1 @@
+{"benchmarks":6,"checks":12,"failedComplementary":[{"name":"absent founded remains null","expected":null,"actual":0,"pass":false,"kind":"complementary contract FAIL"}],"ownedServersStopped":true}

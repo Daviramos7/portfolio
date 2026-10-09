@@ -1,0 +1,70 @@
+
+ RUN  v3.2.4 C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/.agent-grid/labs/mission06/atleta-hibrido/run-20261009-1410
+
+ ❯ mission06.test.ts (7 tests | 3 failed) 7644ms
+   ✓ Mission06 complementary synthetic checks > preserves empty daily fields and explicit zero 2ms
+   ✓ Mission06 complementary synthetic checks > selects wearable per field without adding cardio kcal 1ms
+   ✓ Mission06 complementary synthetic checks > keeps date at local midnight boundary and stable cardio fingerprint 3ms
+   × Mission06 complementary synthetic checks > weekly empty export should preserve unknown as null (regression) 28ms
+     → expected +0 to be null
+   × Mission06 complementary synthetic checks > weekly active kcal should divide only known observations (regression) 6ms
+     → expected 250 to be 500 // Object.is equality
+   × Mission06 complementary synthetic checks > weekly known zero steps should remain a recorded day (regression) 3ms
+     → expected 10000 to be 5000 // Object.is equality
+   ✓ Mission06 complementary synthetic checks > benchmarks actual aggregation functions with known cardinalities  7599ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  mission06.test.ts > Mission06 complementary synthetic checks > weekly empty export should preserve unknown as null (regression)
+AssertionError: expected +0 to be null
+
+- Expected: 
+null
+
++ Received: 
+0
+
+ ❯ mission06.test.ts:50:29
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  mission06.test.ts > Mission06 complementary synthetic checks > weekly active kcal should divide only known observations (regression)
+AssertionError: expected 250 to be 500 // Object.is equality
+
+- Expected
++ Received
+
+- 500
++ 250
+
+ ❯ mission06.test.ts:55:34
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  mission06.test.ts > Mission06 complementary synthetic checks > weekly known zero steps should remain a recorded day (regression)
+AssertionError: expected 10000 to be 5000 // Object.is equality
+
+- Expected
++ Received
+
+- 5000
++ 10000
+
+ ❯ mission06.test.ts:60:29
+     58|     const result = await weekly({ wearable_daily_metrics: [{ metric_da…
+     59|     observations.checks.weeklyZero = { actual: result.avgSteps, expect…
+     60|     expect(result.avgSteps).toBe(5000);
+       |                             ^
+     61|   });
+     62|   it('benchmarks actual aggregation functions with known cardinalities…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 4 passed (7)
+   Start at  14:14:25
+   Duration  8.26s (transform 161ms, setup 0ms, collect 228ms, tests 7.64s, environment 0ms, prepare 152ms)
+

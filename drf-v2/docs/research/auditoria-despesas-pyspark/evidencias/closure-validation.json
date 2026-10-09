@@ -1,0 +1,43 @@
+{
+  "checked_at": "2026-10-09T14:50:20.061634-03:00",
+  "audit_elapsed_seconds_since_copy": 549.480778,
+  "output_files": {
+    "public-output\\04_dashboard_portfolio.png": {
+      "bytes": 107081,
+      "sha256": "69ca4c5a069fd399f6ae7c9e112b21f5562af1e764896560268db5e669b65548"
+    },
+    "public-output\\resumo_execucao.json": {
+      "bytes": 507,
+      "sha256": "bf12d308d4a1cd62c1751a926db8a238f388297d286616cfe105d75731d04551"
+    },
+    "public-output\\top_10_orgaos_por_valor_liquidado.csv": {
+      "bytes": 847,
+      "sha256": "05896e3862d9d115eb6621d84980aed968f1a0cba0fb8a524fa790e3268cff20"
+    }
+  },
+  "zip": {
+    "members": [
+      "04_dashboard_portfolio.png",
+      "resumo_execucao.json",
+      "top_10_orgaos_por_valor_liquidado.csv"
+    ],
+    "bad_member": null
+  },
+  "png_dimensions": [
+    1600,
+    900
+  ],
+  "top10_rows": 10,
+  "ranking_descending": true,
+  "fourth": {
+    "﻿orgao_nome": "SECRETARIA DE PLANEJAMENTO, GESTÃO E TRANSFORMAÇÃO DIGITAL - ADMINISTRAÇÃO SUPERVISIONADA",
+    "total_liquidado": "928018667.9499992"
+  },
+  "fifth": {
+    "﻿orgao_nome": "ENCARGOS GERAIS DO MUNICÍPIO",
+    "total_liquidado": "806929638.8000009"
+  },
+  "syntax_ast_parse": "PASS; not build",
+  "original_final_sha": "27f0c933e83c2e426248bf397659c88b02fe072e",
+  "original_final_status": ""
+}

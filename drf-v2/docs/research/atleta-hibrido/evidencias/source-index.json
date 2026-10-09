@@ -1,0 +1,69 @@
+{
+  "revision": "0ae9190b15b9da943c3c640eddd9fd5e9ecf0b84",
+  "files": {
+    "package.json": {
+      "lines": 37,
+      "git_blob": "2a4ee5e2c10ee53fa978a91fef8fd37a6ae13f91"
+    },
+    "pnpm-workspace.yaml": {
+      "lines": 5,
+      "git_blob": "c7a092d4d800957fd153ec538ac01930760b80b7"
+    },
+    "README.md": {
+      "lines": 123,
+      "git_blob": "128d17655293b72f05f6e115128a00cffd6d84a9"
+    },
+    "src/lib/supabaseClient.ts": {
+      "lines": 28,
+      "git_blob": "3a404b99b2601dc7d52be403ca2c24312372b59e"
+    },
+    "src/domain/buildDailyTruth.ts": {
+      "lines": 116,
+      "git_blob": "59271bf3b7365b9ac2e157a851ffe5e9c00588b5"
+    },
+    "src/domain/cardioRules.ts": {
+      "lines": 30,
+      "git_blob": "bb3fdc4ce4eeb0df5a0bed7acb60050fd5e95e64"
+    },
+    "src/domain/nutritionRules.ts": {
+      "lines": 50,
+      "git_blob": "00f0677884d578a822f3efa8b465e6bcd06a3fee"
+    },
+    "src/services/analyticsService.ts": {
+      "lines": 479,
+      "git_blob": "41fc92139cf931fb4542aca054bd9277312fdac8"
+    },
+    "src/services/dailyService.ts": {
+      "lines": 45,
+      "git_blob": "179c432c7cc86febadfbd84a5a7d8dd00f06a0cb"
+    },
+    "src/services/mealService.ts": {
+      "lines": 294,
+      "git_blob": "bcdbcff2403446994f4637bdefb423f53efb82b5"
+    },
+    "src/components/WeeklyReviewView.tsx": {
+      "lines": 204,
+      "git_blob": "75fb5e4c50d382a6953ad2e242c40ea23d7ce4b5"
+    },
+    "src/utils/dates.ts": {
+      "lines": 117,
+      "git_blob": "b4ad46736cc7c83feb6d74a2dfffa85af634387b"
+    },
+    "src/utils/importSecurity.ts": {
+      "lines": 113,
+      "git_blob": "5064e6062a04cec1843bc7c018d5a2f3795d6af7"
+    },
+    "database/policies.sql": {
+      "lines": 108,
+      "git_blob": "26992eda3b3dcc7ca8746440f3b17bfb4ee5d055"
+    },
+    "android_bridge/README.md": {
+      "lines": 39,
+      "git_blob": "e19421fc6c626dca6063674c2ff989f477690f12"
+    },
+    "scripts/smoke-polish.mjs": {
+      "lines": 272,
+      "git_blob": "ff3d6aa486db2539cb59be386540f97bab96ff41"
+    }
+  }
+}

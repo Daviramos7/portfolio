@@ -1,0 +1,16 @@
+[ERR_PNPM_ABORTED_REMOVE_MODULES_DIR_NO_TTY] Aborted removal of modules directory due to no TTY
+
+If you are running pnpm in CI, set the CI environment variable to "true", or set "confirmModulesPurge" to "false".
+[ERROR] Command failed with exit code 1: pnpm install
+
+pnpm: Command failed with exit code 1: pnpm install
+    at getFinalError (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:34291:14)
+    at makeError (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:36598:21)
+    at getSyncResult (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:38442:10)
+    at spawnSubprocessSync (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:38402:14)
+    at execaCoreSync (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:38332:23)
+    at callBoundExeca (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:40860:23)
+    at boundExeca (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:40837:49)
+    at sync (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:40992:14)
+    at runPnpmCli (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:247128:5)
+    at runDepsStatusCheck (file:///C:/Users/davir/AppData/Local/node/corepack/v1/pnpm/11.9.0/dist/pnpm.mjs:248869:7)

@@ -1,0 +1,207 @@
+{
+  "conditions": "synthetic demo only; actual local Express upstream; Vite copied proxy 5281; Chrome headless; Sao Paulo; reduced motion",
+  "screens": [
+    {
+      "name": "1440-standings",
+      "viewport": 1440,
+      "document": 1440,
+      "pass": true
+    },
+    {
+      "name": "1440-search-favorite",
+      "viewport": 1440,
+      "document": 1440,
+      "pass": true
+    },
+    {
+      "name": "1440-upstream-error",
+      "viewport": 1440,
+      "document": 1440,
+      "pass": true
+    },
+    {
+      "name": "390-standings",
+      "viewport": 390,
+      "document": 390,
+      "pass": true
+    },
+    {
+      "name": "390-search-favorite",
+      "viewport": 390,
+      "document": 390,
+      "pass": true
+    },
+    {
+      "name": "390-upstream-error",
+      "viewport": 390,
+      "document": 390,
+      "pass": true
+    }
+  ],
+  "checks": [
+    {
+      "name": "1440-registration-dialog",
+      "tabSamples": [
+        {
+          "id": "",
+          "inDialog": false
+        },
+        {
+          "id": "closeModal",
+          "inDialog": true
+        },
+        {
+          "id": "",
+          "inDialog": false
+        },
+        {
+          "id": "closeModal",
+          "inDialog": true
+        },
+        {
+          "id": "",
+          "inDialog": false
+        }
+      ],
+      "pass": false
+    },
+    {
+      "name": "1440-register-profile",
+      "pass": true
+    },
+    {
+      "name": "1440-search-cache",
+      "pass": true
+    },
+    {
+      "name": "1440-favorites-add-remove",
+      "pass": true
+    },
+    {
+      "name": "1440-demo-logout-login",
+      "pass": true
+    },
+    {
+      "name": "1440-empty-search",
+      "pass": true
+    },
+    {
+      "name": "1440-upstream-error-shown-as-empty",
+      "pass": false,
+      "observed": "Nenhum clube encontrado para \"naocacheado\" na Série A.",
+      "condition": "upstream429 -> internal502; search catches and continues"
+    },
+    {
+      "name": "390-registration-dialog",
+      "tabSamples": [
+        {
+          "id": "",
+          "inDialog": false
+        },
+        {
+          "id": "closeModal",
+          "inDialog": true
+        },
+        {
+          "id": "",
+          "inDialog": false
+        },
+        {
+          "id": "closeModal",
+          "inDialog": true
+        },
+        {
+          "id": "",
+          "inDialog": false
+        }
+      ],
+      "pass": false
+    },
+    {
+      "name": "390-register-profile",
+      "pass": true
+    },
+    {
+      "name": "390-search-cache",
+      "pass": true
+    },
+    {
+      "name": "390-favorites-add-remove",
+      "pass": true
+    },
+    {
+      "name": "390-demo-logout-login",
+      "pass": true
+    },
+    {
+      "name": "390-empty-search",
+      "pass": true
+    },
+    {
+      "name": "390-upstream-error-shown-as-empty",
+      "pass": false,
+      "observed": "Nenhum clube encontrado para \"naocacheado\" na Série A.",
+      "condition": "upstream429 -> internal502; search catches and continues"
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    {
+      "width": 1440,
+      "url": "http://127.0.0.1:5280/search.html?query=naocacheado",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "location": {
+        "url": "http://127.0.0.1:5280/api/football/teams?competition=serie-a",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "width": 1440,
+      "url": "http://127.0.0.1:5280/search.html?query=naocacheado",
+      "text": "Erro ao buscar na liga Brasileirão Série A: Error: external_rate_limited\n    at fetchInternal (http://127.0.0.1:5280/assets/js/football/internalFootballProvider.js:16:15)\n    at async searchBrazilianData (http://127.0.0.1:5280/assets/js/search.js:62:27)\n    at async renderSearchResults (http://127.0.0.1:5280/assets/js/search.js:103:27)",
+      "location": {
+        "url": "http://127.0.0.1:5280/assets/js/search.js",
+        "lineNumber": 66,
+        "columnNumber": 20
+      }
+    },
+    {
+      "width": 390,
+      "url": "http://127.0.0.1:5280/search.html?query=naocacheado",
+      "text": "Failed to load resource: the server responded with a status of 502 (Bad Gateway)",
+      "location": {
+        "url": "http://127.0.0.1:5280/api/football/teams?competition=serie-a",
+        "lineNumber": 0,
+        "columnNumber": 0
+      }
+    },
+    {
+      "width": 390,
+      "url": "http://127.0.0.1:5280/search.html?query=naocacheado",
+      "text": "Erro ao buscar na liga Brasileirão Série A: Error: external_rate_limited\n    at fetchInternal (http://127.0.0.1:5280/assets/js/football/internalFootballProvider.js:16:15)\n    at async searchBrazilianData (http://127.0.0.1:5280/assets/js/search.js:62:27)\n    at async renderSearchResults (http://127.0.0.1:5280/assets/js/search.js:103:27)",
+      "location": {
+        "url": "http://127.0.0.1:5280/assets/js/search.js",
+        "lineNumber": 66,
+        "columnNumber": 20
+      }
+    }
+  ],
+  "blockedExternalUrls": [],
+  "failedResources": [],
+  "httpErrors": [
+    {
+      "url": "http://127.0.0.1:5280/api/football/teams?competition=serie-a",
+      "status": 502
+    },
+    {
+      "url": "http://127.0.0.1:5280/api/football/teams?competition=serie-a",
+      "status": 502
+    }
+  ],
+  "startup": {
+    "httpStatus": 200,
+    "readinessMs": 456.1709000000001
+  },
+  "ownedServersStopped": true
+}

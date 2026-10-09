@@ -1,0 +1,35 @@
+✓ Lockfile passes supply-chain policies (verified 10d ago)
+Lockfile is up to date, resolution step is skipped
+Progress: resolved 1, reused 0, downloaded 0, added 0
+Packages: +333
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+Progress: resolved 333, reused 0, downloaded 84, added 83
+Progress: resolved 333, reused 0, downloaded 234, added 160
+Progress: resolved 333, reused 0, downloaded 329, added 282
+Progress: resolved 333, reused 0, downloaded 331, added 330
+Progress: resolved 333, reused 0, downloaded 332, added 331
+Progress: resolved 333, reused 0, downloaded 333, added 331
+Progress: resolved 333, reused 0, downloaded 333, added 333, done
+
+dependencies:
++ @supabase/supabase-js 2.110.0
++ date-fns 4.4.0
++ lucide-react 0.468.0
++ react 19.2.7
++ react-dom 19.2.7
++ vite 7.3.6
+
+devDependencies:
++ @types/react 19.2.17
++ @types/react-dom 19.2.3
++ @typescript-eslint/eslint-plugin 8.62.1
++ @typescript-eslint/parser 8.62.1
++ @vitejs/plugin-react 4.7.0
++ eslint 9.39.4
++ eslint-plugin-react 7.37.5
++ eslint-plugin-react-hooks 5.2.0
++ globals 15.15.0
++ typescript 5.9.3
++ vitest 3.2.4
+
+Done in 7.3s using pnpm v11.9.0

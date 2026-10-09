@@ -1,0 +1,11 @@
+{
+  "server_command": "node node_modules/vite/bin/vite.js --host 127.0.0.1 --port 5280 --strictPort",
+  "smoke_command": "node scripts/smoke-polish.mjs",
+  "conditions": "local Vite; synthetic env 127.0.0.1:5289; all non-app requests mocked/aborted; headless installed Chrome; reduced motion; timezone Sao Paulo",
+  "http_status": 200,
+  "readiness_seconds": 0.7407071000000087,
+  "exitcode": 0,
+  "smoke_wall_seconds": 58.85409430000004,
+  "server_stopped": true,
+  "wall_seconds": 59.786007100000006
+}

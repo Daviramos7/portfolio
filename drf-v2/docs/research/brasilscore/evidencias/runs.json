@@ -1,0 +1,71 @@
+[
+  {
+    "label": "install",
+    "command": "npm.cmd ci --ignore-scripts --no-audit --no-fund",
+    "exitcode": 1,
+    "wall_seconds": 10.389919499999905,
+    "started_at": "2026-10-09T14:26:27.628809-03:00",
+    "conditions": "isolated tracked copy; no env; inherited provider keys removed from process; CI true; TZ Sao Paulo; install lifecycle suppressed"
+  },
+  {
+    "label": "install-peer-compatible",
+    "command": "npm.cmd ci --ignore-scripts --no-audit --no-fund --legacy-peer-deps",
+    "exitcode": 1,
+    "wall_seconds": 1.5199706999999307,
+    "started_at": "2026-10-09T14:27:16.524124-03:00",
+    "conditions": "isolated copy; no env; provider keys removed; frozen npm ci legacy peer resolution only; no lifecycle scripts"
+  },
+  {
+    "label": "install-npm10",
+    "command": "node tooling/package/bin/npm-cli.js ci --ignore-scripts --no-audit --no-fund",
+    "exitcode": 0,
+    "wall_seconds": 23.208839200000057,
+    "started_at": "2026-10-09T14:28:42.547392-03:00",
+    "conditions": "isolated npm10 tool; frozen lock; no inherited keys or env; no lifecycle; TZ Sao Paulo"
+  },
+  {
+    "label": "test",
+    "command": "node tooling/package/bin/npm-cli.js test",
+    "exitcode": 0,
+    "wall_seconds": 2.7053392999998778,
+    "started_at": "2026-10-09T14:29:05.756387-03:00",
+    "conditions": "isolated npm10 tool; frozen lock; no inherited keys or env; no lifecycle; TZ Sao Paulo"
+  },
+  {
+    "label": "lint",
+    "command": "node tooling/package/bin/npm-cli.js run lint",
+    "exitcode": 0,
+    "wall_seconds": 3.613497000000052,
+    "started_at": "2026-10-09T14:29:08.462229-03:00",
+    "conditions": "isolated npm10 tool; frozen lock; no inherited keys or env; no lifecycle; TZ Sao Paulo"
+  },
+  {
+    "label": "build",
+    "command": "node tooling/package/bin/npm-cli.js run build",
+    "exitcode": 0,
+    "wall_seconds": 0.8425392000001466,
+    "started_at": "2026-10-09T14:29:12.076238-03:00",
+    "conditions": "isolated npm10 tool; frozen lock; no inherited keys or env; no lifecycle; TZ Sao Paulo"
+  },
+  {
+    "label": "benchmark",
+    "command": "node benchmark.mjs",
+    "exitcode": 1,
+    "wall_seconds": 1.7653706999999486,
+    "conditions": "isolated npm10 frozen dependencies; real loopback API 5281, upstream5282, UI5280; no external request; browser tools prior lab read-only"
+  },
+  {
+    "label": "browser",
+    "command": "node browser.mjs",
+    "exitcode": 1,
+    "wall_seconds": 4.296268899999859,
+    "conditions": "isolated npm10 frozen dependencies; real loopback API 5281, upstream5282, UI5280; no external request; browser tools prior lab read-only"
+  },
+  {
+    "label": "browser-refined-focus",
+    "command": "node browser.mjs",
+    "exitcode": 1,
+    "wall_seconds": 7.162706800000024,
+    "conditions": "same synthetic flow; focus probe refined after BODY false positives; broken-image diagnostics; first failures preserved"
+  }
+]
