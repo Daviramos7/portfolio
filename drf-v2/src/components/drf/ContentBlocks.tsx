@@ -1,5 +1,6 @@
 import type { Locale, Metric, PortfolioContent, Project } from '../../contracts/index.ts'
 import { uiLabels } from '../../features/uiLabels.ts'
+import { InstrumentValue } from './InstrumentValue.tsx'
 
 type ContentProps = { content: PortfolioContent; locale: Locale }
 
@@ -26,7 +27,7 @@ export function MetricCards({ content, locale, metrics = content.metrics }: Cont
     return <article className="drf-metric" key={metric.id}>
       <span className="drf-tag">{t[metric.state]}</span>
       <h4>{metric.label[locale]}</h4>
-      <p className="drf-metric-value">{metric.value === null ? '—' : new Intl.NumberFormat(locale === 'pt' ? 'pt-BR' : 'en-US', { maximumFractionDigits: 20 }).format(metric.value)} <span>{unit}</span></p>
+      <p className="drf-metric-value"><InstrumentValue value={metric.value === null ? '—' : new Intl.NumberFormat(locale === 'pt' ? 'pt-BR' : 'en-US', { maximumFractionDigits: 20 }).format(metric.value)} /> <span className="drf-metric-unit">{unit}</span></p>
       {project && <p className="drf-muted">{project.title[locale]}</p>}
       <dl><div><dt>{t.unit}</dt><dd>{unit}</dd></div><div><dt>{t.period}</dt><dd>{metric.period[locale]}</dd></div>
         <div><dt>{t.context}</dt><dd>{metric.context?.[locale] ?? t.missing}</dd></div></dl>

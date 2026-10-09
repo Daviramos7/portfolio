@@ -1,6 +1,7 @@
 import type { Locale, PortfolioContent, Project, ZoneId } from '../contracts/index.ts'
 import { EvidenceList, MetricCards, ProjectDetail } from '../components/drf/ContentBlocks.tsx'
 import { uiLabels } from './uiLabels.ts'
+import { TelemetryInstrument } from '../components/drf/TelemetryInstrument.tsx'
 
 type Props = {
   content: PortfolioContent
@@ -29,7 +30,7 @@ export function ZoneContent({ content, locale, zoneId, recruiter, selectedProjec
     </article>)}
   </div>
 
-  if (zoneId === 'telemetry') return <><p className="drf-lead">{t.metricIntro}</p><MetricCards content={content} locale={locale} /></>
+  if (zoneId === 'telemetry') return recruiter ? <><p className="drf-lead">{t.metricIntro}</p><MetricCards content={content} locale={locale} /></> : <TelemetryInstrument content={content} locale={locale} />
 
   if (zoneId === 'pit-wall') return <>
     <div className="drf-timeline">{content.experiences.map(experience => <article key={experience.id}>
