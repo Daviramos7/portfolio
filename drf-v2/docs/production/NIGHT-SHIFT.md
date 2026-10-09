@@ -45,3 +45,9 @@ Revisão visual do Lead: C resolve leitura dos programas, mas o hero muda pouco;
 - `2b50cf1`: instrumentação de recurso/heap no smoke. Snapshot preview loopback: request do chunk de cena 27,5 ms, 152.823 B transferidos, 596.117 B decodificados, heap 9.423.586 B. Em DEV: heap 40.925.954 B; filtro de chunk compilado não aplicável. Amostras únicas, sem comparação de desempenho de produção, execução de import ou pico de memória.
 
 Preview atual: `http://127.0.0.1:5173/`; DEV para revisão local: `http://127.0.0.1:5176/?mode=recruiter&lang=pt&cv-review=1#driver-profile`. Servidores exclusivos deste ciclo. Artefatos de currículo ficam fora de public e do Git.
+
+## Marco de materialidade e iluminação
+
+`78fda82` integrado em `35925fb`: C2 adiciona albedo/roughness/normal de piso originais 512×512, marcas na baia, contato radial, contraste quente/frio, carbono não metálico e equipamentos funcionais. Antes/depois com mesma câmera preservados em `.agent-grid/artifacts/night-shift/scene-c2/`. Hero 62→66 draw calls, 45.392→48.088 triângulos; cena lazy 153,67→154,57 kB gzip. Nenhum asset externo ou requisição adicional.
+
+Revisão do Lead confirma melhoria perceptível, com acabamento ainda estilizado e aliasing low mobile. Não representa aceite visual do proprietário ou fotorrealismo. Relatórios completos movidos de public/scene para [SCENE-C.md](SCENE-C.md) e [SCENE-C2.md](SCENE-C2.md), fora do build público; nenhuma captura excluída. Lint/build/14 testes passaram após integração.

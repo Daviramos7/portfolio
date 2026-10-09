@@ -72,4 +72,5 @@ Aplicam-se os termos do próprio repositório; nenhuma licença de terceiros nov
 SHA256 do gerador de piso desta entrega:
 `fd80e00887ea1fd944d730b960c7b100f21f1192c6e60c8ed0912294dbd83d83`.
 As texturas e materiais entram no registro existente de dispose. Não há
-requisições de assets adicionais; detalhes e limites desta rodada em C2.md.
+requisições de assets adicionais; QA desta rodada em docs/production/SCENE-C2.md
+no repositório (fora dos assets distribuídos).
