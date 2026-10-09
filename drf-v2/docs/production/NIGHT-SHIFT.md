@@ -38,3 +38,10 @@ Resultados de integração e commits serão registrados após execução; não h
 - Capturas de C preservadas em `.agent-grid/screenshots/night-shift/scene-c/`, além dos arquivos originais no Temp. QA integrada em `scene-integrated/`. Cópia intermediária preservada no arquivo privado `.agent-grid/artifacts/night-shift/lead-captures/`; nenhum registro excluído.
 
 Revisão visual do Lead: C resolve leitura dos programas, mas o hero muda pouco; overhaul premium **parcial**, não aprovado como completo. Worker 3D recebeu C2 focado em acabamento perceptível, iluminação e composição antes de D. Não aumentar complexidade se a comparação visual não justificar.
+
+- `1a8445d`: slider acessível e seleção/revisão de PDF somente em DEV + flag explícita; produção não inclui a entrada nem currículo. Fixture baixada byte a byte e URLs revogadas; nenhum currículo real enviado a servidor.
+- `3c51b15`: fontes por junction — permissão restrita ao realpath do pacote Geist, mantendo workspace padrão. Referência: [Vite server.fs.allow](https://vite.dev/config/server-options.html#server-fs-allow). Checagem dirigida no worker e smoke DEV no principal confirmaram fonte HTTP200, console/rede sem erros.
+- `759219d`: nota sanitizada de QA do currículo incorporada à V2. PDF privado re-renderizado/inspecionado; sete destinos de links estruturalmente conferidos, sem teste externo. DOCX permanece rascunho: LibreOffice ausente. Nenhuma publicação.
+- `2b50cf1`: instrumentação de recurso/heap no smoke. Snapshot preview loopback: request do chunk de cena 27,5 ms, 152.823 B transferidos, 596.117 B decodificados, heap 9.423.586 B. Em DEV: heap 40.925.954 B; filtro de chunk compilado não aplicável. Amostras únicas, sem comparação de desempenho de produção, execução de import ou pico de memória.
+
+Preview atual: `http://127.0.0.1:5173/`; DEV para revisão local: `http://127.0.0.1:5176/?mode=recruiter&lang=pt&cv-review=1#driver-profile`. Servidores exclusivos deste ciclo. Artefatos de currículo ficam fora de public e do Git.

@@ -408,4 +408,6 @@ await runBrowser(false)
 await runBrowser(true)
 assert.ok(fonts.size > 0, 'Geist font must load')
 assert.ok([...fonts.values()].every(status => status === 200), 'Geist font requests must succeed')
-console.log(JSON.stringify({ checks, sceneMeasures, fonts: [...fonts.entries()], screenshots, consoleErrors: [], networkErrors: [], mobile: 'emulated; physical device performance pending' }, null, 2))
+const report = { checks, sceneMeasures, fonts: [...fonts.entries()], screenshots, consoleErrors: [], networkErrors: [], mobile: 'emulated; physical device performance pending' }
+await writeFile(join(screenshots, 'smoke-result.json'), JSON.stringify(report, null, 2))
+console.log(JSON.stringify(report, null, 2))
