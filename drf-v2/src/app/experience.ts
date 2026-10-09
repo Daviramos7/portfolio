@@ -9,6 +9,7 @@ export function createExperienceController(content: PortfolioContent, environmen
     navigationSeq: 0,
     renderStatus: 'idle',
     audio: 'off',
+    audioVolume: 0.25,
     reducedMotion: environment.reducedMotion(),
     ambientEnabled: true,
     panelOpen: false,
@@ -76,6 +77,12 @@ export function createExperienceController(content: PortfolioContent, environmen
       }
     },
     setAmbientEnabled: ambientEnabled => update({ ambientEnabled }),
+    setAudioVolume: volume => {
+      if (!Number.isFinite(volume)) return
+      const audioVolume = Math.min(1, Math.max(0, volume))
+      sceneHandle?.setAudioVolume?.(audioVolume)
+      update({ audioVolume })
+    },
     setPanelOpen: panelOpen => update({ panelOpen }),
     retryScene: () => {
       if (state.mode !== 'immersive') return
@@ -94,6 +101,7 @@ export function createExperienceController(content: PortfolioContent, environmen
       if (sceneHandle === handle) return
       mute()
       sceneHandle = handle
+      sceneHandle?.setAudioVolume?.(state.audioVolume)
       update({ audio: 'off' })
     },
     onSceneEvent: (event: SceneEvent, attempt: number) => {

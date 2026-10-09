@@ -93,6 +93,7 @@ export type ExperienceState = Readonly<{
   navigationSeq: number
   renderStatus: RenderStatus
   audio: AudioStatus
+  audioVolume: number // 0..1; session-only, never enables audio implicitly
   reducedMotion: boolean
   ambientEnabled: boolean
   panelOpen: boolean
@@ -120,12 +121,14 @@ export type SceneProps = Readonly<{
 export type SceneHandle = {
   requestAudioFromGesture: () => Promise<'on' | 'unavailable'>
   muteAudio: () => void
+  setAudioVolume?: (volume: number) => void
 }
 export type UIActions = Readonly<{
   navigate: (target: NavigationTarget) => void
   setLocale: (locale: Locale) => void
   setMode: (mode: ViewMode) => void
   setAudioEnabled: (enabled: boolean) => Promise<void>
+  setAudioVolume: (volume: number) => void
   setAmbientEnabled: (enabled: boolean) => void
   setPanelOpen: (open: boolean) => void
   retryScene: () => void

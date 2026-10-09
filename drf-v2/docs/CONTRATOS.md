@@ -111,6 +111,7 @@ type ExperienceState = Readonly<{
   navigationSeq: number
   renderStatus: RenderStatus
   audio: AudioStatus
+  audioVolume: number // 0..1, padrão 0.25, apenas durante a sessão
   reducedMotion: boolean
   ambientEnabled: boolean
   panelOpen: boolean
@@ -132,12 +133,14 @@ type SceneProps = Readonly<{
 type SceneHandle = {
   requestAudioFromGesture: () => Promise<'on' | 'unavailable'>
   muteAudio: () => void
+  setAudioVolume?: (volume: number) => void // opcional para cena sem áudio
 }
 type UIActions = Readonly<{
   navigate: (target: NavigationTarget) => void
   setLocale: (locale: Locale) => void
   setMode: (mode: ViewMode) => void
   setAudioEnabled: (enabled: boolean) => Promise<void>
+  setAudioVolume: (volume: number) => void // clamp; não liga áudio
   setAmbientEnabled: (enabled: boolean) => void
   setPanelOpen: (open: boolean) => void
   retryScene: () => void

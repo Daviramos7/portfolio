@@ -167,6 +167,25 @@ test('muting while an unlock is pending cannot re-enable audio on completion', a
   assert.ok(mutes > muted)
 })
 
+test('volume is bounded, session-only and cannot opt in to audio', () => {
+  const { controller } = fixture()
+  const applied = []
+  controller.attachScene({
+    requestAudioFromGesture: async () => 'on',
+    muteAudio: () => {},
+    setAudioVolume: value => applied.push(value),
+  })
+  assert.equal(controller.getState().audioVolume, .25)
+  controller.actions.setAudioVolume(2)
+  assert.equal(controller.getState().audioVolume, 1)
+  controller.actions.setAudioVolume(-1)
+  assert.equal(controller.getState().audioVolume, 0)
+  controller.actions.setAudioVolume(NaN)
+  assert.equal(controller.getState().audioVolume, 0)
+  assert.equal(controller.getState().audio, 'off')
+  assert.deepEqual(applied, [.25, 1, 0])
+})
+
 test('audio failures remain contained and motion/visibility updates do not renavigate', async () => {
   const { controller, motion, visibility } = fixture()
   const stop = controller.start()
