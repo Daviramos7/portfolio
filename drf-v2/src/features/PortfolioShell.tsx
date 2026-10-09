@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { ProjectDetail } from '../components/drf/ContentBlocks.tsx'
 import { useReadingFocus } from '../hooks/ui/useReadingFocus.ts'
@@ -5,7 +6,8 @@ import { ZoneContent } from './ZoneContent.tsx'
 import { uiLabels } from './uiLabels.ts'
 import '../styles/ui/portfolio.css'
 
-export function PortfolioShell({ content, state, actions }: PortfolioShellProps) {
+// The Lead composes the visual region; this shell does not import the scene.
+export function PortfolioShell({ content, state, actions, children }: PortfolioShellProps & { children?: ReactNode }) {
   const t = uiLabels(state.locale)
   const recruiter = state.mode === 'recruiter'
   const zone = content.zones.find(zone => zone.id === state.target.zoneId)
@@ -42,6 +44,7 @@ export function PortfolioShell({ content, state, actions }: PortfolioShellProps)
         <button type="button" aria-pressed={state.ambientEnabled && !state.reducedMotion} disabled={state.reducedMotion} onClick={() => actions.setAmbientEnabled(!state.ambientEnabled)}>{t.ambient}: {state.ambientEnabled && !state.reducedMotion ? t.enabled : t.disabled}</button></div>}
     </div>
     {!recruiter && (state.reducedMotion || state.panelOpen) && <p className="drf-policy">{state.reducedMotion ? t.reduced : t.reading}</p>}
+    {!recruiter && children}
     <div id="drf-content" tabIndex={-1} className="drf-content">
       {recruiter ? content.zones.map((item, index) => <section key={item.id} className="drf-recruiter-zone" aria-labelledby={`drf-zone-${item.id}`}>
         <div className="drf-section-heading"><p className="drf-code">0{index + 1} / DRF ENGINEERING</p><h2 id={`drf-zone-${item.id}`} tabIndex={-1}>{item.label[state.locale]}</h2><p className="drf-muted">{item.summary[state.locale]}</p></div>

@@ -6,29 +6,12 @@ body {
   color: var(--drf-white);
 }
 
-.foundation {
+.drf-app {
   min-height: 100svh;
-  padding: clamp(1rem, 5vw, 4rem);
-  max-width: 80rem;
+  padding: clamp(1rem, 4vw, 3rem);
+  max-width: 90rem;
   margin-inline: auto;
   overflow-wrap: anywhere;
 }
 
-.foundation-header h1 {
-  font-size: clamp(1.75rem, 5vw, 3rem);
-  line-height: 1.2;
-  margin-block: 1rem;
-}
-
-.foundation-eyebrow, .foundation-zone { color: var(--drf-metal); }
-.foundation-header { border-top: 3px solid var(--drf-red); padding-block: 1.5rem; }
-.foundation-scene { margin-top: 1rem; }
-.foundation-retry {
-  padding: 0.75rem 1rem;
-  border: 1px solid var(--drf-metal);
-  border-radius: 0.25rem;
-  background: var(--drf-carbon);
-  color: var(--drf-white);
-  cursor: pointer;
-}
-.foundation-retry:focus-visible { outline: 2px solid var(--drf-white); outline-offset: 4px; }
+.drf-visual { margin-top: 1rem; }
