@@ -175,7 +175,14 @@ async function runBrowser(disableWebGL) {
       const measure = await evaluate('(() => { const c = document.querySelector("canvas"); const gl = c.getContext("webgl2"); const ext = gl.getExtension("WEBGL_debug_renderer_info"); return {drawCalls:Number(c.dataset.sceneDrawCalls),triangles:Number(c.dataset.sceneTriangles),dpr:Number(c.dataset.sceneDpr),gpu:ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "unavailable"} })()')
       assert.ok(measure.drawCalls > 0 && measure.triangles > 0)
       assert.ok(measure.dpr <= 1.5)
-      sceneMeasures.push({ viewport: '1440x900', ...measure })
+      const resourceSnapshot = await evaluate(`(() => ({
+        sceneRequests: performance.getEntriesByType('resource')
+          .filter(entry => /SceneRoot.*\\.js(?:\\?|$)/.test(entry.name))
+          .map(entry => ({url: entry.name, durationMs: entry.duration, transferBytes: entry.transferSize, decodedBytes: entry.decodedBodySize})),
+        heapUsedBytes: performance.memory?.usedJSHeapSize ?? null,
+        note: 'Resource request durations and one Chromium heap snapshot; not scene execution time, peak memory or physical mobile performance'
+      }))()`)
+      sceneMeasures.push({ viewport: '1440x900', ...measure, resourceSnapshot })
       await snapshot('integrated-desktop')
       checks.push('Full-screen Garage, compact HUD, five anchors, balanced DPR <= 1.5')
 
