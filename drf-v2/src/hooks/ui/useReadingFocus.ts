@@ -6,9 +6,17 @@ export function useReadingFocus({ state, actions }: Pick<PortfolioShellProps, 's
   const openerRef = useRef<HTMLElement | null>(null)
   const headingRef = useRef<HTMLHeadingElement | null>(null)
   const recruiter = state.mode === 'recruiter'
+  const wasRecruiterRef = useRef(recruiter)
 
   useEffect(() => {
-    actions.setPanelOpen(recruiter || state.target.projectId !== null)
+    if (wasRecruiterRef.current && !recruiter) document.getElementById('drf-inspect')?.focus({ preventScroll: true })
+    wasRecruiterRef.current = recruiter
+  }, [recruiter])
+
+  useEffect(() => {
+    // Selection is a showcase intent, not an implicit request to open reading.
+    // The controller owns navigation; only recruiter is always a reading mode.
+    if (recruiter) actions.setPanelOpen(true)
   }, [actions, recruiter, state.target.projectId, state.target.zoneId])
 
   useEffect(() => {
@@ -16,21 +24,21 @@ export function useReadingFocus({ state, actions }: Pick<PortfolioShellProps, 's
       const target = state.target.projectId ? document.getElementById(`drf-project-${state.target.projectId}`) : document.getElementById(`drf-zone-${state.target.zoneId}`)
       target?.focus({ preventScroll: true })
       target?.scrollIntoView({ block: 'start' })
-    } else if (state.panelOpen) {
-      headingRef.current?.focus({ preventScroll: true })
-      headingRef.current?.scrollIntoView({ block: 'start' })
     }
-  }, [recruiter, state.panelOpen, state.target.projectId, state.target.zoneId])
+  }, [recruiter, state.target.projectId, state.target.zoneId])
+
+  useEffect(() => {
+    if (!recruiter && state.panelOpen) headingRef.current?.focus({ preventScroll: true })
+  }, [recruiter, state.panelOpen])
 
   const close = useCallback(() => {
     actions.setPanelOpen(false)
     requestAnimationFrame(() => {
-      const projectTrigger = state.target.projectId ? document.getElementById(`drf-select-${state.target.projectId}`) : null
-      const fallback = projectTrigger ?? document.getElementById('drf-open-reading') ?? document.querySelector<HTMLElement>('.drf-zone-nav [aria-current]')
+      const fallback = document.getElementById('drf-inspect') ?? document.querySelector<HTMLElement>('.drf-zone-nav [aria-current]')
       const target = openerRef.current?.isConnected ? openerRef.current : fallback
-      target?.focus()
+      target?.focus({ preventScroll: true })
     })
-  }, [actions, state.target.projectId])
+  }, [actions])
 
   useEffect(() => {
     if (!state.panelOpen || recruiter) return
