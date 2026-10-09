@@ -1,17 +1,19 @@
-import { CircleGeometry, Group, MeshBasicMaterial, PlaneGeometry, TorusGeometry } from 'three'
+import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
 import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
 import type { Resources, Vec3 } from './resources.ts'
 
 export function createGarage(r: Resources) {
   const garage = new Group(); garage.name = 'DRF-interior-workshop'
-  const { carbon, floor, black, red, white, metal, light, redLight, glass, tire } = r.palette
+  const { carbon, floor, black, red, white, metal, light, taskLight, redLight, glass, tire } = r.palette
   const signs = new Map<ZoneId, ReturnType<Resources['sign']>>()
   function zoneSign(id: ZoneId, p: Vec3, rotation = 0) {
     const sign = r.sign(garage, '', [2.8, .7], p); sign.object.rotation.y = rotation; signs.set(id, sign)
   }
   // Fully enclosed interior; cameras remain below the roof and within the room.
-  r.box(garage, [17, .18, 20], [0, -.1, 1.5], floor)
+  r.box(garage, [17, .18, 20], [0, -.1, 1.5], black)
+  const floorTop = r.mesh(garage, r.geometry(new PlaneGeometry(17, 20)), floor, [0, -.007, 1.5])
+  floorTop.rotation.x = -Math.PI / 2; floorTop.castShadow = false
   r.box(garage, [17, .22, 19], [0, 4.65, 2.4], black)
   for (const side of [-1, 1]) {
     r.box(garage, [.2, 4.6, 19], [side * 8.4, 2.3, 2.4], carbon)
@@ -35,7 +37,7 @@ export function createGarage(r: Resources) {
     for (let x = -7; x < 8; x += 2) r.rod(garage, [x, 4.04, z], [x + 1.2, 4.32, z], .026, metal)
     for (const side of [-1, 1]) {
       r.box(garage, [3.2, .09, .42], [side * 3.7, 3.95, z], black)
-      r.box(garage, [2.95, .025, .28], [side * 3.7, 3.89, z], light)
+      r.box(garage, [2.95, .025, .28], [side * 3.7, 3.89, z], side === -1 && (z === .3 || z === 3.2) ? taskLight : light)
     }
   }
   for (const x of [-7.6, 7.6]) {
@@ -43,8 +45,8 @@ export function createGarage(r: Resources) {
     for (let z = -5; z < 7; z += 2) r.rod(garage, [x, 4.03, z], [x, 4.42, z], .02, metal)
   }
   // Epoxy expansion joints, service bay outlines and grated drainage.
-  for (const x of [-6, -3, 3, 6]) r.box(garage, [.016, .005, 15], [x, .001, 0], black)
-  for (const z of [-5, -2, 1, 4, 7]) r.box(garage, [16, .005, .016], [0, .001, z], black)
+  for (const x of [-5.8, 5.8]) r.box(garage, [.016, .005, 15], [x, .001, 0], black)
+  for (const z of [-4.8, 6.8]) r.box(garage, [16, .005, .016], [0, .001, z], black)
   for (const side of [-1, 1]) r.box(garage, [.045, .008, 7.8], [side * 2.65, .006, .15], white)
   for (const z of [-3.8, 4.1]) r.box(garage, [5.3, .008, .065], [0, .006, z], red)
   r.box(garage, [15, .04, .35], [0, -.01, -5.85], black)
@@ -52,9 +54,24 @@ export function createGarage(r: Resources) {
   garage.add(createDRF01(r))
 
   // Cheap static contact patch; no live mirror, ray tracing or postprocess.
-  const patchMat = r.material(new MeshBasicMaterial({ color: '#06080c', transparent: true, opacity: .38, depthWrite: false }))
-  const contact = r.mesh(garage, r.geometry(new CircleGeometry(1, 48)), patchMat, [0, .006, .05])
-  contact.rotation.x = -Math.PI / 2; contact.scale.set(1.5, 2.65, 1); contact.castShadow = false
+  const patchCanvas = document.createElement('canvas'); patchCanvas.width = patchCanvas.height = 128
+  const patchContext = patchCanvas.getContext('2d')
+  if (patchContext) {
+    const fade = patchContext.createRadialGradient(64, 64, 14, 64, 64, 64)
+    fade.addColorStop(0, 'rgba(3,5,8,.5)'); fade.addColorStop(1, 'rgba(3,5,8,0)')
+    patchContext.fillStyle = fade; patchContext.fillRect(0, 0, 128, 128)
+  }
+  const patchMat = r.material(new MeshBasicMaterial({ map: r.texture(new CanvasTexture(patchCanvas)), transparent: true, depthWrite: false }))
+  const contact = r.mesh(garage, r.geometry(new PlaneGeometry(3.8, 6.4)), patchMat, [0, .003, .05])
+  contact.rotation.x = -Math.PI / 2; contact.castShadow = false
+  // Portable inspection lamp with a supply cable routed within the maintenance bay.
+  r.rod(garage, [-3.25, .05, 1.5], [-3.25, 1.6, 1.5], .025, metal)
+  for (const [x, z] of [[-3.6, 1.25], [-2.9, 1.25], [-3.25, 1.9]])
+    r.rod(garage, [-3.25, .3, 1.5], [x, .04, z], .022, black)
+  r.box(garage, [.48, .26, .11], [-3.25, 1.6, 1.5], black)
+  r.box(garage, [.4, .18, .015], [-3.25, 1.6, 1.565], taskLight)
+  const cable = new CatmullRomCurve3([[-7.4, .03, .1], [-5.4, .03, .8], [-4.2, .03, 1.6], [-3.25, .03, 1.5]].map(p => new Vector3(...p)))
+  r.mesh(garage, r.geometry(new TubeGeometry(cable, 24, .018, 6, false)), black)
   zoneSign('garage', [0, 3.44, -6.15])
   const team = r.sign(garage, 'DRF ENGINEERING', [3.5, .8], [-6.25, 3.4, -6.44])
   team.setText('DRF ENGINEERING', 'RECIFE / BRASIL · EQUIPE FICTÍCIA')
@@ -73,6 +90,11 @@ export function createGarage(r: Resources) {
     r.box(bench, [.7, .035, .25], [x, 1.085, .3], carbon)
     r.rod(bench, [x, 1.1, -.3], [x, .17, -.38], .013, black)
   }
+  // Socket tray and an insulated maintenance driver, kept below the display sightline.
+  r.box(bench, [.5, .025, .3], [1.25, 1.08, .3], black)
+  for (const x of [.03, .12, .21]) r.rod(bench, [1 + x, 1.1, .3], [1 + x, 1.16, .3], .025, metal)
+  r.rod(bench, [.65, 1.1, .25], [.9, 1.1, .25], .02, metal)
+  r.box(bench, [.13, .045, .06], [.62, 1.1, .25], red)
   garage.add(bench); zoneSign('telemetry', [-5.7, 2.6, -5.02])
   r.box(garage, [.7, 2.05, .78], [-7.72, 1.025, -4.95], black)
   for (let y = .3; y < 2; y += .18) r.box(garage, [.53, .025, .025], [-7.72, y, -4.53], metal)

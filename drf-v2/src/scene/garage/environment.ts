@@ -12,10 +12,10 @@ export function createWorkshopEnvironment(renderer: WebGLRenderer) {
     surfaces.push(material)
     const mesh = new Mesh(shape, material); mesh.scale.set(...size); mesh.position.set(...position); room.add(mesh)
   }
-  panel('#d0e3ff', 4, [.1, 3, 11], [-7, 2.5, 0])
-  panel('#e8e7df', 5, [11, .1, 1.2], [0, 5, -1])
-  panel('#c6dfff', 3, [6, 3, .1], [0, 2, -8])
-  panel('#b32742', 1.2, [.1, 2, 8], [7, 1.8, 0])
+  panel('#ffdfb8', 3, [.1, 1.4, 3.5], [-4, 1.8, 1])
+  panel('#e8e7df', 2, [8, .1, .7], [0, 5, -1])
+  panel('#c6dfff', 4, [6, 3, .1], [0, 2, -8])
+  panel('#c5e7ff', 2, [.1, 1.4, 4], [5, 2.8, -3])
   panel('#626a76', .7, [12, .1, 14], [0, -1, 0])
   const generator = new PMREMGenerator(renderer)
   try {
