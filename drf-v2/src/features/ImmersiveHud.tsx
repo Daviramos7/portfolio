@@ -53,9 +53,9 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         <p className="drf-code">{inGarage ? t.programs : t.briefing}</p>
         <span className="drf-program-count">{inGarage ? `${String(projectIndex + 1).padStart(2, '0')} / ${String(content.projects.length).padStart(2, '0')}` : `0${zoneIndex + 1} / 05`}</span>
       </div>
+      {inGarage && program && <h2 className="drf-program-title" aria-live="polite" aria-atomic="true">{program.title[state.locale]}</h2>}
       <div className="drf-showcase-command">
       {inGarage && program ? <>
-        <h2 className="drf-sr-only" aria-live="polite" aria-atomic="true">{program.title[state.locale]}</h2>
         <div className="drf-program-selector" role="group" aria-label={t.chooseProgram}>
         <button type="button" onClick={() => changeProgram(-1)} aria-label={t.previous}><ArrowLeft size={16} aria-hidden="true" /></button>
         <select id="drf-program-select" aria-label={t.chooseProgram} value={program.id} onChange={event => {

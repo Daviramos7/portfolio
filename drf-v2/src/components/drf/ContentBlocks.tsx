@@ -16,7 +16,7 @@ export function EvidenceList({ content, locale, ids }: ContentProps & { ids: rea
         </small>
       </li>)}
     </ul>
-  ) : <p className="drf-muted">{t.noSources}</p>
+  ) : null
 }
 
 export function MetricCards({ content, locale, metrics = content.metrics }: ContentProps & { metrics?: readonly Metric[] }) {
@@ -40,22 +40,21 @@ export function MetricCards({ content, locale, metrics = content.metrics }: Cont
 export function ProjectDetail({ project, content, locale }: ContentProps & { project: Project }) {
   const t = uiLabels(locale)
   const media = content.media.filter(media => project.mediaIds.includes(media.id))
+  const metrics = content.metrics.filter(metric => project.metricIds.includes(metric.id))
   return <div className="drf-project-detail">
     <p className="drf-tag">{project.contentStatus === 'pending-evidence' ? t.pending : t.reviewed}</p>
     <p className="drf-lead">{project.summary[locale]}</p>
-    <dl className="drf-facts">
-      <div><dt>{t.problem}</dt><dd>{project.problem?.[locale] ?? t.notRecorded}</dd></div>
-      <div><dt>{t.contribution}</dt><dd>{project.contribution?.[locale] ?? t.notRecorded}</dd></div>
-      <div><dt>{t.productStatus}</dt><dd>{project.productStatus?.[locale] ?? t.notRecorded}</dd></div>
-    </dl>
-    <h4>{t.stack}</h4><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul>
-    <h4>{t.decisions}</h4>
-    {project.decisions.length ? <ul className="drf-text-list">{project.decisions.map((decision, i) => <li key={i}>{decision[locale]}</li>)}</ul> : <p className="drf-muted">{t.noDecisions}</p>}
+    {(project.problem || project.contribution || project.productStatus) && <dl className="drf-facts">
+      {project.problem && <div><dt>{t.problem}</dt><dd>{project.problem[locale]}</dd></div>}
+      {project.contribution && <div><dt>{t.contribution}</dt><dd>{project.contribution[locale]}</dd></div>}
+      {project.productStatus && <div><dt>{t.productStatus}</dt><dd>{project.productStatus[locale]}</dd></div>}
+    </dl>}
+    {project.technologies.length > 0 && <><h4>{t.stack}</h4><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul></>}
+    {project.decisions.length > 0 && <><h4>{t.decisions}</h4><ul className="drf-text-list">{project.decisions.map((decision, i) => <li key={i}>{decision[locale]}</li>)}</ul></>}
     {project.limitations.length > 0 && <div className="drf-callout"><h4>{t.limitations}</h4><ul className="drf-text-list">{project.limitations.map((limit, i) => <li key={i}>{limit[locale]}</li>)}</ul></div>}
-    <h4>{content.zones.find(zone => zone.id === 'telemetry')?.label[locale]}</h4>
-    <MetricCards content={content} locale={locale} metrics={content.metrics.filter(metric => project.metricIds.includes(metric.id))} />
-    <h4>{t.sources}</h4><EvidenceList content={content} locale={locale} ids={project.evidenceIds} />
-    {media.length ? media.map(item => <figure key={item.id}><img src={item.src} alt={item.alt[locale]} loading="lazy" /><figcaption>{item.credit[locale]} · {item.licenseRef}</figcaption></figure>) : <p className="drf-muted drf-media-note">{t.noMedia}</p>}
+    {metrics.length > 0 && <><h4>{content.zones.find(zone => zone.id === 'telemetry')?.label[locale]}</h4><MetricCards content={content} locale={locale} metrics={metrics} /></>}
+    {project.evidenceIds.length > 0 && <><h4>{t.sources}</h4><EvidenceList content={content} locale={locale} ids={project.evidenceIds} /></>}
+    {media.map(item => <figure key={item.id}><img src={item.src} alt={item.alt[locale]} loading="lazy" /><figcaption>{item.credit[locale]} · {item.licenseRef}</figcaption></figure>)}
     <div className="drf-links">
       {project.repositoryUrl && <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">{t.repository} ↗</a>}
       {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.demo} ↗</a>}

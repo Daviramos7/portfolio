@@ -20,16 +20,12 @@ export function useReadingFocus({ state, actions }: Pick<PortfolioShellProps, 's
   }, [actions, recruiter, state.target.projectId, state.target.zoneId])
 
   useEffect(() => {
-    if (recruiter) {
-      const target = state.target.projectId ? document.getElementById(`drf-project-${state.target.projectId}`) : document.getElementById(`drf-zone-${state.target.zoneId}`)
-      target?.focus({ preventScroll: true })
-      target?.scrollIntoView({ block: 'start' })
+    if (recruiter) return
+    if (state.panelOpen) headingRef.current?.focus({ preventScroll: true })
+    else if (document.activeElement === document.body || document.activeElement?.closest('.drf-hud-nav')) {
+      document.querySelector<HTMLElement>('.drf-hud-nav [aria-current]')?.focus({ preventScroll: true })
     }
-  }, [recruiter, state.target.projectId, state.target.zoneId])
-
-  useEffect(() => {
-    if (!recruiter && state.panelOpen) headingRef.current?.focus({ preventScroll: true })
-  }, [recruiter, state.panelOpen])
+  }, [recruiter, state.panelOpen, state.target.projectId, state.target.zoneId])
 
   const close = useCallback(() => {
     actions.setPanelOpen(false)

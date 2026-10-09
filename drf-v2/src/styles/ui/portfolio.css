@@ -85,6 +85,18 @@
 .drf-performance article { display: grid; gap: 1rem; }
 .drf-strategies { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 1rem; }
 .drf-strategies article { border: 1px solid var(--ui-border); padding: 1.5rem; display: grid; align-content: start; gap: 1rem; }
+/* Explicit tracks prevent content/button intrinsic sizes from squeezing prose. */
+.drf-ui :is(.drf-strategies article,.drf-project-detail,.drf-timeline article,.drf-performance article) { min-width: 0; grid-template-columns: minmax(0,1fr); }
+.drf-ui :is(.drf-strategies,.drf-facts,.drf-project-detail,.drf-chips) > * { min-width: 0; }
+.drf-ui :is(.drf-strategies,.drf-project-detail,.drf-timeline,.drf-performance) { overflow-wrap: break-word; word-break: normal; }
+.drf-ui :is(.drf-chips li,.drf-evidence a,.drf-evidence code) { overflow-wrap: anywhere; }
+.drf-ui .drf-strategies .drf-button { max-width: 100%; white-space: normal; text-align: left; }
+.drf-ui[data-view-mode=recruiter] .drf-header { position: sticky; top: 0; z-index: 8; background: var(--drf-black); padding-block: .6rem; flex-wrap: wrap; }
+.drf-ui[data-view-mode=recruiter] .drf-preferences { min-width: 0; align-items: center; }
+.drf-recruiter-nav { min-width: 0; flex: 1 1 10rem; }
+.drf-recruiter-nav select { font: inherit; font-size: .85rem; color: var(--drf-white); background: var(--drf-carbon); border: 1px solid var(--ui-border); min-height: 44px; width: 100%; max-width: 15rem; padding: .5rem; }
+.drf-recruiter-nav select:focus-visible { outline: 2px solid var(--drf-white); outline-offset: 2px; }
+.drf-ui[data-view-mode=recruiter] [id] { scroll-margin-top: 160px; }
 .drf-recruiter-zone { padding-block: 2rem; border-bottom: 1px solid var(--ui-border); }
 .drf-recruiter-zone > :is(p,h3,ul,.drf-timeline,.drf-strategies,.drf-callout) { margin-bottom: 1.5rem; }
 .drf-dossiers { display: grid; gap: 2rem; }
@@ -92,6 +104,12 @@
 .drf-footer { padding-block: 1.5rem; border-top: 1px solid var(--ui-border); display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; color: var(--drf-metal); font-size: .75rem; }
 @media (max-width: 1000px) { .drf-project-grid { grid-template-columns: repeat(2,minmax(0,1fr)); } .drf-header { flex-wrap: wrap; } .drf-intro { grid-template-columns: 1fr; gap: 1.5rem; } }
 @media (max-width: 600px) {
+  .drf-ui[data-view-mode=recruiter] .drf-header { gap: .5rem; }
+  .drf-ui[data-view-mode=recruiter] .drf-brand { display: none; }
+  .drf-ui[data-view-mode=recruiter] .drf-preferences { gap: .5rem; }
+  .drf-recruiter-nav { flex-basis: 100%; }
+  .drf-recruiter-nav select { max-width: none; }
+  .drf-ui[data-view-mode=recruiter] [id] { scroll-margin-top: 125px; }
   .drf-header { gap: 1rem; } .drf-preferences { width: 100%; } .drf-intro { padding-block: 2rem; }
   .drf-zone-nav { grid-template-columns: 1fr; } .drf-zone-nav button { flex-direction: row; align-items: center; min-height: 48px; padding: .75rem; gap: 1rem; }
   .drf-zone-nav button + button { border-left: 0; border-top: 1px solid var(--ui-border); }

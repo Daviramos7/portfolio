@@ -3,7 +3,7 @@ import type { Locale } from '../contracts/index.ts'
 const labels = {
   pt: {
     navigation: 'Navegação pelas zonas', skip: 'Ir para o conteúdo', locale: 'Idioma',
-    immersive: 'Imersivo', recruiter: 'Recruiter Mode', mode: 'Modo de leitura',
+    immersive: 'Imersivo', recruiter: 'Recruiter Mode', mode: 'Modo de leitura', returnGarage: 'Voltar à garagem',
     fiction: 'Equipe fictícia. Trabalho real de Davi.', identity: 'Portfólio de engenharia',
     read: 'Abrir leitura', close: 'Fechar leitura', back: 'Voltar aos projetos',
     openProject: 'Explorar projeto', selected: 'Selecionado',
@@ -40,7 +40,7 @@ const labels = {
   },
   en: {
     navigation: 'Zone navigation', skip: 'Skip to content', locale: 'Language',
-    immersive: 'Immersive', recruiter: 'Recruiter Mode', mode: 'Reading mode',
+    immersive: 'Immersive', recruiter: 'Recruiter Mode', mode: 'Reading mode', returnGarage: 'Return to garage',
     fiction: 'Fictional team. Real work by Davi.', identity: 'Engineering portfolio',
     read: 'Open reading', close: 'Close reading', back: 'Back to projects',
     openProject: 'Explore project', selected: 'Selected',

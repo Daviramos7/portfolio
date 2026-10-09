@@ -41,13 +41,14 @@
 .drf-nav-short { display: none; }
 .drf-zone-coordinate { position: absolute; top: 126px; right: var(--hud-edge); display: grid; gap: 5px; text-align: right; font-size: .75rem; letter-spacing: .13em; padding: 10px 12px; border-right: 2px solid var(--drf-red); background: var(--hud-surface); }
 .drf-zone-coordinate span:last-child { font-size: .65rem; color: var(--drf-metal); }
-.drf-showcase { position: absolute; bottom: 84px; left: var(--hud-edge); width: min(390px,32vw); padding: 10px 12px; background: var(--hud-surface); border: 1px solid var(--hud-border); border-top: 3px solid var(--drf-red); }
+.drf-showcase { position: absolute; z-index: 2; bottom: 84px; left: var(--hud-edge); width: min(390px,32vw); padding: 10px 12px; background: var(--hud-surface); border: 1px solid var(--hud-border); border-top: 3px solid var(--drf-red); }
 .drf-showcase-toolbar { display: flex; justify-content: space-between; gap: 10px; align-items: center; padding-bottom: 8px; }
 .drf-showcase-toolbar .drf-code { font-size: .65rem; }
 .drf-showcase-command { display: grid; grid-template-columns: minmax(0,1fr) 44px; gap: 8px; align-items: center; }
 .drf-program-count { font-family: ui-monospace, monospace; font-size: .8rem; font-variant-numeric: tabular-nums; }
 .drf-showcase-copy { padding-block: 6px; animation: drf-program-enter 240ms ease-out both; }
 .drf-ui .drf-showcase h2 { font-size: clamp(1.05rem,1.5vw,1.35rem); line-height: 1.25; letter-spacing: -.025em; }
+.drf-ui .drf-program-title { margin-bottom: 10px; overflow-wrap: break-word; }
 .drf-program-selector { display: grid; grid-template-columns: 44px minmax(0,1fr) 44px; border: 1px solid var(--hud-border); }
 .drf-program-selector button { display: grid; place-items: center; width: 44px; min-height: 44px; border: 0; background: var(--drf-carbon); }
 .drf-program-selector select { min-width: 0; width: 100%; min-height: 44px; background: var(--hud-surface); color: var(--drf-white); border: 0; border-inline: 1px solid var(--hud-border); padding: 0 8px; font: inherit; font-size: .75rem; text-overflow: ellipsis; }
@@ -74,7 +75,8 @@
 .drf-documentary-label { margin-top: 10px !important; color: var(--drf-metal); font-size: .75rem; }
 .drf-workstation-body { min-height: 0; overflow-y: auto; overscroll-behavior: contain; padding: 24px; scrollbar-color: var(--drf-metal) var(--hud-surface); scrollbar-width: thin; }
 .drf-workstation-body > :is(p,h3,ul,.drf-timeline,.drf-strategies,.drf-callout,.drf-performance) { margin-bottom: 20px; }
-.drf-workstation-body :is(.drf-facts,.drf-metrics,.drf-strategies) { grid-template-columns: 1fr; }
+.drf-workstation-body :is(.drf-facts,.drf-metrics,.drf-strategies) { min-width: 0; grid-template-columns: minmax(0,1fr); }
+.drf-workstation > * { min-width: 0; }
 .drf-workstation-body .drf-lead { font-size: .95rem; }
 .drf-workstation-body .drf-project-detail { gap: 24px; }
 .drf-workstation-body .drf-callout { padding: 16px; }

@@ -3,6 +3,7 @@ import { X } from 'lucide-react'
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { ProjectDetail } from '../components/drf/ContentBlocks.tsx'
 import { useReadingFocus } from '../hooks/ui/useReadingFocus.ts'
+import { useRecruiterContext } from '../hooks/ui/useRecruiterContext.ts'
 import { ImmersiveHud } from './ImmersiveHud.tsx'
 import { RecruiterView } from './RecruiterView.tsx'
 import { ZoneContent } from './ZoneContent.tsx'
@@ -18,13 +19,14 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
   const selected = content.projects.find(project => project.id === state.target.projectId)
   const program = selected ?? content.projects[0]
   const { openerRef, headingRef, close } = useReadingFocus({ state, actions })
+  const readingActions = useRecruiterContext({ state, actions })
+  const uiActions = { ...actions, ...readingActions }
 
   const onProject = (project: Project, trigger: HTMLButtonElement) => {
     openerRef.current = trigger
-    actions.navigate({ zoneId: state.target.zoneId === 'driver-profile' && project.relatedZones.includes('driver-profile') ? 'driver-profile' : 'garage', projectId: project.id })
+    uiActions.navigate({ zoneId: state.target.zoneId === 'driver-profile' && project.relatedZones.includes('driver-profile') ? 'driver-profile' : 'garage', projectId: project.id })
     actions.setPanelOpen(true)
-    if (recruiter) document.getElementById(`drf-project-${project.id}`)?.focus()
-    else requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true }))
+    if (!recruiter) requestAnimationFrame(() => headingRef.current?.focus({ preventScroll: true }))
   }
   const onChoose = (project: Project) => {
     const reading = state.panelOpen
@@ -39,10 +41,10 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
   const failed = state.renderStatus === 'error' || state.renderStatus === 'unavailable'
 
   return <div className="drf-ui" data-view-mode={state.mode} data-reduced-motion={state.reducedMotion} data-reading-open={state.panelOpen} lang={state.locale}>
-    {recruiter ? <RecruiterView content={content} state={state} actions={actions} onProject={onProject} /> : <>
+    {recruiter ? <RecruiterView content={content} state={state} actions={uiActions} onProject={onProject} /> : <>
       <div className="drf-immersive-stage">{children}</div>
       <a className="drf-skip" href="#drf-reading" onClick={event => { event.preventDefault(); inspect(document.getElementById('drf-inspect') as HTMLButtonElement) }}>{t.skip}</a>
-      <ImmersiveHud content={content} state={state} actions={actions} program={program} onChoose={onChoose} onInspect={inspect} onClose={close} />
+      <ImmersiveHud content={content} state={state} actions={uiActions} program={program} onChoose={onChoose} onInspect={inspect} onClose={close} />
 
       {(failed || state.renderStatus === 'idle' || state.renderStatus === 'loading') && <section className="drf-scene-notice" aria-label={t.identity}>
         <p className="drf-code">DRF / ENGINEERING</p>
@@ -50,7 +52,7 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
         <p>{content.profile.summary[state.locale]}</p>
         <div className="drf-links">
           {failed && <button type="button" className="drf-button" onClick={() => { actions.retryScene(); document.getElementById('drf-inspect')?.focus({ preventScroll: true }) }}>{t.retry}</button>}
-          <button type="button" className="drf-button" onClick={() => actions.setMode('recruiter')}>{t.cvLabel} ↗</button>
+          <button type="button" className="drf-button" onClick={() => uiActions.setMode('recruiter')}>{t.cvLabel} ↗</button>
         </div>
       </section>}
 
