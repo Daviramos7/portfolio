@@ -1,6 +1,6 @@
 # Contratos de integração — versão 1
 
-Especificação para a próxima etapa; os tipos abaixo ainda não são arquivos de aplicação. Lead materializa e mantém a fonte canônica em `src/contracts/`. Mudança incompatível exige revisão dos consumidores antes de editar. Não adicionar bibliotecas de estado, eventos, física ou áudio para cumprir estes contratos.
+Tipos materializados na Missão 03; fonte canônica em `src/contracts/index.ts`, mantida pelo Lead. Exportações e pontos de entrada estão no [handoff](PLANO.md#handoff-da-missão-03). Mudança incompatível exige revisão dos consumidores antes de editar. Não adicionar bibliotecas de estado, eventos, física ou áudio para cumprir estes contratos.
 
 ## Conteúdo compartilhado
 

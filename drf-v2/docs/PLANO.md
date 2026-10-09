@@ -1,10 +1,10 @@
 # Plano de implementação e trabalho paralelo
 
-Estado: fase documental concluída; desenvolvimento/workers dependem de autorização do usuário. Branch obrigatória: `feat/drf-engineering`. Stack já disponível: React/TypeScript/Vite, Tailwind/shadcn, Three/R3F/Drei, GSAP e Framer Motion. Sem dependências novas planejadas.
+Estado: fundação compartilhada implementada na Missão 03; workers ainda dependem de autorização do usuário. Branch obrigatória: `feat/drf-engineering`. Stack já disponível: React/TypeScript/Vite, Tailwind/shadcn, Three/R3F/Drei, GSAP e Framer Motion. Sem dependências novas planejadas.
 
 ## Estrutura e propriedade exclusiva
 
-Os caminhos novos são propostos; nesta missão existem apenas os três documentos. A propriedade abaixo vale por arquivo e subárvore, inclusive quando ainda não criados.
+Os pontos de entrada compartilhados e placeholders já existem; as demais subpastas continuam reservadas. A propriedade abaixo vale por arquivo e subárvore, inclusive quando ainda não criados.
 
 ```text
 drf-v2/
@@ -40,8 +40,8 @@ V1 protegida: raiz `index.html`, `css/`, `js/`, `img/`, `curriculo/`, README e A
 
 ## Sequência exata para iniciar
 
-1. **Usuário autoriza workers e desenvolvimento.** Lead reconfirma branch/Git e verifica workers existentes para reutilizar antes de criar novos. Pendência da Horta continua visível, sem impedir trabalho independente.
-2. **Lead prepara o mínimo compartilhado:** materializa tipos dos contratos, catálogo inicial revisado, tokens provisórios e interfaces `SceneRoot`/`PortfolioShell`; prepara estado/URL e adaptador. Publica caminhos/exportações congelados e lista de arquivos exclusivos. É um handoff técnico curto, não conclusão do Recruiter Mode.
+1. **Usuário autoriza workers para desenvolvimento paralelo.** Lead reconfirma branch/Git e verifica workers existentes para reutilizar antes de criar novos. Pendência da Horta continua visível, sem impedir trabalho independente.
+2. **Fundação pronta na Missão 03:** tipos, catálogo inicial, tokens provisórios, interfaces `SceneRoot`/`PortfolioShell`, estado/URL e adaptador estão materializados. Consumir o handoff abaixo e manter propriedade exclusiva; não repetir essa preparação nem esperar a conclusão do Recruiter Mode.
 3. **Iniciar 3D, Frontend/UX e QA na mesma rodada**, após esse handoff. Prompts contêm escopo, proibições, critérios e obrigação de fechar cada turno com resumo visível. Não convocar outro Lead concorrente.
 4. **Primeiro incremento paralelo:** 3D entrega garagem geométrica/DRF-01 original e câmera para Garage; Frontend entrega shell PT/EN, painel desse projeto e leitura Recruiter da mesma fatia; QA verifica schema, IDs, paridade, foco e plano de falhas. Lead integra exports e fallback. Revisar captura conjunta de UI + cena, sem esperar acabamento de nenhuma experiência.
 5. **Segundo incremento paralelo:** 3D abre as cinco zonas e implementa Trackside/CAR_PASS; Frontend amplia as mesmas zonas, telemetria documentada, experiência, Driver Performance e controles de áudio/ambiente; QA testa transições, teclado, reduced motion, cancelamento, modo e erros. Lead revisa evidências/assets e resolve somente integração.
@@ -85,4 +85,19 @@ QA registra resultado PASS/FAIL/PENDENTE com evidência em `docs/qa/`, sem marca
 - Cada worker entrega exportações, arquivos modificados, verificações realizadas e pendências; não editar área alheia para resolver conflito de integração.
 - Lead solicita correções ao mesmo proprietário, incorpora mudanças compatíveis e mantém os documentos canônicos curtos. QA identifica conflito; Lead decide transferência antes de qualquer edição cruzada.
 - Verificar `git diff --check`, diff dos arquivos rastreados e lista de novos arquivos contra a matriz de propriedade. Conferir explicitamente V1 e lockfile. Não usar `git add .`, reset/clean ou checkout destrutivo.
-- Nesta entrega documental: conferir referências, consistência dos três documentos e Git. Lint/build/navegador ficam para mudanças de aplicação; executar build agora geraria artefatos sem validar os contratos ainda documentais.
+- Mudanças de aplicação passam por lint/build e verificação dos cenários afetados; QA registra separadamente aceite do produto completo.
+
+## Handoff da Missão 03
+
+- `src/contracts/index.ts`: todos os tipos públicos (conteúdo, navegação, UI, cena e `CarPass`).
+- `src/content/portfolio.ts`: `portfolioContent`, catálogo único PT/EN; `src/content/validate.ts`: `validatePortfolioContent`.
+- `src/app/navigation.ts`: resolver/normalizar seleção e construir URL; `experience.ts`: `createExperienceController`; `useExperience.ts`: integração React.
+- `src/app/sceneIndex.ts`: `buildSceneContentIndex`, projeção mínima para a cena; sem APIs de projetos.
+- 3D substitui somente `src/scene/SceneRoot.tsx`: export nomeado `SceneRoot`, recebe `SceneProps` + `ref?: Ref<SceneHandle>` (React 19). Cena real deve emitir loading/ready/erro conforme seu ciclo; placeholder permanece idle e áudio unavailable.
+- Frontend substitui somente `src/features/PortfolioShell.tsx`: export nomeado `PortfolioShell`, recebe `PortfolioShellProps`; callbacks ficam em `actions`. O placeholder é igual nos dois modos, sem Recruiter Mode implementado.
+- Lead mantém `App.tsx`, boundary lazy, controller e tokens `--drf-*`. UI e cena não editam esses arquivos. Eventos ficam vinculados à tentativa da cena; callbacks de tentativas antigas são descartados.
+- QA possui `tests/` e `docs/qa/`; testes da fundação usam Node nativo: `node --experimental-strip-types --test tests/foundation.test.mjs`.
+- Smoke de navegador: com servidor ativo, `node tests/browser-smoke.mjs [URL] [caminho-do-Chrome]`. Usa Chrome headless já instalado; cobre console, PT/EN, histórico, mobile emulado, armazenamento bloqueado e WebGL desativado, sem novas dependências.
+- Mídia e currículo continuam pendentes de revisão (`media: []`, `cvUrl: null`); sem cópias não verificadas ou links locais quebrados. Horta mantém evidência pendente; métricas de Recife são apenas documentadas.
+
+Próximo passo autorizado separadamente: iniciar os três workers com os caminhos exclusivos acima; não há necessidade de concluir UI ou 3D antes do paralelismo.
