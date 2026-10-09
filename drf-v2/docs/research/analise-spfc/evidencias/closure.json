@@ -1,0 +1,66 @@
+{
+  "checked_at": "2026-10-09T15:14:34.337243-03:00",
+  "elapsed_seconds_since_copy": 229.282823,
+  "original_sha": "ff13dc28a6872d4b53f6e203eb241f9b2a1e6f32",
+  "original_status": "",
+  "source_syntax_ast": "PASS; not build",
+  "command": "metadata/AST/hash/Git verification + instrumental tolerance diagnosis",
+  "exitcode": 0,
+  "wall_seconds": 0.13737700000001496,
+  "runs": {
+    "unittest": {
+      "exitcode": 0,
+      "wall_seconds": 4.983481799999936,
+      "max_sampled_rss_bytes_by_group": {
+        "python": 118538240,
+        "other": 7827456
+      },
+      "owned_cleanup": []
+    },
+    "cli-demo": {
+      "exitcode": 0,
+      "wall_seconds": 0.8552055999998629,
+      "max_sampled_rss_bytes_by_group": {
+        "python": 82993152,
+        "other": 7819264
+      },
+      "owned_cleanup": []
+    },
+    "legacy-demo": {
+      "exitcode": 0,
+      "wall_seconds": 0.8536794999999984,
+      "max_sampled_rss_bytes_by_group": {
+        "python": 78434304,
+        "other": 7827456
+      },
+      "owned_cleanup": []
+    },
+    "offline": {
+      "exitcode": 1,
+      "wall_seconds": 2.7676577000002,
+      "max_sampled_rss_bytes_by_group": {
+        "python": 163102720,
+        "other": 7823360
+      },
+      "owned_cleanup": []
+    },
+    "public": {
+      "exitcode": 1,
+      "wall_seconds": 25.162791000000652,
+      "max_sampled_rss_bytes_by_group": {
+        "python": 107888640,
+        "other": 94380032,
+        "chromedriver": 22593536,
+        "chrome": 877301760
+      },
+      "owned_cleanup": []
+    }
+  },
+  "output_hashes": {
+    "fixture-table.html": "efa1369892a6d2e4988e2b06730799b888348c8286df24a9681ce682c805bce9",
+    "SINTETICO-demo.csv": "559a7fce0f4b5ea1f11c9af0df1cdc7fb1857e1bb6871ffb543c3c2dc7e49f40",
+    "sintetico-finalizadores.png": "dad90bad790ccabd7bbada2c3dd752062da230a1a9de37dac41f82b49dc19aff"
+  },
+  "quota": "Lead monitors (40% available at authorization); tool not exposed to worker, not project blocker",
+  "oversized_files": []
+}

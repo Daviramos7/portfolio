@@ -1,0 +1,596 @@
+{
+  "started_at": "2026-10-09T15:04:40.616802-03:00",
+  "wall_seconds": 7.9502928999995675,
+  "source_sha256": "c496192d6fa009ed50b76ff75e1c0d4040e482e1e474695868d6de2509b0e44a",
+  "versions": {
+    "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+    "pandas": "3.0.6",
+    "numpy": "2.5.3",
+    "streamlit": "1.65.0",
+    "yfinance": "1.7.0"
+  },
+  "fixture": "deterministic arithmetic sequence; no RNG; minute timestamp only synthetic benchmark, not daily market data",
+  "checks": [
+    {
+      "name": "normalized OHLCV schema",
+      "expected": [
+        "data",
+        "abertura",
+        "maxima",
+        "minima",
+        "fechamento",
+        "volume"
+      ],
+      "actual": [
+        "data",
+        "abertura",
+        "maxima",
+        "minima",
+        "fechamento",
+        "volume"
+      ],
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "inclusive requested end",
+      "expected": "2025-01-03",
+      "actual": "2025-01-03",
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "cache repeated key supplier calls",
+      "expected": 1,
+      "actual": 1,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "cache retains original download timing",
+      "expected": 0.010130882263183594,
+      "actual": 0.010130882263183594,
+      "pass": true,
+      "kind": "characterization: timing is cached not current request latency"
+    },
+    {
+      "name": "SMA20 independent reference",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "rising series RSI",
+      "expected": 100.0,
+      "actual": 100.0,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "chart traces",
+      "expected": 5,
+      "actual": 5,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "duplicates retained",
+      "expected": 61,
+      "actual": 61,
+      "pass": true,
+      "kind": "characterization; no dedupe contract"
+    },
+    {
+      "name": "flat series RSI defined",
+      "expected": true,
+      "actual": false,
+      "pass": false,
+      "kind": "edge expectation; 0/0 NaN, policy requires owner"
+    },
+    {
+      "name": "app rows=60 mode=normal no uncaught exception",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "app rows=1 mode=normal no uncaught exception",
+      "expected": 0,
+      "actual": 1,
+      "pass": false,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "app rows=5 mode=normal no uncaught exception",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "short history trend unavailable",
+      "expected": true,
+      "actual": false,
+      "pass": false,
+      "kind": "edge expectation; SMA20 has insufficient rows"
+    },
+    {
+      "name": "app rows=0 mode=empty no uncaught exception",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "app rows=60 mode=timeout no uncaught exception",
+      "expected": 0,
+      "actual": 1,
+      "pass": false,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "app rows=60 mode=missing no uncaught exception",
+      "expected": 0,
+      "actual": 1,
+      "pass": false,
+      "kind": "app real with injected supplier"
+    },
+    {
+      "name": "USD ticker not labelled BRL",
+      "expected": false,
+      "actual": true,
+      "pass": false,
+      "kind": "currency presentation expectation"
+    }
+  ],
+  "apps": [
+    {
+      "rows": 60,
+      "mode": "normal",
+      "wall_seconds": 0.7221819000001233,
+      "exceptions": [],
+      "metrics": [
+        {
+          "label": "Preço Atual",
+          "value": "R$ 100.59"
+        },
+        {
+          "label": "RSI (14d)",
+          "value": "100.0"
+        },
+        {
+          "label": "Volatilidade Anual",
+          "value": "0.0%"
+        },
+        {
+          "label": "Tendência (20d)",
+          "value": "Alta"
+        },
+        {
+          "label": "Download (API)",
+          "value": "0.0025 s"
+        },
+        {
+          "label": "Cálculo (CPU)",
+          "value": "0.0038 s"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "rows": 1,
+      "mode": "normal",
+      "wall_seconds": 0.22126330000037342,
+      "exceptions": [
+        "single positional indexer is out-of-bounds"
+      ],
+      "metrics": [
+        {
+          "label": "Download (API)",
+          "value": "0.0022 s"
+        },
+        {
+          "label": "Cálculo (CPU)",
+          "value": "0.0035 s"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "rows": 5,
+      "mode": "normal",
+      "wall_seconds": 0.2513259000002108,
+      "exceptions": [],
+      "metrics": [
+        {
+          "label": "Preço Atual",
+          "value": "R$ 100.04"
+        },
+        {
+          "label": "RSI (14d)",
+          "value": "nan"
+        },
+        {
+          "label": "Volatilidade Anual",
+          "value": "nan%"
+        },
+        {
+          "label": "Tendência (20d)",
+          "value": "Baixa"
+        },
+        {
+          "label": "Download (API)",
+          "value": "0.0024 s"
+        },
+        {
+          "label": "Cálculo (CPU)",
+          "value": "0.0039 s"
+        }
+      ],
+      "errors": []
+    },
+    {
+      "rows": 0,
+      "mode": "empty",
+      "wall_seconds": 0.17482090000021344,
+      "exceptions": [],
+      "metrics": [],
+      "errors": [
+        "Falha ao carregar dados. Verifique o ticker ou o período."
+      ]
+    },
+    {
+      "rows": 60,
+      "mode": "timeout",
+      "wall_seconds": 0.18865139999979874,
+      "exceptions": [
+        "synthetic supplier timeout"
+      ],
+      "metrics": [],
+      "errors": []
+    },
+    {
+      "rows": 60,
+      "mode": "missing",
+      "wall_seconds": 0.18587250000018685,
+      "exceptions": [
+        "\"['fechamento'] not in index\""
+      ],
+      "metrics": [],
+      "errors": []
+    }
+  ],
+  "benchmarks": [
+    {
+      "n": 1000,
+      "warmup": 1,
+      "repetitions": 5,
+      "samples_seconds": [
+        0.004242099999828497,
+        0.0038512000000991975,
+        0.005330200000116747,
+        0.0033791000000746862,
+        0.0031607000000803964
+      ],
+      "internal_time_time_samples": [
+        0.004233837127685547,
+        0.003833770751953125,
+        0.005309581756591797,
+        0.003362417221069336,
+        0.0031480789184570312
+      ],
+      "median_seconds": 0.0038512000000991975,
+      "p95_nearest_rank_seconds": 0.005330200000116747,
+      "rows_per_second_from_median": 259659.32695633633,
+      "fixture_sha256": "f4dcc86f51314a35dab18fcce3999ef6669aab01616b8010421fba4704b7a46a",
+      "fixture_bytes": 68593,
+      "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified",
+      "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"
+    },
+    {
+      "n": 10000,
+      "warmup": 1,
+      "repetitions": 5,
+      "samples_seconds": [
+        0.006089099999826431,
+        0.005746799999997165,
+        0.004956600000241451,
+        0.0047130000002653105,
+        0.004902900000161026
+      ],
+      "internal_time_time_samples": [
+        0.00603795051574707,
+        0.005720376968383789,
+        0.0049266815185546875,
+        0.004695415496826172,
+        0.004876136779785156
+      ],
+      "median_seconds": 0.004956600000241451,
+      "p95_nearest_rank_seconds": 0.006089099999826431,
+      "rows_per_second_from_median": 2017512.0040981458,
+      "fixture_sha256": "0db33797f82610333003e86aa4fa8bf907051f9e1eec98a59d0abb7b9501c4f6",
+      "fixture_bytes": 714741,
+      "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified",
+      "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"
+    },
+    {
+      "n": 100000,
+      "warmup": 1,
+      "repetitions": 5,
+      "samples_seconds": [
+        0.015856999999869004,
+        0.016959800000222458,
+        0.01478499999984706,
+        0.015536800000063522,
+        0.01588450000008379
+      ],
+      "internal_time_time_samples": [
+        0.015440940856933594,
+        0.01616978645324707,
+        0.013926267623901367,
+        0.014604806900024414,
+        0.014995813369750977
+      ],
+      "median_seconds": 0.015856999999869004,
+      "p95_nearest_rank_seconds": 0.016959800000222458,
+      "rows_per_second_from_median": 6306363.12044057,
+      "fixture_sha256": "668cd93668cb98498edbba723b37043676f2abcd3eeed29a757faa1a385c6236",
+      "fixture_bytes": 7316111,
+      "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified",
+      "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"
+    }
+  ],
+  "cache_single_probe": {
+    "cold_seconds": 0.011081499999818334,
+    "hot_seconds": 0.0005136999998285319,
+    "returned_download_seconds": 0.010130882263183594,
+    "scope": "mock yf.download; actual Streamlit cache; n1 each; no remote integration speed claim"
+  },
+  "network": {
+    "adapter": "yf.download patched in process; yfinance remote protocol not tested",
+    "external_socket_attempts_blocked": []
+  },
+  "rss_scope": "100ms samples Python process includes imports/AppTest/checks/benchmarks; not peak or per-cardinality; children separately enumerated",
+  "python_max_sampled_rss_bytes": 183496704,
+  "rss_samples": [
+    {
+      "seconds": 2.82495149999977,
+      "python_rss": 141234176,
+      "children": []
+    },
+    {
+      "seconds": 2.93108809999967,
+      "python_rss": 150167552,
+      "children": []
+    },
+    {
+      "seconds": 3.0416145999997752,
+      "python_rss": 150388736,
+      "children": []
+    },
+    {
+      "seconds": 3.1475374999999985,
+      "python_rss": 152100864,
+      "children": []
+    },
+    {
+      "seconds": 3.253250599999774,
+      "python_rss": 153415680,
+      "children": []
+    },
+    {
+      "seconds": 3.3920610999998644,
+      "python_rss": 156090368,
+      "children": []
+    },
+    {
+      "seconds": 3.497841199999584,
+      "python_rss": 158355456,
+      "children": []
+    },
+    {
+      "seconds": 3.605109199999788,
+      "python_rss": 158363648,
+      "children": []
+    },
+    {
+      "seconds": 3.7120841999999357,
+      "python_rss": 158363648,
+      "children": []
+    },
+    {
+      "seconds": 3.818822299999738,
+      "python_rss": 159481856,
+      "children": []
+    },
+    {
+      "seconds": 3.9242499999995744,
+      "python_rss": 159510528,
+      "children": []
+    },
+    {
+      "seconds": 4.030607299999701,
+      "python_rss": 161652736,
+      "children": []
+    },
+    {
+      "seconds": 4.13743199999999,
+      "python_rss": 161681408,
+      "children": []
+    },
+    {
+      "seconds": 4.251671600000009,
+      "python_rss": 162070528,
+      "children": []
+    },
+    {
+      "seconds": 4.358996499999648,
+      "python_rss": 162275328,
+      "children": []
+    },
+    {
+      "seconds": 4.465679999999793,
+      "python_rss": 162578432,
+      "children": []
+    },
+    {
+      "seconds": 4.57168909999973,
+      "python_rss": 162611200,
+      "children": []
+    },
+    {
+      "seconds": 4.677393599999959,
+      "python_rss": 162615296,
+      "children": []
+    },
+    {
+      "seconds": 4.783156399999825,
+      "python_rss": 162738176,
+      "children": []
+    },
+    {
+      "seconds": 4.88836289999972,
+      "python_rss": 163610624,
+      "children": []
+    },
+    {
+      "seconds": 5.007562599999801,
+      "python_rss": 164827136,
+      "children": []
+    },
+    {
+      "seconds": 5.149076199999854,
+      "python_rss": 167817216,
+      "children": []
+    },
+    {
+      "seconds": 5.2567503999998735,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.363227299999835,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.468688799999654,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.574607699999888,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.680621099999826,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.786945500000002,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.89193989999967,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 5.997580999999627,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.103385399999752,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.2093307000000095,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.313918399999693,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.418655899999976,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.523926799999572,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.628576599999633,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.734037299999727,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.839369599999827,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 6.943842599999698,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 7.049489999999878,
+      "python_rss": 169832448,
+      "children": []
+    },
+    {
+      "seconds": 7.156678899999861,
+      "python_rss": 175751168,
+      "children": []
+    },
+    {
+      "seconds": 7.3222664999998415,
+      "python_rss": 176189440,
+      "children": []
+    },
+    {
+      "seconds": 7.427673700000014,
+      "python_rss": 176189440,
+      "children": []
+    },
+    {
+      "seconds": 7.533460599999671,
+      "python_rss": 176189440,
+      "children": []
+    },
+    {
+      "seconds": 7.639573599999949,
+      "python_rss": 176189440,
+      "children": []
+    },
+    {
+      "seconds": 7.74597999999969,
+      "python_rss": 176189440,
+      "children": []
+    },
+    {
+      "seconds": 7.85263999999961,
+      "python_rss": 183496704,
+      "children": []
+    }
+  ],
+  "existing_suite_lint_build": "N/A absent",
+  "test_kind": "complementary harness, not original suite"
+}

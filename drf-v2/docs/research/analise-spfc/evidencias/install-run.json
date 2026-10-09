@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pip",
+    "install",
+    "-r",
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044\\requirements.txt",
+    "psutil==7.2.2",
+    "--report",
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\worktrees\\drf-portfolio-intelligence\\drf-v2\\docs\\research\\analise-spfc\\evidencias\\install-report.json",
+    "--disable-pip-version-check"
+  ],
+  "exitcode": 0,
+  "wall_seconds": 48.22070799999983,
+  "condition": "isolated venv exact source pins; psutil instrumentation pinned"
+}

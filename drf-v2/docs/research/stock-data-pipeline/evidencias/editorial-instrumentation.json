@@ -1,0 +1,10 @@
+{
+  "activity": "minimize pip report package descriptions",
+  "first_exitcode": 1,
+  "first_wall_seconds": 0.2812194,
+  "first_error": "UnicodeDecodeError: default Windows cp1252 cannot decode UTF8 pip metadata",
+  "first_command": "Python here-string json.loads(Path.read_text())",
+  "recovery": "same operation with encoding=utf8 explicit, no experiment rerun",
+  "recovery_exitcode": 0,
+  "classification": "Confirmado por execu\u00e7\u00e3o"
+}

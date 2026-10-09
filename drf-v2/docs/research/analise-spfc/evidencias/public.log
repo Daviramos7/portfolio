@@ -1,0 +1,12 @@
+==================================================
+AUTOMAÇÃO INICIADA
+==================================================
+
+Coletando dados públicos do FBref...
+
+==================================================
+AUTOMAÇÃO INTERROMPIDA
+==================================================
+[ERRO] Falha na etapa de localização da tabela.
+Não foi possível concluir a coleta de dados públicos.
+Detalhes técnicos: TimeoutException: Message: 

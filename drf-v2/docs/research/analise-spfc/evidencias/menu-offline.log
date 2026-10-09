@@ -1,0 +1,55 @@
+==================================================
+>>> Ferramenta de Análise SPFC <<<
+==================================================
+Dados carregados: 8 jogadores.
+
+Escolha uma opção de análise:
+1 - Top 5 Finalizadores (Gols/90min)
+2 - Top 5 Garçons (Assistências/90min)
+3 - Disciplina (Cartões)
+0 - Sair
+
+--- Análise: Top 5 Finalizadores Mais Eficientes ---
+    Jogador  Gols  Minutos  Gols_por_90_min
+Sintético 7     7      900             0.70
+Sintético 6     6      900             0.60
+Sintético 5     5      900             0.50
+Sintético 4     4      900             0.40
+Sintético 3     3      900             0.30
+
+Escolha uma opção de análise:
+1 - Top 5 Finalizadores (Gols/90min)
+2 - Top 5 Garçons (Assistências/90min)
+3 - Disciplina (Cartões)
+0 - Sair
+
+--- Análise: Top 5 Garçons (Assistências) ---
+    Jogador  Assistencias  Minutos  Ast_por_90_min
+Sintético 6             6      900            0.60
+Sintético 5             5      900            0.50
+Sintético 4             4      900            0.40
+Sintético 3             3      900            0.30
+Sintético 2             2      900            0.20
+
+Escolha uma opção de análise:
+1 - Top 5 Finalizadores (Gols/90min)
+2 - Top 5 Garçons (Assistências/90min)
+3 - Disciplina (Cartões)
+0 - Sair
+
+--- Análise: Disciplina (Cartões) ---
+Jogadores com mais cartões:
+    Jogador  Cartoes_Amarelos  Cartoes_Vermelhos  Total_Cartoes
+Sintético 7                 3                  1              4
+Sintético 3                 3                  1              4
+Sintético 2                 2                  0              2
+Sintético 1                 1                  1              2
+Sintético 5                 1                  1              2
+Sintético 6                 2                  0              2
+
+Escolha uma opção de análise:
+1 - Top 5 Finalizadores (Gols/90min)
+2 - Top 5 Garçons (Assistências/90min)
+3 - Disciplina (Cartões)
+0 - Sair
+Saindo...

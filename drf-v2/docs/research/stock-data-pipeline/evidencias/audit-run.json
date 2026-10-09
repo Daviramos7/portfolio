@@ -1,0 +1,12 @@
+{
+  "command": [
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\stock-data-pipeline\\run-20261009-150256\\.venv\\Scripts\\python.exe",
+    "audit.py",
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\worktrees\\drf-portfolio-intelligence\\drf-v2\\docs\\research\\stock-data-pipeline\\evidencias"
+  ],
+  "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\stock-data-pipeline\\run-20261009-150256",
+  "started_at": "2026-10-09T15:04:40.401740-03:00",
+  "exitcode": 1,
+  "wall_seconds": 8.341280900000129,
+  "timeout_seconds": 120
+}

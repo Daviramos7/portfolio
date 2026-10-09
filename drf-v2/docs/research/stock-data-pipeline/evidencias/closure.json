@@ -1,0 +1,18 @@
+{
+  "checked_at": "2026-10-09T15:05:33.590591-03:00",
+  "elapsed_seconds_since_copy": 157.384351,
+  "original_sha": "f9feca6fba241479c9fcb113132c601b4d44d54d",
+  "original_status": "",
+  "source_copy_sha256": "c496192d6fa009ed50b76ff75e1c0d4040e482e1e474695868d6de2509b0e44a",
+  "python": "3.13.9",
+  "os": "Windows-11-10.0.26200-SP0",
+  "syntax": "AST parse PASS, not build",
+  "command": "isolated closure metadata + ast.parse + Git SHA/status",
+  "exitcode": 0,
+  "wall_seconds": 0.1781890000002022,
+  "quota_monitor": "harness_bandwidth not exposed; no remaining-percent measurement available",
+  "process_model": "AppTest in one bounded child process; no server or persistent helper started; process exited",
+  "rss_children_observed": [],
+  "file_size_limit_bytes": 1048576,
+  "oversized_files": []
+}

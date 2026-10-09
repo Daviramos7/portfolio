@@ -1,0 +1,17 @@
+{
+  "command": [
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\stock-data-pipeline\\run-20261009-150256\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pip",
+    "install",
+    "-r",
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\stock-data-pipeline\\run-20261009-150256\\requirements.txt",
+    "psutil",
+    "--report",
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\worktrees\\drf-portfolio-intelligence\\drf-v2\\docs\\research\\stock-data-pipeline\\evidencias\\install-report.json",
+    "--disable-pip-version-check"
+  ],
+  "exitcode": 0,
+  "wall_seconds": 69.8718899999999,
+  "condition": "own isolated venv; source requirements unpinned; freeze after resolution; psutil instrumentation"
+}

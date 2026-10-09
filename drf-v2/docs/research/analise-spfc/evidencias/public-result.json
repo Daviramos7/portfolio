@@ -1,0 +1,20 @@
+{
+  "source_url": "https://fbref.com/en/squads/5f232eb1/Sao-Paulo-Stats",
+  "acquisitions": 1,
+  "bootstrap": "lab driver cache+profile; standard headless options, no automation-disguise flags; real extract_real_data/main unchanged",
+  "driver_ready": true,
+  "driver_install_seconds": 4.502414900000076,
+  "driver_path": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044\\driver-cache\\.wdm\\drivers\\chromedriver\\win64\\155.0.8059.39\\chromedriver-win32/chromedriver.exe",
+  "chrome_version": "155.0.8059.39",
+  "title": "Um momento…",
+  "final_url": "https://fbref.com/en/squads/5f232eb1/Sao-Paulo-Stats",
+  "page_sha256": "2c17bd75bb668758c318a5ad6caf3ca24acdfd083149048256969a281feca5e8",
+  "document_statuses": [
+    {
+      "url": "https://fbref.com/en/squads/5f232eb1/Sao-Paulo-Stats",
+      "status": 403
+    }
+  ],
+  "cli_exitcode": 1,
+  "other_document_statuses_omitted": "browser internal and challenge resources omitted; no cookies/header/query retained"
+}

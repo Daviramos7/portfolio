@@ -1,0 +1,31 @@
+test_dados_zerados_nao_abrem_grafico (test_analises.TestAnalises.test_dados_zerados_nao_abrem_grafico) ... ok
+test_disciplina_soma_cartoes_e_trata_valor_ausente (test_analises.TestAnalises.test_disciplina_soma_cartoes_e_trata_valor_ausente) ... ok
+test_finalizadores_calcula_ordena_e_nao_altera_entrada (test_analises.TestAnalises.test_finalizadores_calcula_ordena_e_nao_altera_entrada) ... ok
+test_garcons_informa_todas_as_colunas_ausentes (test_analises.TestAnalises.test_garcons_informa_todas_as_colunas_ausentes) ... ok
+test_grafico_continua_ativo_por_padrao (test_analises.TestAnalises.test_grafico_continua_ativo_por_padrao) ... ok
+test_error_sanitization_handles_case_and_forward_slashes (test_main.MainTests.test_error_sanitization_handles_case_and_forward_slashes) ... ok
+test_error_sanitization_hides_local_paths (test_main.MainTests.test_error_sanitization_hides_local_paths) ... ok
+test_failure_does_not_open_an_old_result (test_main.MainTests.test_failure_does_not_open_an_old_result) ... ok
+test_missing_dependency_has_clean_install_instruction (test_main.MainTests.test_missing_dependency_has_clean_install_instruction) ... ok
+test_no_open_skips_automatic_opening (test_main.MainTests.test_no_open_skips_automatic_opening) ... ok
+test_open_result_requires_an_existing_file (test_main.MainTests.test_open_result_requires_an_existing_file) ... ok
+test_pipeline_error_message_does_not_expose_local_path (test_main.MainTests.test_pipeline_error_message_does_not_expose_local_path) ... ok
+test_success_opens_the_new_result (test_main.MainTests.test_success_opens_the_new_result) ... ok
+test_arquivo_ausente_exibe_orientacao (test_menu.TestMenu.test_arquivo_ausente_exibe_orientacao) ... ok
+test_caminho_padrao_ausente_nao_expoe_raiz_do_projeto (test_menu.TestMenu.test_caminho_padrao_ausente_nao_expoe_raiz_do_projeto) ... ok
+test_caminho_padrao_e_resolvido_pela_raiz_do_projeto (test_menu.TestMenu.test_caminho_padrao_e_resolvido_pela_raiz_do_projeto) ... ok
+test_main_remove_espacos_e_encaminha_opcao_sem_grafico (test_menu.TestMenu.test_main_remove_espacos_e_encaminha_opcao_sem_grafico) ... ok
+test_main_trata_fim_de_entrada_e_interrupcao (test_menu.TestMenu.test_main_trata_fim_de_entrada_e_interrupcao) ... ok
+test_menu_nao_depende_do_diretorio_atual (test_menu.TestMenu.test_menu_nao_depende_do_diretorio_atual) ... ok
+test_keeps_optional_columns_optional (test_pipeline.NormalizeDataTests.test_keeps_optional_columns_optional) ... ok
+test_normalizes_multiindex_and_removes_invalid_rows (test_pipeline.NormalizeDataTests.test_normalizes_multiindex_and_removes_invalid_rows) ... ok
+test_requires_the_expected_schema (test_pipeline.NormalizeDataTests.test_requires_the_expected_schema) ... ok
+test_demo_data_is_deterministic_and_clearly_structured (test_pipeline.PipelineExecutionTests.test_demo_data_is_deterministic_and_clearly_structured) ... ok
+test_demo_run_uses_the_requested_output (test_pipeline.PipelineExecutionTests.test_demo_run_uses_the_requested_output) ... ok
+test_failed_real_collection_does_not_overwrite_previous_result (test_pipeline.PipelineExecutionTests.test_failed_real_collection_does_not_overwrite_previous_result) ... ok
+test_save_result_writes_the_expected_csv (test_pipeline.PipelineExecutionTests.test_save_result_writes_the_expected_csv) ... ok
+
+----------------------------------------------------------------------
+Ran 26 tests in 0.123s
+
+OK

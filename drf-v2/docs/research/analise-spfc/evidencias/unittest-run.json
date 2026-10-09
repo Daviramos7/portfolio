@@ -1,0 +1,955 @@
+{
+  "command": [
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044\\.venv\\Scripts\\python.exe",
+    "-m",
+    "unittest",
+    "discover",
+    "-s",
+    "tests",
+    "-v"
+  ],
+  "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044",
+  "started_at": "2026-10-09T15:13:13.143819-03:00",
+  "exitcode": 0,
+  "timedout": false,
+  "wall_seconds": 4.983481799999936,
+  "rss_samples": [
+    {
+      "seconds": 0.011220999999750347,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 2699264
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 3411968
+        }
+      ]
+    },
+    {
+      "seconds": 0.11669230000006792,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 20385792
+        }
+      ]
+    },
+    {
+      "seconds": 0.22272520000024087,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 26001408
+        }
+      ]
+    },
+    {
+      "seconds": 0.3290790000000925,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 26091520
+        }
+      ]
+    },
+    {
+      "seconds": 0.4347248000003674,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 26091520
+        }
+      ]
+    },
+    {
+      "seconds": 0.5411979000000429,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 26091520
+        }
+      ]
+    },
+    {
+      "seconds": 0.6465024999997695,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 33169408
+        }
+      ]
+    },
+    {
+      "seconds": 0.752158799999961,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 39260160
+        }
+      ]
+    },
+    {
+      "seconds": 0.8579274000003352,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 45301760
+        }
+      ]
+    },
+    {
+      "seconds": 0.9639276999996582,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 51478528
+        }
+      ]
+    },
+    {
+      "seconds": 1.069962100000339,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 51974144
+        }
+      ]
+    },
+    {
+      "seconds": 1.1760518999999476,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 51974144
+        }
+      ]
+    },
+    {
+      "seconds": 1.28218250000009,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 51986432
+        }
+      ]
+    },
+    {
+      "seconds": 1.3880196999998589,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52006912
+        }
+      ]
+    },
+    {
+      "seconds": 1.4936015000002953,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52027392
+        }
+      ]
+    },
+    {
+      "seconds": 1.6000616999999693,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52178944
+        }
+      ]
+    },
+    {
+      "seconds": 1.7056260999997903,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52183040
+        }
+      ]
+    },
+    {
+      "seconds": 1.8112472000002526,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52359168
+        }
+      ]
+    },
+    {
+      "seconds": 1.9174120999996376,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52117504
+        }
+      ]
+    },
+    {
+      "seconds": 2.0234011000002283,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52604928
+        }
+      ]
+    },
+    {
+      "seconds": 2.129482899999857,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52080640
+        }
+      ]
+    },
+    {
+      "seconds": 2.235887900000307,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52604928
+        }
+      ]
+    },
+    {
+      "seconds": 2.3419292999997197,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52572160
+        }
+      ]
+    },
+    {
+      "seconds": 2.447667499999625,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 51965952
+        }
+      ]
+    },
+    {
+      "seconds": 2.5539377000004606,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52613120
+        }
+      ]
+    },
+    {
+      "seconds": 2.659477799999877,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52613120
+        }
+      ]
+    },
+    {
+      "seconds": 2.765664800000195,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52486144
+        }
+      ]
+    },
+    {
+      "seconds": 2.8713012999996863,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 52359168
+        }
+      ]
+    },
+    {
+      "seconds": 2.9773066999996445,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 53927936
+        }
+      ]
+    },
+    {
+      "seconds": 3.0826571999996304,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 56766464
+        }
+      ]
+    },
+    {
+      "seconds": 3.1887274000000616,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 59482112
+        }
+      ]
+    },
+    {
+      "seconds": 3.295015300000159,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 65900544
+        }
+      ]
+    },
+    {
+      "seconds": 3.401099200000317,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 67215360
+        }
+      ]
+    },
+    {
+      "seconds": 3.5072452000003977,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 69156864
+        }
+      ]
+    },
+    {
+      "seconds": 3.6132469000003766,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 70373376
+        }
+      ]
+    },
+    {
+      "seconds": 3.7195606000004773,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 72073216
+        }
+      ]
+    },
+    {
+      "seconds": 3.8258443000004263,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 73588736
+        }
+      ]
+    },
+    {
+      "seconds": 3.931766499999867,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 77930496
+        }
+      ]
+    },
+    {
+      "seconds": 4.036849699999948,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 83189760
+        }
+      ]
+    },
+    {
+      "seconds": 4.142487799999799,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 87310336
+        }
+      ]
+    },
+    {
+      "seconds": 4.248310199999651,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 92131328
+        }
+      ]
+    },
+    {
+      "seconds": 4.354269499999646,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 96440320
+        }
+      ]
+    },
+    {
+      "seconds": 4.4596990999998525,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 100892672
+        }
+      ]
+    },
+    {
+      "seconds": 4.565033900000344,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 104431616
+        }
+      ]
+    },
+    {
+      "seconds": 4.67074969999976,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 108711936
+        }
+      ]
+    },
+    {
+      "seconds": 4.7767273999998,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 114364416
+        }
+      ]
+    },
+    {
+      "seconds": 4.882851299999857,
+      "processes": [
+        {
+          "pid": 7292,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 18288,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 17980,
+          "name": "python.exe",
+          "rss": 99999744
+        }
+      ]
+    }
+  ],
+  "rss_scope": "100ms sampled child Python and descendants; max observed not guaranteed peak; wrapper excluded",
+  "cleanup_owned_pids": []
+}

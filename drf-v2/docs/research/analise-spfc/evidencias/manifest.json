@@ -1,0 +1,21 @@
+{
+  "started_at": "2026-10-09T15:10:45.054420-03:00",
+  "lab": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044",
+  "sha": "ff13dc28a6872d4b53f6e203eb241f9b2a1e6f32",
+  "initial_status": "",
+  "AGENTS": "none source/ancestry found",
+  "hashes": {
+    "README.md": "098680f7a4985efcb85e1fdafe68fbadea607cb004582f6ed1864d789f4d0c10",
+    "analises.py": "d414b229f7a682977b44a1eda2611b0a76d026d281c17d828988a9ac05618a7a",
+    "main.py": "cd2415cad9ec97f33b2a4fdd5bf0367b215490129fcb870bdb4c05d531d4b7e2",
+    "menu.py": "b119207c82a94de02e511243af97c21784bef2052a7b415668f09771e0a66ec6",
+    "pipeline.py": "6e5b6887f3f3f56b4057542066d3d22aea1203df2e3522baf8753a994961f2b4",
+    "raspagem_spfc.py": "34a20a7dac37dfc776e4061aeb7ed9fb92fbaefd3d198cb7ab62652af4d66703",
+    "requirements.txt": "39cdab83433df26a00936819baba31db348944f1e8b249e3906a4e7364670f2a",
+    "tests/test_analises.py": "29f1aa024ce4ae00251e71e895c0ec2b8c69a4c8c7c6a9060c65ec013f72e542",
+    "tests/test_main.py": "334da779e19b1d54f0a667c733516928eb099f3b3a165ebef4df75be85902e4b",
+    "tests/test_menu.py": "77b8ae10a641978b8e405e21af6dc77559c5f02292e99a30aeb8696217fa2dac",
+    "tests/test_pipeline.py": "18897c1ce85a13b80b2fc64f5a1846c017dd39a59651b214eb6d9e30427edfaf"
+  },
+  "excluded": "tracked historical CSV/assets; no env/private data/.git/cache/deps"
+}

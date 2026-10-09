@@ -1,0 +1,21 @@
+{
+  "classification": "Confirmado por execu\u00e7\u00e3o",
+  "original_check": {
+    "name": "assist top rate",
+    "expected": 0.6,
+    "actual": 0.6000000000000001,
+    "pass": false,
+    "kind": "contract"
+  },
+  "diagnosis": "Exact float equality in harness generated FAIL; actual ratio agrees with expected to floating tolerance; no source formula defect shown",
+  "directed_check": "math.isclose(actual, expected, rel_tol=1e-12)",
+  "directed_result": true,
+  "command": "closure Python stdlib diagnostic using preserved results, no rerun",
+  "exitcode": 0,
+  "experiments_rerun": false,
+  "original_harness": "harness-offline-original.py",
+  "original_harness_sha256": "3af3318776edc09575aec891c81f2cfeaa8dac473be7e7df33661d5df9a71587",
+  "reproduction_patch": "only assist-top-rate predicate changed from exact equality to math.isclose(rel_tol=1e-12); no source/bench/collector change",
+  "patched_harness_sha256": "9777da386f991bd75b9437d9eb1e2e91f7883d756351223ab7fbef84b98dfce5",
+  "patched_harness_rerun": false
+}

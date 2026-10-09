@@ -1,0 +1,172 @@
+{
+  "command": [
+    "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044\\.venv\\Scripts\\python.exe",
+    "raspagem_spfc.py",
+    "--demo",
+    "--no-open"
+  ],
+  "cwd": "C:\\Users\\davir\\OneDrive\\Documentos\\GitHub\\portfolio\\.agent-grid\\labs\\performance-lab\\lote02\\analise-spfc\\run-20261009-151044",
+  "started_at": "2026-10-09T15:13:19.156380-03:00",
+  "exitcode": 0,
+  "timedout": false,
+  "wall_seconds": 0.8536794999999984,
+  "rss_samples": [
+    {
+      "seconds": 0.012671000000409549,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 2699264
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 3588096
+        }
+      ]
+    },
+    {
+      "seconds": 0.11877110000023094,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 21950464
+        }
+      ]
+    },
+    {
+      "seconds": 0.22448250000070402,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 36327424
+        }
+      ]
+    },
+    {
+      "seconds": 0.3305138000005172,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 50499584
+        }
+      ]
+    },
+    {
+      "seconds": 0.43569920000027196,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 61255680
+        }
+      ]
+    },
+    {
+      "seconds": 0.5408057000004192,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 69054464
+        }
+      ]
+    },
+    {
+      "seconds": 0.646671200000128,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 74260480
+        }
+      ]
+    },
+    {
+      "seconds": 0.7528053000005457,
+      "processes": [
+        {
+          "pid": 10644,
+          "name": "python.exe",
+          "rss": 4173824
+        },
+        {
+          "pid": 9040,
+          "name": "conhost.exe",
+          "rss": 7827456
+        },
+        {
+          "pid": 23592,
+          "name": "python.exe",
+          "rss": 6348800
+        }
+      ]
+    }
+  ],
+  "rss_scope": "100ms sampled child Python and descendants; max observed not guaranteed peak; wrapper excluded",
+  "cleanup_owned_pids": []
+}

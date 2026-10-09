@@ -1,0 +1,131 @@
+2026-10-09 15:04:43.456 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:43.456 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:43.457 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:43.676 WARNING streamlit.runtime.caching.cache_data_api: No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:43.677 WARNING streamlit.runtime.scriptrunner_utils.script_run_context: Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:44.374 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:44.376 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:44.399 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:44.399 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:44.614 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\dashboard.py", line 162, in <module>
+    penultimo = df_analise.iloc[-2]
+                ~~~~~~~~~~~~~~~^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\indexing.py", line 1207, in __getitem__
+    return self._getitem_axis(maybe_callable, axis=axis)
+           ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\indexing.py", line 1773, in _getitem_axis
+    self._validate_integer(key, axis)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\indexing.py", line 1706, in _validate_integer
+    raise IndexError("single positional indexer is out-of-bounds")
+IndexError: single positional indexer is out-of-bounds
+2026-10-09 15:04:44.620 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:44.620 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:44.861 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:44.869 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:44.871 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:44.872 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:45.046 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:45.047 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:45.230 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\dashboard.py", line 145, in <module>
+    df_raw, tempo_download = carregar_dados_api(ticker_selecionado, data_inicio, data_fim_input)
+                             ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 728, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 784, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 846, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\dashboard.py", line 34, in carregar_dados_api
+    dados = yf.download(ticker, start=data_inicio, end=data_fim_yf, auto_adjust=True, progress=False)
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\audit.py", line 51, in download
+    if mode=='timeout':raise TimeoutError('synthetic supplier timeout')
+                       ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TimeoutError: synthetic supplier timeout
+2026-10-09 15:04:45.235 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:45.235 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:45.413 Uncaught app execution
+Traceback (most recent call last):
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\exec_code.py", line 136, in exec_func_with_error_handling
+    result = func()
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\scriptrunner\script_runner.py", line 924, in code_to_exec
+    exec(code, module.__dict__)  # noqa: S102
+    ~~~~^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\dashboard.py", line 145, in <module>
+    df_raw, tempo_download = carregar_dados_api(ticker_selecionado, data_inicio, data_fim_input)
+                             ~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 728, in __call__
+    return self._get_or_create_cached_value(args, kwargs, spinner_message)
+           ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 784, in _get_or_create_cached_value
+    return self._handle_cache_miss(cache, value_key, func_args, func_kwargs)
+           ~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\streamlit\runtime\caching\cache_utils.py", line 846, in _handle_cache_miss
+    computed_value = self._info.func(*func_args, **func_kwargs)
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\dashboard.py", line 55, in carregar_dados_api
+    dados = dados[colunas_finais]
+            ~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\frame.py", line 4384, in __getitem__
+    indexer = self.columns._get_indexer_strict(key, "columns")[1]
+              ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 6302, in _get_indexer_strict
+    self._raise_if_missing(keyarr, indexer, axis_name)
+    ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\labs\performance-lab\lote02\stock-data-pipeline\run-20261009-150256\.venv\Lib\site-packages\pandas\core\indexes\base.py", line 6355, in _raise_if_missing
+    raise KeyError(f"{not_found} not in index")
+KeyError: "['fechamento'] not in index"
+2026-10-09 15:04:45.421 No runtime found, using MemoryCacheStorageManager
+2026-10-09 15:04:45.421 Thread 'MainThread': missing ScriptRunContext! This warning can be ignored when running in bare mode.
+2026-10-09 15:04:45.625 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:45.627 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:45.665 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+2026-10-09 15:04:45.669 Please replace `use_container_width` with `width`.
+
+`use_container_width` will be removed after 2025-12-31.
+
+For `use_container_width=True`, use `width='stretch'`. For `use_container_width=False`, use `width='content'`.
+{"checks": 17, "FAILs": [{"name": "flat series RSI defined", "expected": true, "actual": false, "pass": false, "kind": "edge expectation; 0/0 NaN, policy requires owner"}, {"name": "app rows=1 mode=normal no uncaught exception", "expected": 0, "actual": 1, "pass": false, "kind": "app real with injected supplier"}, {"name": "short history trend unavailable", "expected": true, "actual": false, "pass": false, "kind": "edge expectation; SMA20 has insufficient rows"}, {"name": "app rows=60 mode=timeout no uncaught exception", "expected": 0, "actual": 1, "pass": false, "kind": "app real with injected supplier"}, {"name": "app rows=60 mode=missing no uncaught exception", "expected": 0, "actual": 1, "pass": false, "kind": "app real with injected supplier"}, {"name": "USD ticker not labelled BRL", "expected": false, "actual": true, "pass": false, "kind": "currency presentation expectation"}], "benchmarks": [{"n": 1000, "warmup": 1, "repetitions": 5, "samples_seconds": [0.004242099999828497, 0.0038512000000991975, 0.005330200000116747, 0.0033791000000746862, 0.0031607000000803964], "internal_time_time_samples": [0.004233837127685547, 0.003833770751953125, 0.005309581756591797, 0.003362417221069336, 0.0031480789184570312], "median_seconds": 0.0038512000000991975, "p95_nearest_rank_seconds": 0.005330200000116747, "rows_per_second_from_median": 259659.32695633633, "fixture_sha256": "f4dcc86f51314a35dab18fcce3999ef6669aab01616b8010421fba4704b7a46a", "fixture_bytes": 68593, "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified", "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"}, {"n": 10000, "warmup": 1, "repetitions": 5, "samples_seconds": [0.006089099999826431, 0.005746799999997165, 0.004956600000241451, 0.0047130000002653105, 0.004902900000161026], "internal_time_time_samples": [0.00603795051574707, 0.005720376968383789, 0.0049266815185546875, 0.004695415496826172, 0.004876136779785156], "median_seconds": 0.004956600000241451, "p95_nearest_rank_seconds": 0.006089099999826431, "rows_per_second_from_median": 2017512.0040981458, "fixture_sha256": "0db33797f82610333003e86aa4fa8bf907051f9e1eec98a59d0abb7b9501c4f6", "fixture_bytes": 714741, "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified", "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"}, {"n": 100000, "warmup": 1, "repetitions": 5, "samples_seconds": [0.015856999999869004, 0.016959800000222458, 0.01478499999984706, 0.015536800000063522, 0.01588450000008379], "internal_time_time_samples": [0.015440940856933594, 0.01616978645324707, 0.013926267623901367, 0.014604806900024414, 0.014995813369750977], "median_seconds": 0.015856999999869004, "p95_nearest_rank_seconds": 0.016959800000222458, "rows_per_second_from_median": 6306363.12044057, "fixture_sha256": "668cd93668cb98498edbba723b37043676f2abcd3eeed29a757faa1a385c6236", "fixture_bytes": 7316111, "assertions": "row count, SMA20 independent mean, rising RSI100, input not modified", "scope": "real processar_indicadores; copy+rolling calculations; in-memory warm input; no extraction IO/cache/chart/UI; serial concurrency1"}]}
