@@ -1,7 +1,6 @@
 import type { CarPass, ExperienceState } from '../../contracts/index.ts'
 
-// Integration seam only: no scheduler, audio, moving vehicle or timers are enabled.
-// The future scheduler must use the renderer's single monotonic frame timestamp.
+// Original route and envelopes, driven by the renderer's single monotonic clock.
 export const tracksideRoute = {
   start: [-22, .05, -11] as const,
   end: [22, .05, -11] as const,

@@ -9,8 +9,9 @@ export function SceneRoot({ state, contentIndex, onEvent, ref }: SceneProps & { 
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const engineRef = useRef<GarageRenderer | null>(null)
   useImperativeHandle(ref, () => ({
-    requestAudioFromGesture: async () => 'unavailable',
-    muteAudio: () => {},
+    requestAudioFromGesture: () => engineRef.current?.requestAudioFromGesture() ?? Promise.resolve('unavailable'),
+    muteAudio: () => engineRef.current?.muteAudio(),
+    setAudioVolume: volume => engineRef.current?.setAudioVolume?.(volume),
   }), [])
 
   useEffect(() => {
