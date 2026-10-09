@@ -28,3 +28,13 @@ Capturas incrementais: `.agent-grid/screenshots/night-shift/`; as versões anter
 O fluxo testado é intenção UI/hotspot → estado compartilhado → enquadramento 3D + conteúdo HTML; não existe API remota do portfólio nesta versão.
 
 Resultados de integração e commits serão registrados após execução; não há aprovação visual do proprietário implícita.
+
+## Checkpoint integrado
+
+- `a6fa06a`: conteúdo sanitizado e sete métricas com condições explícitas; lint/build e 13 testes; smoke desktop/390/320 e fallback com console/rede sem erros.
+- `0b46ca5`: extensão aditiva de volume, limitada e sem opt-in implícito; lint/build e 14 testes.
+- `94401ec` / merge `f9d06b9`: UI de telemetria contextualizada e controles opt-in.
+- `7504d5b` / merge `14a5292`: oclusão corrigida por geometria/enquadramentos; UVs, normais e materiais originais. Lint/build/14 testes e smoke integrado passaram. Hero: 62 draw calls, 45.392 triângulos, JS inicial gzip 90,60 kB e cena lazy 153,67 kB. Mobile emulado, sem conclusão sobre celular físico.
+- Capturas de C preservadas em `.agent-grid/screenshots/night-shift/scene-c/`, além dos arquivos originais no Temp. QA integrada em `scene-integrated/`. Cópia intermediária preservada no arquivo privado `.agent-grid/artifacts/night-shift/lead-captures/`; nenhum registro excluído.
+
+Revisão visual do Lead: C resolve leitura dos programas, mas o hero muda pouco; overhaul premium **parcial**, não aprovado como completo. Worker 3D recebeu C2 focado em acabamento perceptível, iluminação e composição antes de D. Não aumentar complexidade se a comparação visual não justificar.
