@@ -1,9 +1,9 @@
-# Preparação local — currículo rascunho
+# Revisão local — currículo rascunho
 
-O currículo não foi aprovado. Nenhum arquivo, link de download ou alteração de `cvUrl` faz parte deste lote.
+O currículo não foi aprovado. Nenhum arquivo público ou alteração de `cvUrl` faz parte deste lote.
 
 O Lead fornecerá o artefato de revisão em um diretório local separado, fora de `public/` e do código versionado. A revisão inicial pode usar o visualizador local de PDF, sem publicar o arquivo.
 
-Se houver necessidade de revisão dentro da UI, preparar uma entrada optativa exclusivamente sob `import.meta.env.DEV`, com sinalizador explícito de revisão e aviso permanente **RASCUNHO / DRAFT — não aprovado**. Selecionar o arquivo local por intenção; não inserir caminho no catálogo, URL pública ou bundle de produção. Esse mecanismo depende do artefato e fica para aprovação posterior.
+Em desenvolvimento, abrir Recruiter Mode com `cv-review=1` na query e usar **Revisar rascunho local**. A entrada é condicionada a `import.meta.env.DEV`; produção não carrega o componente. O proprietário escolhe um PDF local, com aviso permanente **RASCUNHO / DRAFT — não aprovado**, prévia e download local. O arquivo não é pré-carregado nem enviado. A URL temporária é revogada na troca do arquivo e ao sair do Recruiter. Não inserir caminhos no catálogo, em `public/` ou no bundle.
 
-Pendência de áudio: este marco usa a base `a6fa06a`, com ativação/desativação e movimento ambiente. O Lead informou uma extensão posterior com `audioVolume` inicial de 0,25, `setAudioVolume` limitado a 0–1 e setter opcional da cena. A adoção dessa extensão e do slider acessível será um follow-up curto. Ajustar volume não deve ativar áudio nem persistir consentimento para áudio ligado.
+O slider usa `audioVolume` e `setAudioVolume` do Lead, entre 0 e 1, com valor inicial de 0,25. Ajustar volume não ativa áudio nem persiste consentimento para áudio ligado. O ganho audível depende do setter da cena, fora da área da UI.

@@ -1,6 +1,9 @@
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { ZoneContent } from './ZoneContent.tsx'
 import { uiLabels } from './uiLabels.ts'
+import { lazy, Suspense } from 'react'
+
+const LocalCvReview = import.meta.env.DEV ? lazy(() => import('./LocalCvReview.tsx')) : null
 
 type Props = PortfolioShellProps & {
   onProject: (project: Project, trigger: HTMLButtonElement) => void
@@ -9,6 +12,7 @@ type Props = PortfolioShellProps & {
 // Traditional reading remains separate from the spatial experience.
 export function RecruiterView({ content, state, actions, onProject }: Props) {
   const t = uiLabels(state.locale)
+  const reviewEnabled = import.meta.env.DEV && new URLSearchParams(window.location.search).get('cv-review') === '1'
   return <>
     <a className="drf-skip" href="#drf-content" onClick={event => {
       event.preventDefault()
@@ -27,8 +31,14 @@ export function RecruiterView({ content, state, actions, onProject }: Props) {
         </nav>
         <div role="group" aria-label={t.locale} className="drf-segment">{(['pt', 'en'] as const).map(locale => <button type="button" key={locale} aria-pressed={state.locale === locale} onClick={() => actions.setLocale(locale)} aria-label={locale === 'pt' ? 'Português' : 'English'}>{locale.toUpperCase()}</button>)}</div>
         <button id="drf-return-garage" type="button" className="drf-button" onClick={() => actions.setMode('immersive')}>{t.returnGarage} ↗</button>
+        {reviewEnabled && <button type="button" className="drf-button" onClick={() => {
+          const review = document.getElementById('drf-cv-review')
+          review?.focus({ preventScroll: true })
+          review?.scrollIntoView({ block: 'start' })
+        }}>{t.reviewCv}</button>}
       </div>
     </header>
+    {reviewEnabled && LocalCvReview && <Suspense fallback={<p>{t.loadingDraft}</p>}><LocalCvReview locale={state.locale} /></Suspense>}
     <div className="drf-intro"><div><p className="drf-code">{content.profile.location[state.locale]}</p><h1>{content.profile.name}</h1><p className="drf-lead">{content.profile.summary[state.locale]}</p></div><p className="drf-team-note">{t.fiction}</p></div>
     <div className="drf-status-strip"><p role="status">{t.recruiterNotice}</p></div>
     <div id="drf-content" tabIndex={-1} className="drf-content">
