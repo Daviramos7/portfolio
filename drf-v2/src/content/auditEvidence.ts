@@ -15,6 +15,8 @@ const audits = [
   audit('audit-pyspark', 'PySpark / Recife', '27f0c93'),
   audit('audit-stock', 'Stock Data Pipeline', 'f9feca6'),
   audit('audit-spfc', 'SPFC', 'ff13dc2'),
+  audit('audit-task', 'Task Manager', 'b1b2409'),
+  audit('audit-pokemon', 'Guess the Pokémon', '14d501c'),
 ]
 const metric = (id: string, projectId: string, evidenceId: string, value: number,
   unit: string, label: Localized, context: Localized): Metric => ({
@@ -52,6 +54,22 @@ const metrics: Metric[] = [
       'Median, warmup + 3 repetitions, Pandas 2.3.3/Python 3.13.9, Windows 11. Warm synthetic fixture, serial; includes local write/replace, excludes acquisition, HTML parser and chart. No fsync. Not comparable to Stock calculation.')),
 ]
 const updates: Record<string, Partial<Project>> = {
+  'task-manager': {
+    evidenceIds: ['audit-task'],
+    problem: t('Persistir tarefas e consultá-las por uma API HTTP e um cliente de terminal.', 'Persist tasks and query them through an HTTP API and a terminal client.'),
+    summary: t('API Python HTTPServer com SQLite e cliente CLI requests. Criação, listagem e consulta verificadas em cópia isolada com dados sintéticos.', 'Python HTTPServer API with SQLite and a requests CLI client. Creation, listing and lookup verified in an isolated copy with synthetic data.'),
+    productStatus: t('API e CLI locais verificados; CRUD incompleto', 'Local API and CLI verified; incomplete CRUD'),
+    technologies: ['Python', 'SQLite', 'HTTPServer', 'requests'],
+    decisions: [t('Persistência SQLite e respostas JSON; benchmark serial de listagem HTTP incluindo leitura e decodificação.', 'SQLite persistence and JSON responses; serial HTTP listing benchmark including reading and decoding.')],
+    limitations: [t('Complemento: 11 PASS/5 FAIL. Título null encerra a resposta sem status e pode deixar conexão bloqueando escritas; PUT/DELETE ausentes; query string no ID falha. Política para título vazio exige confirmação. Sem autenticação ou validação de produção.', 'Supplement: 11 PASS/5 FAIL. A null title closes the response without a status and can leave a connection blocking writes; PUT/DELETE absent; ID query string fails. Empty-title policy needs confirmation. No authentication or production validation.')],
+  },
+  'guess-the-pokemon': {
+    evidenceIds: ['audit-pokemon'],
+    problem: t('Criar um jogo de dedução com dicas, tentativas limitadas e pontuação persistida.', 'Create a deduction game with hints, limited attempts and persisted scores.'),
+    summary: t('Jogo HTML/CSS/JavaScript integrado à PokéAPI por código. Fluxos testados em navegador com API local e imagens sintéticas; pontuação via localStorage.', 'HTML/CSS/JavaScript game integrated with PokéAPI in code. Browser flows tested with a local API and synthetic images; scores stored in localStorage.'),
+    productStatus: t('Fluxos offline verificados; API real não validada', 'Offline flows verified; live API unvalidated'),
+    limitations: [t('Complemento: 14 PASS/4 FAIL. Feedback de acerto sobrescrito, tentativas continuam após vitória, reinício faz duas aquisições e retry de erro não tem limite por código. Quatro erros 503 foram injetados, sem carga externa. Assets de franquia não reaproveitados; contribuição e licenças exigem revisão.', 'Supplement: 14 PASS/4 FAIL. Success feedback overwritten, attempts continue after winning, restart acquires twice and code has no retry limit. Four 503 errors were injected without external load. Franchise assets not reused; contribution and licenses need review.')],
+  },
   'public-expenditure-big-data': {
     problem: t('Transformar despesas públicas de 2023 em agregações e saídas verificáveis.', 'Turn 2023 public expenditure into inspectable aggregates and exports.'),
     summary: t('Pipeline PySpark para normalização monetária, agregação, qualidade e exportação de ranking/dashboard. Reprodução local de 127.119 registros públicos.', 'PySpark pipeline for monetary normalization, aggregation, quality checks and ranking/dashboard exports. Local reproduction of 127,119 public records.'),
@@ -95,9 +113,9 @@ export function applyAuditEvidence(base: PortfolioContent): PortfolioContent {
       if (!update) return project
       const ownMetrics = metrics.filter(item => item.projectId === project.id)
       return { ...project, ...update, contribution: null,
-        evidenceIds: [...project.evidenceIds, ...new Set(ownMetrics.flatMap(item => item.evidenceIds))],
+        evidenceIds: [...new Set([...project.evidenceIds, ...(update.evidenceIds ?? []), ...ownMetrics.flatMap(item => item.evidenceIds)])],
         metricIds: ownMetrics.map(item => item.id),
-        relatedZones: [...new Set([...project.relatedZones, 'telemetry' as const])],
+        relatedZones: ownMetrics.length ? [...new Set([...project.relatedZones, 'telemetry' as const])] : project.relatedZones,
       }
     }),
   }

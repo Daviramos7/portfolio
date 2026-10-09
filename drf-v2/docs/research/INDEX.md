@@ -1,6 +1,6 @@
 # Índice de evidências do portfólio
 
-Consolidado em09/10/2026 para revisão do proprietário. Cinco projetos auditados experimentalmente; classificações e ressalvas completas nos relatórios. Aprovação dos lotes autoriza preservação das evidências, não publicação automática de métricas nem aprovação de produto.
+Consolidado em09/10/2026 para revisão do proprietário. Sete projetos auditados experimentalmente; classificações e ressalvas completas nos relatórios. Aprovação dos lotes autoriza preservação das evidências, não publicação automática de métricas nem aprovação de produto.
 
 | Projeto | Revisão | Evidências atuais | Relatório / limites principais |
 |---|---|---|---|
@@ -29,9 +29,16 @@ Manter [condições do Lote01](CHECKPOINT-LOTE-01.md) e [Lote02](CHECKPOINT-LOTE
 ## Projetos ainda pendentes
 
 - [Horta Inteligente](horta-inteligente/BLOQUEIO.md): código não localizado na busca pontual autorizada; sem firmware/hardware/métricas verificadas.
-- Demais repositórios inventariados ainda sem auditoria experimental deste ciclo: task_manager, av2_backend, Faculdade, LocateMe/variantes, ed-marcas-site e Mushmc bedwars etl. Relevância para portfólio e escopo de cada um precisam de seleção posterior; não inferir capacidades pelo nome.
-- Trabalho municipal/SEFAZ: somente descrição profissional pública autorizada daV1/V2/CV; conteúdo interno não auditado nem divulgado. Não iniciar novo lote nesta missão.
+- Demais repositórios inventariados ainda sem auditoria experimental deste ciclo: av2_backend, Faculdade, LocateMe/variantes, ed-marcas-site e Mushmc bedwars etl. Relevância para portfólio e escopo de cada um precisam de seleção posterior; não inferir capacidades pelo nome.
+- Trabalho municipal/SEFAZ: somente descrição profissional pública autorizada daV1/V2/CV; conteúdo interno não auditado nem divulgado. Demais projetos aguardam capacidade para nova execução.
 
-## Próximo passo autorizado
+## Night Shift — ampliação verificada
 
-Preparar currículoPT/PDF/DOCX como rascunho privado revisável, com fontes e dúvidas separadas. Conteúdo/download atual do portfólio eV1 permanecem preservados. Atualização do catálogo, integração de download e publicação dependem da aprovação do proprietário.
+| Projeto | Revisão | Execução e limites |
+|---|---|---|
+| Task Manager | `b1b2409` | [Relatório](task-manager/RELATORIO.md): API/CLI e SQLite isolados; 11 PASS/5 FAIL complementares. Listagem HTTP serial 100 mil linhas: mediana 394,958 ms, warmup +3; inclui JSON/transferência/decode. n=3 não sustenta p95 de produção. RSS 163,79 MiB é amostra do servidor+cliente combinados. |
+| Guess the Pokémon | `14d501c` | [Relatório](guess-the-pokemon/RELATORIO.md): Chrome headless, API/imagens sintéticas e CDN bloqueada; 14 PASS/4 FAIL. Sem benchmark de serviço remoto. RSS 682,05 MiB combina harness e navegador; não é memória exclusiva do jogo. |
+
+Falhas instrumentais de harness e negativas intencionais preservadas; não equivalem a defeitos adicionais. Novos resultados publicados somente no checkout local autorizado, sem push/deploy. Sete métricas do lote anterior continuam com suas condições; métricas heterogêneas não são um ranking. Task/Pokémon não recebem números de dashboard neste ciclo.
+
+Currículo privado permanece rascunho. PDF inspecionado; DOCX sem QA visual final devido à ausência de renderer compatível. Revisão DEV opt-in não substitui o download público. [Linha do tempo](../production/NIGHT-SHIFT.md).
