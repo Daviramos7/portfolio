@@ -1,6 +1,7 @@
 import { ArrowLeft, ArrowRight, BookOpen, Crosshair, X } from 'lucide-react'
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
+import { EnvironmentControls } from './EnvironmentControls.tsx'
 
 type Props = PortfolioShellProps & {
   program: Project | undefined
@@ -28,6 +29,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         <span className="drf-hud-mark" aria-hidden="true">DRF<span>/</span></span>
         <div><h1>ENGINEERING</h1><p>{t.team}</p></div>
       </div>
+      <EnvironmentControls state={state} actions={actions} />
       <div className="drf-hud-tools">
         <div className="drf-hud-locale" role="group" aria-label={t.locale}>
           {(['pt', 'en'] as const).map(locale => <button type="button" key={locale} aria-pressed={state.locale === locale} aria-label={locale === 'pt' ? 'Português' : 'English'} onClick={() => actions.setLocale(locale)}>{locale.toUpperCase()}</button>)}
