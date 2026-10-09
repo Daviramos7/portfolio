@@ -1,0 +1,9 @@
+{
+  "command": "npm install --prefix <LAB>/tooling --cache <LAB>/tooling/cache --save-exact --ignore-scripts playwright-core",
+  "exitcode": 0,
+  "wall_seconds": null,
+  "wall_condition": "not instrumented; no duration inferred",
+  "node": "v22.21.0",
+  "playwright-core": "1.64.0",
+  "browser": "existing Chrome; no browser installation"
+}

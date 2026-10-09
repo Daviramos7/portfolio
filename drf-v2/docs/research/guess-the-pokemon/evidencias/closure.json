@@ -1,0 +1,15 @@
+{
+  "closed_at": "2026-10-09T20:22:57.033410-03:00",
+  "elapsed_since_copy_seconds": 464.286626,
+  "copied_source_hashes_unchanged": true,
+  "lab_ports": [
+    5286
+  ],
+  "shutdown": "server closed by harness finally; no listener found on lab ports during closure",
+  "hardware": {
+    "logical_threads": 8,
+    "physical_ram_bytes": 34278518784
+  },
+  "max_observed_combined_rss_bytes": 715177984,
+  "rss_scope": "Node+Chrome+own console helper descendants, sampled ~100ms; wrapper excluded; max observed, not peak or game-only RSS"
+}

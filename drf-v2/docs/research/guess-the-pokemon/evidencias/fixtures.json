@@ -1,0 +1,114 @@
+[
+  {
+    "id": 1,
+    "name": "alpha",
+    "types": [
+      {
+        "type": {
+          "name": "grass"
+        }
+      }
+    ],
+    "sprites": {
+      "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg",
+      "other": {
+        "official-artwork": {
+          "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+        }
+      },
+      "versions": {
+        "generation-v": {
+          "black-white": {
+            "animated": {
+              "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 2,
+    "name": "beta",
+    "types": [
+      {
+        "type": {
+          "name": "water"
+        }
+      }
+    ],
+    "sprites": {
+      "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg",
+      "other": {
+        "official-artwork": {
+          "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+        }
+      },
+      "versions": {
+        "generation-v": {
+          "black-white": {
+            "animated": {
+              "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 3,
+    "name": "gamma",
+    "types": [
+      {
+        "type": {
+          "name": "fire"
+        }
+      }
+    ],
+    "sprites": {
+      "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg",
+      "other": {
+        "official-artwork": {
+          "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+        }
+      },
+      "versions": {
+        "generation-v": {
+          "black-white": {
+            "animated": {
+              "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    "id": 4,
+    "name": "delta",
+    "types": [
+      {
+        "type": {
+          "name": "grass"
+        }
+      }
+    ],
+    "sprites": {
+      "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg",
+      "other": {
+        "official-artwork": {
+          "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+        }
+      },
+      "versions": {
+        "generation-v": {
+          "black-white": {
+            "animated": {
+              "front_default": "http://127.0.0.1:5286/synthetic-sprite.svg"
+            }
+          }
+        }
+      }
+    }
+  }
+]

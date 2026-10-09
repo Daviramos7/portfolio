@@ -1,0 +1,15 @@
+{
+  "sha": "14d501c2a87fa0eaad5030614a04c0cc4bcaaed4",
+  "source_url": "https://github.com/Daviramos7/Guess-the-Pokemon",
+  "started_at": "2026-10-09T20:15:12.746784-03:00",
+  "acquisition": "public shallow no-checkout clone; only text files materialized via SHA",
+  "hashes": {
+    ".hintrc": "20a7f034756172fc058409717b8aa8617bebc5c6655e5ac0a75f723aedf4ba8e",
+    "README.md": "3938c680584db95ba69bc9208f76c82dea07a2372ca89e2452d69bc11690f9f4",
+    "index.html": "2194636b38987a78dd5974d5a4fc1228b190d49e55d2cb62229caf4062dcf1ef",
+    "script.js": "d0dd22b93aefd61e2beda94ba265727515dcc726349adce9a8691a92f2155197",
+    "style.css": "b9e4337c8453a30e97b3adf37150a0a08856021cf54cb92007bf17eb762c929d"
+  },
+  "AGENTS": "none tracked",
+  "excluded": "official/local franchise assets not materialized; no credentials/env"
+}

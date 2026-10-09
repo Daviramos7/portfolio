@@ -1,0 +1,482 @@
+{
+  "conditions": "original HTML/CSS/JS unchanged; PokéAPI requests intercepted to deterministic HTTP loopback mock; no real upstream/official assets; Math.random fixed0; Chrome headless; serial; localStorage fresh context",
+  "checks": [
+    {
+      "name": "startup seeded target",
+      "expected": "alpha",
+      "actual": "alpha",
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "wrong guess consumes one",
+      "expected": 2,
+      "actual": 2,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "wrong guess feedback preserved",
+      "expected": true,
+      "actual": false,
+      "pass": false,
+      "kind": "UI feedback expectation; submit handler rebuilds attempts"
+    },
+    {
+      "name": "duplicate does not consume another",
+      "expected": 2,
+      "actual": 2,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "invalid name does not consume attempt",
+      "expected": 2,
+      "actual": 2,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "three hints consumed",
+      "expected": 3,
+      "actual": 3,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "hints bounded at three",
+      "expected": 3,
+      "actual": 3,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "normalized correct guess awards remaining chances",
+      "expected": 20,
+      "actual": 20,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "record saved",
+      "expected": 20,
+      "actual": 20,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "winning round rejects further guesses",
+      "expected": 2,
+      "actual": 1,
+      "pass": false,
+      "kind": "game-ended expectation; only attemptsLeft<=0 guarded"
+    },
+    {
+      "name": "record survives reload",
+      "expected": 20,
+      "actual": 20,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "three wrong guesses exhaust round",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "restart tab resets attempts",
+      "expected": 3,
+      "actual": 3,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "restart button makes one acquisition",
+      "expected": 1,
+      "actual": 2,
+      "pass": false,
+      "kind": "duplicate event registration expectation"
+    },
+    {
+      "name": "keyboard selects first suggestion",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "Escape clears suggestions",
+      "expected": 0,
+      "actual": 0,
+      "pass": true,
+      "kind": "functional"
+    },
+    {
+      "name": "503 round uses a bounded single acquisition",
+      "expected": 1,
+      "actual": 5,
+      "pass": false,
+      "kind": "observed four failures then fixture allows success; original recursive retries have no cap"
+    },
+    {
+      "name": "mobile document fits width",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "functional"
+    }
+  ],
+  "screens": [
+    {
+      "name": "1440-startup-synthetic",
+      "viewport": 1440,
+      "scrollWidth": 1440,
+      "focusedTag": "INPUT"
+    },
+    {
+      "name": "1440-win-feedback-synthetic",
+      "viewport": 1440,
+      "scrollWidth": 1440,
+      "focusedTag": "INPUT"
+    },
+    {
+      "name": "390-startup-synthetic",
+      "viewport": 390,
+      "scrollWidth": 390,
+      "focusedTag": "INPUT"
+    }
+  ],
+  "pageErrors": [],
+  "consoleErrors": [
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: the server responded with a status of 404 (Not Found)",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: net::ERR_FAILED",
+    "Failed to load resource: net::ERR_FAILED"
+  ],
+  "blockedExternal": [
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+    "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+    "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap",
+    "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+    "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap"
+  ],
+  "mockedPokeUrls": [
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/beta",
+    "https://pokeapi.co/api/v2/pokemon/beta",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/beta",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/not-a-fixture",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/alpha",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/gamma",
+    "https://pokeapi.co/api/v2/pokemon/gamma",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/beta",
+    "https://pokeapi.co/api/v2/pokemon/beta",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/gamma",
+    "https://pokeapi.co/api/v2/pokemon/gamma",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/delta",
+    "https://pokeapi.co/api/v2/pokemon/delta",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon?limit=151",
+    "https://pokeapi.co/api/v2/pokemon/alpha",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1",
+    "https://pokeapi.co/api/v2/pokemon/1"
+  ],
+  "failedResources": [
+    {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css",
+      "reason": "net::ERR_FAILED"
+    },
+    {
+      "url": "https://fonts.googleapis.com/css2?family=Oxanium:wght@300;400;500;600;700;800&display=swap",
+      "reason": "net::ERR_FAILED"
+    }
+  ],
+  "browserVersion": "155.0.8059.40",
+  "finalState": {
+    "attemptsLeft": 3,
+    "score": 0,
+    "highScore": 20,
+    "hintsUsed": 0,
+    "attempts": [],
+    "currentPokemon": "alpha",
+    "message": "Adivinhe o Pokémon!"
+  },
+  "mobileFocusSamples": [
+    {
+      "tag": "A",
+      "title": "GitHub"
+    },
+    {
+      "tag": "A",
+      "title": "LinkedIn"
+    },
+    {
+      "tag": "BODY",
+      "title": null
+    },
+    {
+      "tag": "BUTTON",
+      "title": "Tentativas"
+    },
+    {
+      "tag": "BUTTON",
+      "title": "Dicas"
+    }
+  ],
+  "serverRequests": [
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/style.css",
+      "query": ""
+    },
+    {
+      "path": "/script.js",
+      "query": ""
+    },
+    {
+      "path": "/img/pokedex.png",
+      "query": ""
+    },
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/synthetic-sprite.svg",
+      "query": ""
+    },
+    {
+      "path": "/favicons/favicon-16x16.png",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/beta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/beta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/beta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/not-a-fixture",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/alpha",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/gamma",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/gamma",
+      "query": ""
+    },
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/style.css",
+      "query": ""
+    },
+    {
+      "path": "/script.js",
+      "query": ""
+    },
+    {
+      "path": "/img/pokedex.png",
+      "query": ""
+    },
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/synthetic-sprite.svg",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/beta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/beta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/gamma",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/gamma",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/delta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/delta",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon",
+      "query": "?limit=151"
+    },
+    {
+      "path": "/api/v2/pokemon/alpha",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/style.css",
+      "query": ""
+    },
+    {
+      "path": "/script.js",
+      "query": ""
+    },
+    {
+      "path": "/img/pokedex.png",
+      "query": ""
+    },
+    {
+      "path": "/",
+      "query": ""
+    },
+    {
+      "path": "/api/v2/pokemon/1",
+      "query": ""
+    },
+    {
+      "path": "/synthetic-sprite.svg",
+      "query": ""
+    }
+  ]
+}
