@@ -1,0 +1,10 @@
+{
+  "command": [
+    "<PORTFOLIO>\\.agent-grid\\labs\\night-shift-audit\\task-manager\\.venv\\Scripts\\python.exe",
+    "audit.py",
+    "<PORTFOLIO>\\.agent-grid\\worktrees\\drf-portfolio-intelligence\\drf-v2\\docs\\research\\task-manager\\evidencias"
+  ],
+  "exitcode": 1,
+  "wall_seconds": 10.858113400001457,
+  "timeout_seconds": 90
+}

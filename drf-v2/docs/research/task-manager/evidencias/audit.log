@@ -1,0 +1,161 @@
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks/1 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks/999999 HTTP/1.1" 404 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks/not-an-id HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "PUT /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "DELETE /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks/1?probe=1 HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks/1 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "PUT /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "DELETE /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:22] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:23] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:23] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:18:24] "GET /tasks HTTP/1.1" 200 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 53731)
+Traceback (most recent call last):
+  File "<PYTHON313>\Lib\socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "<PORTFOLIO>\.agent-grid\labs\night-shift-audit\task-manager\backend_server.py", line 117, in do_POST
+    cursor.execute("INSERT INTO tarefas (titulo, descricao) VALUES (?,?)", (titulo, descricao))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: tarefas.titulo
+----------------------------------------
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 0.2465 ms
+   ├─ ⚡ Tempo Total da API:   1.6992 ms
+   └─ 📦 Tamanho da Resposta:  2 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 3.6445 ms
+   ├─ ⚡ Tempo Total da API:   4.2818 ms
+   └─ 📦 Tamanho da Resposta:  137 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/1
+   ├─ 💾 Tempo de Banco (SQL): 0.2222 ms
+   ├─ ⚡ Tempo Total da API:   1.3623 ms
+   └─ 📦 Tamanho da Resposta:  137 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/999999
+   ├─ 💾 Tempo de Banco (SQL): 0.2401 ms
+   ├─ ⚡ Tempo Total da API:   0.8254 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/not-an-id
+   ├─ 💾 Tempo de Banco (SQL): 0.0000 ms
+   ├─ ⚡ Tempo Total da API:   0.4978 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 4.6632 ms
+   ├─ ⚡ Tempo Total da API:   5.2042 ms
+   └─ 📦 Tamanho da Resposta:  98 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/1
+   ├─ 💾 Tempo de Banco (SQL): 0.0000 ms
+   ├─ ⚡ Tempo Total da API:   1.2465 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 3.7365 ms
+   ├─ ⚡ Tempo Total da API:   4.3526 ms
+   └─ 📦 Tamanho da Resposta:  133 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 4.0295 ms
+   ├─ ⚡ Tempo Total da API:   5.2276 ms
+   └─ 📦 Tamanho da Resposta:  133 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 1.7395 ms
+   ├─ ⚡ Tempo Total da API:   4.3666 ms
+   └─ 📦 Tamanho da Resposta:  126783 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 1.1194 ms
+   ├─ ⚡ Tempo Total da API:   2.9917 ms
+   └─ 📦 Tamanho da Resposta:  126783 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 1.0154 ms
+   ├─ ⚡ Tempo Total da API:   2.5325 ms
+   └─ 📦 Tamanho da Resposta:  126783 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 0.9441 ms
+   ├─ ⚡ Tempo Total da API:   2.6138 ms
+   └─ 📦 Tamanho da Resposta:  126783 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 11.5612 ms
+   ├─ ⚡ Tempo Total da API:   27.6587 ms
+   └─ 📦 Tamanho da Resposta:  1287784 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 11.5964 ms
+   ├─ ⚡ Tempo Total da API:   25.6674 ms
+   └─ 📦 Tamanho da Resposta:  1287784 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 11.5499 ms
+   ├─ ⚡ Tempo Total da API:   24.4083 ms
+   └─ 📦 Tamanho da Resposta:  1287784 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 9.0847 ms
+   ├─ ⚡ Tempo Total da API:   21.5046 ms
+   └─ 📦 Tamanho da Resposta:  1287784 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 114.0509 ms
+   ├─ ⚡ Tempo Total da API:   241.7669 ms
+   └─ 📦 Tamanho da Resposta:  13077785 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 110.3320 ms
+   ├─ ⚡ Tempo Total da API:   262.2144 ms
+   └─ 📦 Tamanho da Resposta:  13077785 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 112.5469 ms
+   ├─ ⚡ Tempo Total da API:   250.5503 ms
+   └─ 📦 Tamanho da Resposta:  13077785 bytes
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 112.1151 ms
+   ├─ ⚡ Tempo Total da API:   250.8874 ms
+   └─ 📦 Tamanho da Resposta:  13077785 bytes
+{"checks": 16, "FAILs": [{"name": "update documented CRUD", "expected": 200, "actual": 501, "pass": false, "kind": "README expectation; method stub"}, {"name": "delete documented CRUD", "expected": 204, "actual": 501, "pass": false, "kind": "README expectation; method stub"}, {"name": "empty title rejected", "expected": 400, "actual": 201, "pass": false, "kind": "validation expectation; API checks presence only"}, {"name": "query on item route", "expected": 200, "actual": 400, "pass": false, "kind": "routing expectation; ID parsed from raw self.path"}, {"name": "null title controlled rejection", "expected": 400, "actual": 0, "pass": false, "kind": "validation expectation; SQL exception closes request"}], "benchmarks": [{"n": 1000, "warmup": 1, "repetitions": 3, "samples_seconds": [0.004538599998340942, 0.003995600000052946, 0.004022000000986736], "median_seconds": 0.004022000000986736, "p95_nearest_rank_seconds": 0.004538599998340942, "rows_per_second_from_median": 248632.5210727661, "response_bytes": [126783, 126783, 126783], "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log", "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp", "fixture_rows_sha256": "67c7b1e0d7bbdd31fc1338bfc506ef606e020720f32b7c55660c358ea1da4363"}, {"n": 10000, "warmup": 1, "repetitions": 3, "samples_seconds": [0.04932089999783784, 0.061879400000179885, 0.050220100001752144], "median_seconds": 0.050220100001752144, "p95_nearest_rank_seconds": 0.061879400000179885, "rows_per_second_from_median": 199123.45852857933, "response_bytes": [1287784, 1287784, 1287784], "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log", "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp", "fixture_rows_sha256": "d78722a99299de3c9f1bc01b816f2f1e0df0fb5abce04e44487c6620ca65ac0c"}, {"n": 100000, "warmup": 1, "repetitions": 3, "samples_seconds": [0.418768600000476, 0.38652319999891915, 0.39495780000288505], "median_seconds": 0.39495780000288505, "p95_nearest_rank_seconds": 0.418768600000476, "rows_per_second_from_median": 253191.60679766175, "response_bytes": [13077785, 13077785, 13077785], "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log", "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp", "fixture_rows_sha256": "052c3c3717ef6aac03436639c041bf8b43a0e874ba197c11f79e2f471c5c57eb"}]}

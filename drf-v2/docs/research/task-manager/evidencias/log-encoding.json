@@ -1,0 +1,7 @@
+[
+  {
+    "file": "audit-first-fail.log",
+    "original_sha256": "500e8d2af4bbc0071d84e1d6cbcacb185fe2c7291a5b2ae22bf5e462b1f34c1e",
+    "conversion": "mixed stream; invalid UTF8 bytes escaped as literal backslash-x; valid UTF8 preserved"
+  }
+]

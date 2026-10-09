@@ -1,0 +1,129 @@
+127.0.0.1 - - [09/Oct/2026 20:17:34] "GET /tasks HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "POST /tasks HTTP/1.1" 201 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "GET /tasks/1 HTTP/1.1" 200 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "GET /tasks/999999 HTTP/1.1" 404 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "GET /tasks/not-an-id HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "POST /tasks HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "POST /tasks HTTP/1.1" 400 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "PUT /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "DELETE /tasks/1 HTTP/1.1" 501 -
+127.0.0.1 - - [09/Oct/2026 20:17:34] "POST /tasks HTTP/1.1" 201 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50595)
+Traceback (most recent call last):
+  File "<PYTHON313>\Lib\socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "<PORTFOLIO>\.agent-grid\labs\night-shift-audit\task-manager\backend_server.py", line 117, in do_POST
+    cursor.execute("INSERT INTO tarefas (titulo, descricao) VALUES (?,?)", (titulo, descricao))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.IntegrityError: NOT NULL constraint failed: tarefas.titulo
+----------------------------------------
+127.0.0.1 - - [09/Oct/2026 20:17:34] "GET /tasks/1?probe=1 HTTP/1.1" 400 -
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 50597)
+Traceback (most recent call last):
+  File "<PYTHON313>\Lib\socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "<PORTFOLIO>\.agent-grid\labs\night-shift-audit\task-manager\backend_server.py", line 117, in do_POST
+    cursor.execute("INSERT INTO tarefas (titulo, descricao) VALUES (?,?)", (titulo, descricao))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+----------------------------------------
+----------------------------------------
+Exception occurred during processing of request from ('127.0.0.1', 53663)
+Traceback (most recent call last):
+  File "<PYTHON313>\Lib\socketserver.py", line 318, in _handle_request_noblock
+    self.process_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 349, in process_request
+    self.finish_request(request, client_address)
+    ~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 362, in finish_request
+    self.RequestHandlerClass(request, client_address, self)
+    ~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "<PYTHON313>\Lib\socketserver.py", line 766, in __init__
+    self.handle()
+    ~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 436, in handle
+    self.handle_one_request()
+    ~~~~~~~~~~~~~~~~~~~~~~~^^
+  File "<PYTHON313>\Lib\http\server.py", line 424, in handle_one_request
+    method()
+    ~~~~~~^^
+  File "<PORTFOLIO>\.agent-grid\labs\night-shift-audit\task-manager\backend_server.py", line 117, in do_POST
+    cursor.execute("INSERT INTO tarefas (titulo, descricao) VALUES (?,?)", (titulo, descricao))
+    ~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+sqlite3.OperationalError: database is locked
+----------------------------------------
+
+📊 [ESTATÍSTICA] GET /tasks
+   ├─ 💾 Tempo de Banco (SQL): 0.3138 ms
+   ├─ ⚡ Tempo Total da API:   1.6298 ms
+   └─ 📦 Tamanho da Resposta:  2 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 4.7057 ms
+   ├─ ⚡ Tempo Total da API:   5.4092 ms
+   └─ 📦 Tamanho da Resposta:  137 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/1
+   ├─ 💾 Tempo de Banco (SQL): 0.2530 ms
+   ├─ ⚡ Tempo Total da API:   1.4799 ms
+   └─ 📦 Tamanho da Resposta:  137 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/999999
+   ├─ 💾 Tempo de Banco (SQL): 0.2162 ms
+   ├─ ⚡ Tempo Total da API:   0.7269 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/not-an-id
+   ├─ 💾 Tempo de Banco (SQL): 0.0000 ms
+   ├─ ⚡ Tempo Total da API:   0.5062 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 4.3142 ms
+   ├─ ⚡ Tempo Total da API:   5.3580 ms
+   └─ 📦 Tamanho da Resposta:  98 bytes
+
+📊 [ESTATÍSTICA] GET /tasks/1
+   ├─ 💾 Tempo de Banco (SQL): 0.0000 ms
+   ├─ ⚡ Tempo Total da API:   0.5841 ms
+   └─ 📦 Tamanho da Resposta:  0 bytes
+Traceback (most recent call last):
+  File "<PORTFOLIO>\.agent-grid\labs\night-shift-audit\task-manager\audit.py", line 32, in <module>
+    first=req('POST','/tasks',{'titulo':'Reexecu\xe7\xe3o sint\xe9tica'})[1];second=req('POST','/tasks',{'titulo':'Reexecu\xe7\xe3o sint\xe9tica'})[1];ck('POST non-idempotent characterization',True,first['id']!=second['id'],'not bug; no idempotency contract')
+                                                                                                                                                                                    ~~~~~^^^^^^
+KeyError: 'id'

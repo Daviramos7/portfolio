@@ -1,0 +1,69 @@
+
+--- Sistema de Gestão de Tarefas ---
+1. Listar todas as tarefas
+2. Adicionar nova tarefa
+3. Visualizar uma tarefa
+4. Atualizar uma tarefa
+5. Deletar uma tarefa
+6. Sair
+
+📊 [ESTATÍSTICA] POST /tasks
+   ├─ 💾 Tempo de Banco (SQL): 3.5028 ms
+   ├─ ⚡ Tempo Total da API:   5.0080 ms
+   └─ 📦 Tamanho da Resposta:  139 bytes
+Tarefa adicionada com sucesso!
+------------------------------
+ID: 5
+Título: CLI sintético
+Descrição: Descrição CLI
+Status: pendente
+Criado em: 2026-10-09 23:18:22
+------------------------------
+
+--- Sistema de Gestão de Tarefas ---
+1. Listar todas as tarefas
+2. Adicionar nova tarefa
+3. Visualizar uma tarefa
+4. Atualizar uma tarefa
+5. Deletar uma tarefa
+6. Sair
+
+📊 [ESTATÍSTICA] GET /tasks/1
+   ├─ 💾 Tempo de Banco (SQL): 0.2096 ms
+   ├─ ⚡ Tempo Total da API:   1.7529 ms
+   └─ 📦 Tamanho da Resposta:  137 bytes
+------------------------------
+ID: 1
+Título: Sintético Árvore
+Descrição: Fixture local
+Status: pendente
+Criado em: 2026-10-09 23:18:22
+------------------------------
+
+--- Sistema de Gestão de Tarefas ---
+1. Listar todas as tarefas
+2. Adicionar nova tarefa
+3. Visualizar uma tarefa
+4. Atualizar uma tarefa
+5. Deletar uma tarefa
+6. Sair
+Digite os novos dados (deixe em branco para não alterar):
+Erro ao atualizar tarefa: 501 - {"error": "N\u00e3o instrumentado para teste"}
+
+--- Sistema de Gestão de Tarefas ---
+1. Listar todas as tarefas
+2. Adicionar nova tarefa
+3. Visualizar uma tarefa
+4. Atualizar uma tarefa
+5. Deletar uma tarefa
+6. Sair
+Erro ao deletar tarefa: 501 - {"error": "N\u00e3o instrumentado para teste"}
+
+--- Sistema de Gestão de Tarefas ---
+1. Listar todas as tarefas
+2. Adicionar nova tarefa
+3. Visualizar uma tarefa
+4. Atualizar uma tarefa
+5. Deletar uma tarefa
+6. Sair
+Saindo...

@@ -1,0 +1,14 @@
+{
+  "command": [
+    "<PORTFOLIO>\\.agent-grid\\labs\\night-shift-audit\\task-manager\\.venv\\Scripts\\python.exe",
+    "-m",
+    "pip",
+    "install",
+    "requests==2.34.2",
+    "psutil==7.2.2",
+    "--disable-pip-version-check"
+  ],
+  "exitcode": 0,
+  "wall_seconds": 4.782273500000883,
+  "condition": "own lab venv, client/instrumentation only; server stdlib; no source lock/requirements"
+}

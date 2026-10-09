@@ -1,0 +1,7 @@
+{
+  "first_failure": "null title raises unhandled SQLite IntegrityError; later requests see database locked; harness assumes id and raises KeyError",
+  "recovery": "move null-title toxic negative case after benchmarks and valid writes; no source rewrite, no global environment change",
+  "original_harness": "harness-first.py",
+  "original_log": "audit-first-fail.log",
+  "first_exitcode": 1
+}

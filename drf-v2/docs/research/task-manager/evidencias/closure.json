@@ -1,0 +1,15 @@
+{
+  "closed_at": "2026-10-09T20:22:56.941528-03:00",
+  "elapsed_since_copy_seconds": 500.736682,
+  "copied_source_hashes_unchanged": true,
+  "lab_ports": [
+    5287
+  ],
+  "shutdown": "server closed by harness finally; no listener found on lab ports during closure",
+  "hardware": {
+    "logical_threads": 8,
+    "physical_ram_bytes": 34278518784
+  },
+  "final_original_sha": "b1b24099628eaaee5d7ab368ea38431c28ed3222",
+  "final_original_status": ""
+}

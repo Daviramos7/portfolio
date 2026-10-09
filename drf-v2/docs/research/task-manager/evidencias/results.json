@@ -1,0 +1,269 @@
+{
+  "checks": [
+    {
+      "name": "startup empty listing",
+      "expected": [],
+      "actual": [],
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "create status",
+      "expected": 201,
+      "actual": 201,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "default status",
+      "expected": "pendente",
+      "actual": "pendente",
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "get persisted task title",
+      "expected": "Sintético Árvore",
+      "actual": "Sintético Árvore",
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "SQLite real persisted row",
+      "expected": 1,
+      "actual": 1,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "missing ID",
+      "expected": 404,
+      "actual": 404,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "invalid ID",
+      "expected": 400,
+      "actual": 400,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "missing title rejected",
+      "expected": 400,
+      "actual": 400,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "invalid JSON rejected",
+      "expected": 400,
+      "actual": 400,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "update documented CRUD",
+      "expected": 200,
+      "actual": 501,
+      "pass": false,
+      "kind": "README expectation; method stub"
+    },
+    {
+      "name": "delete documented CRUD",
+      "expected": 204,
+      "actual": 501,
+      "pass": false,
+      "kind": "README expectation; method stub"
+    },
+    {
+      "name": "empty title rejected",
+      "expected": 400,
+      "actual": 201,
+      "pass": false,
+      "kind": "validation expectation; API checks presence only"
+    },
+    {
+      "name": "query on item route",
+      "expected": 200,
+      "actual": 400,
+      "pass": false,
+      "kind": "routing expectation; ID parsed from raw self.path"
+    },
+    {
+      "name": "POST non-idempotent characterization",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "not bug; no idempotency contract"
+    },
+    {
+      "name": "CLI creates and reports unsupported CRUD",
+      "expected": true,
+      "actual": true,
+      "pass": true,
+      "kind": "contract"
+    },
+    {
+      "name": "null title controlled rejection",
+      "expected": 400,
+      "actual": 0,
+      "pass": false,
+      "kind": "validation expectation; SQL exception closes request"
+    }
+  ],
+  "benchmarks": [
+    {
+      "n": 1000,
+      "warmup": 1,
+      "repetitions": 3,
+      "samples_seconds": [
+        0.004538599998340942,
+        0.003995600000052946,
+        0.004022000000986736
+      ],
+      "median_seconds": 0.004022000000986736,
+      "p95_nearest_rank_seconds": 0.004538599998340942,
+      "rows_per_second_from_median": 248632.5210727661,
+      "response_bytes": [
+        126783,
+        126783,
+        126783
+      ],
+      "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log",
+      "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp",
+      "fixture_rows_sha256": "67c7b1e0d7bbdd31fc1338bfc506ef606e020720f32b7c55660c358ea1da4363"
+    },
+    {
+      "n": 10000,
+      "warmup": 1,
+      "repetitions": 3,
+      "samples_seconds": [
+        0.04932089999783784,
+        0.061879400000179885,
+        0.050220100001752144
+      ],
+      "median_seconds": 0.050220100001752144,
+      "p95_nearest_rank_seconds": 0.061879400000179885,
+      "rows_per_second_from_median": 199123.45852857933,
+      "response_bytes": [
+        1287784,
+        1287784,
+        1287784
+      ],
+      "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log",
+      "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp",
+      "fixture_rows_sha256": "d78722a99299de3c9f1bc01b816f2f1e0df0fb5abce04e44487c6620ca65ac0c"
+    },
+    {
+      "n": 100000,
+      "warmup": 1,
+      "repetitions": 3,
+      "samples_seconds": [
+        0.418768600000476,
+        0.38652319999891915,
+        0.39495780000288505
+      ],
+      "median_seconds": 0.39495780000288505,
+      "p95_nearest_rank_seconds": 0.418768600000476,
+      "rows_per_second_from_median": 253191.60679766175,
+      "response_bytes": [
+        13077785,
+        13077785,
+        13077785
+      ],
+      "scope": "GET/tasks real HTTPServer+new SQLite connection+fetchall+JSON serialization+loopback transfer+client JSON decode; serial concurrency1; OS cache warm, no DB write/preparation; actual handler logging retained in redirected log",
+      "fixture": "deterministic title i, ids1..n, fixed synthetic timestamp",
+      "fixture_rows_sha256": "052c3c3717ef6aac03436639c041bf8b43a0e874ba197c11f79e2f471c5c57eb"
+    }
+  ],
+  "versions": {
+    "python": "3.13.9 (tags/v3.13.9:8183fa5, Oct 14 2025, 14:09:13) [MSC v.1944 64 bit (AMD64)]",
+    "sqlite": "3.50.4",
+    "requests": "2.34.2",
+    "psutil": "7.2.2"
+  },
+  "conditions": "real source handler/CLI unchanged; only DB path and CLI BASE_URL globals injected; loopback bind replaces original all-interface startup; synthetic SQLite created from tracked schema; no original DB/binary used",
+  "rss_scope": "100ms snapshots one combined Python/server/client process, max observed not peak",
+  "rss_samples": [
+    {
+      "seconds": 0.00018980000095325522,
+      "rss_python_bytes": 40361984
+    },
+    {
+      "seconds": 0.10022140000000945,
+      "rss_python_bytes": 43057152
+    },
+    {
+      "seconds": 0.20303419999981998,
+      "rss_python_bytes": 52916224
+    },
+    {
+      "seconds": 0.30337320000035106,
+      "rss_python_bytes": 53653504
+    },
+    {
+      "seconds": 0.40344220000042696,
+      "rss_python_bytes": 55640064
+    },
+    {
+      "seconds": 0.5043360000017856,
+      "rss_python_bytes": 57171968
+    },
+    {
+      "seconds": 0.6095114000017929,
+      "rss_python_bytes": 96919552
+    },
+    {
+      "seconds": 0.7259258000012778,
+      "rss_python_bytes": 129085440
+    },
+    {
+      "seconds": 0.8558522000021185,
+      "rss_python_bytes": 124051456
+    },
+    {
+      "seconds": 0.967643500000122,
+      "rss_python_bytes": 138395648
+    },
+    {
+      "seconds": 1.116090899999108,
+      "rss_python_bytes": 171745280
+    },
+    {
+      "seconds": 1.266108700001496,
+      "rss_python_bytes": 168513536
+    },
+    {
+      "seconds": 1.3736228000016126,
+      "rss_python_bytes": 130441216
+    },
+    {
+      "seconds": 1.5315718000019842,
+      "rss_python_bytes": 171405312
+    },
+    {
+      "seconds": 1.658964999998716,
+      "rss_python_bytes": 169160704
+    },
+    {
+      "seconds": 1.767778500001441,
+      "rss_python_bytes": 130764800
+    },
+    {
+      "seconds": 1.9206531000018003,
+      "rss_python_bytes": 171053056
+    },
+    {
+      "seconds": 2.059202500000538,
+      "rss_python_bytes": 169955328
+    },
+    {
+      "seconds": 2.190164100000402,
+      "rss_python_bytes": 124416000
+    }
+  ],
+  "max_sampled_rss_bytes": 171745280,
+  "suite_lint_build": "N/A absent"
+}

@@ -1,0 +1,13 @@
+{
+  "sha": "b1b24099628eaaee5d7ab368ea38431c28ed3222",
+  "initial_status": "",
+  "started_at": "2026-10-09T20:14:36.204846-03:00",
+  "hashes": {
+    "README.md": "8201f4b4a344af5834728f86b22460698449108b2c23f88cf52d0f58f99f5313",
+    "backend_server.py": "eeb147887496e914e5b1acf653ab9ab2fb6fff2a2ef8049b3aa606924f7c7984",
+    "cli_client.py": "684b9559dbee962dfddd95a7a6dd80c41698b52037c961518a780c50acd1ea9a",
+    "database_setup.sql": "802af27646df75399c4565f941b66926c795ddfb2e0fc71ed46b266279250966"
+  },
+  "excluded": "tracked sqlite3.exe, tarefas.db and preview; no private/original task data copied",
+  "AGENTS": "none project file found"
+}
