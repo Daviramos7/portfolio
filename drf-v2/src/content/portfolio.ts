@@ -31,13 +31,14 @@ const baselineContent: PortfolioContent = {
       'Computer Science student focused on Data Engineering and Full Stack Development. Interested in pipelines, automation, and turning data into useful information.',
     ),
     location: text('Recife, Pernambuco, Brasil', 'Recife, Pernambuco, Brazil'),
-    education: [text('Ciência da Computação — UNINASSAU. Conclusão prevista para 2027.', 'Computer Science — UNINASSAU. Expected graduation in 2027.')],
+    // Owner confirmation, 2026-10-10; academic documentary verification pending.
+    education: [text('Ciência da Computação — UNINASSAU, 6º período. Conclusão prevista: dezembro de 2027.', 'Computer Science — UNINASSAU, 6th semester. Expected graduation: December 2027.')],
     interests: [text('Engenharia de dados, automação e desenvolvimento de aplicações.', 'Data engineering, automation, and application development.')],
     // Existing public V1 PDF only. The new private draft is not published.
     cvUrl: '/cv/Davi-Ramos-Ferreira-public-2026.pdf',
     contactLinks: [
       { id: 'github', label: text('GitHub', 'GitHub'), url: github },
-      { id: 'linkedin', label: text('LinkedIn', 'LinkedIn'), url: 'https://www.linkedin.com/in/davi-ramos-ferreira-325354294/' },
+      { id: 'linkedin', label: text('LinkedIn', 'LinkedIn'), url: 'https://www.linkedin.com/in/daviramosferreira' },
       { id: 'instagram', label: text('Dados com Davi', 'Dados com Davi'), url: 'https://www.instagram.com/dadoscomdavi/' },
     ],
   },
@@ -63,7 +64,7 @@ const baselineContent: PortfolioContent = {
     project({
       id: 'public-expenditure-big-data',
       title: text('Auditoria de Despesas Públicas com PySpark', 'Public Expenditure Audit with PySpark'),
-      summary: text('Pipeline ETL com PySpark para ingestão, tratamento e análise de despesas públicas do Recife no dataset de 2023.', 'A PySpark ETL pipeline for ingesting, processing, and analyzing Recife public expenditure in the 2023 dataset.'),
+      summary: text('Pipeline PySpark para análise de despesas públicas do Recife, com normalização monetária, agregações, qualidade de dados e exportações de ranking e dashboard.', 'PySpark pipeline for Recife public expenditure analysis, with monetary normalization, aggregation, data quality and ranking and dashboard exports.'),
       technologies: ['Python', 'PySpark', 'Spark SQL', 'Pandas', 'ETL'],
       repositoryUrl: `${github}/analise-despesas-recife-pyspark`,
       relatedZones: ['garage', 'telemetry', 'strategy-room'],
@@ -74,10 +75,7 @@ const baselineContent: PortfolioContent = {
     project({
       id: 'atleta-hibrido',
       title: text('Atleta Híbrido', 'Atleta Híbrido'),
-      summary: text(
-        'Aplicação para registrar alimentação, hidratação, recuperação e treino de força com cardio. Cliente React/TypeScript e Supabase, com Android Bridge para leitura autorizada do Health Connect.',
-        'An application for recording nutrition, hydration, recovery, strength training, and cardio. React/TypeScript and Supabase client with an Android Bridge for authorized Health Connect reads.',
-      ),
+      summary: text('Aplicação para organizar treino, alimentação, hidratação e recuperação, com consolidação de registros manuais e importados e origem explícita.', 'Application for organizing training, nutrition, hydration and recovery, consolidating manual and imported records with explicit provenance.'),
       technologies: ['React', 'TypeScript', 'Supabase', 'PostgreSQL', 'Kotlin', 'Android Bridge', 'Health Connect'],
       repositoryUrl: `${github}/AtletaHib`,
       demoUrl: 'https://atleta-hib.vercel.app',
@@ -89,7 +87,7 @@ const baselineContent: PortfolioContent = {
     project({
       id: 'brasilscore',
       title: text('BrasilScore', 'BrasilScore'),
-      summary: text('Aplicação acadêmica colaborativa para consultar classificação, clubes e partidas da Série A, pesquisar clubes e gerenciar favoritos locais.', 'A collaborative academic application for viewing Série A standings, clubs, and matches, searching clubs, and managing local favorites.'),
+      summary: text('Aplicação acadêmica colaborativa para consultar clubes e classificação da Série A, com busca e favoritos locais demonstrativos.', 'Collaborative academic application for browsing Série A clubs and standings, with search and local demo favorites.'),
       technologies: ['HTML', 'CSS', 'JavaScript', 'Vite', 'Node.js', 'Express', 'API REST'],
       repositoryUrl: `${github}/BrasilScore`,
       evidenceIds: ['brasilscore-readme'],
@@ -109,7 +107,7 @@ const baselineContent: PortfolioContent = {
     project({
       id: 'stock-data-pipeline',
       title: text('Pipeline de Dados de Ações', 'Stock Data Pipeline'),
-      summary: text('Pipeline ETL e dashboard interativo para coleta, transformação e visualização de dados de ações.', 'An ETL pipeline and interactive dashboard for collecting, transforming, and visualizing stock data.'),
+      summary: text('Dashboard de análise de ações com filtros por ativo e período, indicadores técnicos, gráficos interativos e tabela de dados.', 'Stock analysis dashboard with asset and period filters, technical indicators, interactive charts and a data table.'),
       technologies: ['Python', 'Pandas', 'NumPy', 'ETL', 'Streamlit', 'Plotly'],
       repositoryUrl: `${github}/stock_data_pipeline`,
       demoUrl: 'https://stockdatapipeline-jnuaqfhrnt8jts3ymssrsp.streamlit.app/',
@@ -119,21 +117,21 @@ const baselineContent: PortfolioContent = {
     project({
       id: 'spfc-analysis',
       title: text('Análise de Dados — SPFC', 'Data Analysis — SPFC'),
-      summary: text('Coleta e análise de estatísticas de jogadores do São Paulo FC com Python, Selenium, Pandas e gráficos.', 'Collection and analysis of São Paulo FC player statistics using Python, Selenium, Pandas, and charts.'),
+      summary: text('Automação para coletar e normalizar estatísticas públicas do SPFC, analisar desempenho por 90 minutos e disciplina e produzir CSV e gráficos.', 'Automation for collecting and normalizing public SPFC statistics, analyzing per-90 performance and discipline, and producing CSV and charts.'),
       technologies: ['Python', 'Selenium', 'Pandas', 'Matplotlib'],
       repositoryUrl: `${github}/Projeto-SPFC`,
     }),
     project({
       id: 'task-manager',
       title: text('Gerenciador de Tarefas', 'Task Manager'),
-      summary: text('Sistema para organizar e acompanhar tarefas com Python e persistência em SQLite.', 'A system for organizing and tracking tasks with Python and SQLite persistence.'),
+      summary: text('Gerenciador de tarefas com API HTTP em Python, cliente de terminal e persistência SQLite para criação, listagem e consulta.', 'Task manager with a Python HTTP API, terminal client and SQLite persistence for creation, listing and retrieval.'),
       technologies: ['Python', 'SQLite3'],
       repositoryUrl: `${github}/task_manager`,
     }),
     project({
       id: 'guess-the-pokemon',
       title: text('Adivinhe o Pokémon', 'Guess the Pokémon'),
-      summary: text('Jogo de descobrir um Pokémon a partir de dicas e tentativas limitadas, usando HTML, CSS, JavaScript e PokéAPI.', 'A game for guessing a Pokémon from hints and limited attempts, using HTML, CSS, JavaScript, and PokéAPI.'),
+      summary: text('Jogo web de adivinhação com silhuetas, dicas progressivas, tentativas limitadas, sugestões de nomes e recorde persistido localmente.', 'Web guessing game with silhouettes, progressive hints, limited attempts, name suggestions and a locally persisted high score.'),
       technologies: ['HTML', 'CSS', 'JavaScript', 'PokéAPI'],
       repositoryUrl: `${github}/Guess-the-Pokemon`,
       demoUrl: 'https://guess-the-pokemon-coral.vercel.app/',
