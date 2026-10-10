@@ -15,6 +15,12 @@ test('exactly five authored discoveries occupy five existing functional zones, o
   assert.deepEqual(new Set(personalDetailLayout.map(d=>d.zone)),new Set(Object.keys(framings)))
   const room=new Box3(new Vector3(-8.3,0,-6.4),new Vector3(8.3,4.5,11.3)),hero=new Box3(new Vector3(-1.6,0,-2.3),new Vector3(1.6,1.6,3)),projects=new Box3(new Vector3(-8.2,.3,-4.25),new Vector3(-7.95,3,-1.7))
   for(const group of personal.details){const bounds=new Box3().setFromObject(group);assert.ok(!bounds.isEmpty());assert.ok(room.containsBox(bounds),group.name+' remains indoors');assert.ok(!bounds.intersectsBox(hero));assert.ok(!bounds.intersectsBox(projects));assert.ok(bounds.min.z>-6.4,'no track/opening obstruction');assert.ok(bounds.getSize(new Vector3()).length()<1.6,'small purposeful objects')}
+  const plaque=personal.details.find(group=>group.userData.detailId==='rec-pe')
+  const backing=plaque.children.find(mesh=>Math.abs(mesh.scale.x-1.1)<1e-6)
+  const lightTrimFront=-6.21+.055/2,postFront=-6.4+.3/2
+  assert.ok(new Box3().setFromObject(backing).min.z>lightTrimFront,'entire plaque backing is in front of post and light trim')
+  const supportBounds=new Box3().setFromObject(plaque.children[0]);assert.ok(supportBounds.min.z<=postFront&&supportBounds.max.z>postFront,'stand-off physically connects to post face')
+  assert.ok(supportBounds.min.x< -4.48+.19/2&&supportBounds.max.x> -4.48-.19/2,'lateral support reaches the existing post')
   r.dispose()
 })
 test('all five detail centers project inside their existing desktop/mobile framing without new camera paths',()=>{

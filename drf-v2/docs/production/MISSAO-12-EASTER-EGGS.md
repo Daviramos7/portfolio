@@ -60,3 +60,21 @@ reconhecíveis, mas inscrições pequenas do cartão e handgrip não são leitur
 confortável; em 320 o grafismo REC/PE no hero é discreto. Não há promessa de
 legibilidade de todos os caracteres, realismo premium, escuta ou teste físico
 de celular. Nenhuma integração contratual nova necessária.
+
+## Correção pontual de montagem REC/PE
+
+Após revisão do Lead: a faixa luminosa frontal do montante atravessava a placa.
+Placa elevada e avançada sobre um pequeno suporte metálico ligado à face do
+montante. Somente montagem; outros quatro detalhes, monitores/câmera/pista/UI
+inalterados. Na Garagem 1440/320 o grafismo está inteiro e à frente do montante.
+Na Telemetria o título da estação ainda cobre parte da placa vizinha: limitação
+contextual registrada, aceita pelo Lead sem outra alteração de composição;
+a placa pertence à Garagem. Mobile 320 continua com letras pequenas.
+
+Capturas dirigidas: `easter-eggs/plaque-fix/garage-1440.png`, `garage-320.png`,
+`telemetry-1440.png`, `telemetry-320.png` e `qa.json`, sob a mesma raiz acima.
+Chrome instalado headless/WebGL real, reduced nativo preservado, sem erros
+críticos. Teste adicional de bounds verifica backing à frente da faixa e
+suporte conectado ao montante, sem acrescentar caso à contagem core 52.
+Suporte reutiliza box/material existentes: +12 triângulos de geometria, sem
+textura nova. Build SceneRoot 625,14 kB / gzip 164,15 kB; aviso anterior mantido.

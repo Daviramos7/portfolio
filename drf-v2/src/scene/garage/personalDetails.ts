@@ -4,7 +4,7 @@ import type { Resources, Vec3 } from './resources.ts'
 
 // Exactly five authored, passive discoveries. These are visual allusions, not biography/data.
 export const personalDetailLayout: readonly { id: string; zone: ZoneId; position: Vec3; yaw: number }[] = [
-  { id:'rec-pe', zone:'garage', position:[-4.48,2.55,-6.19], yaw:0 },
+  { id:'rec-pe', zone:'garage', position:[-4.48,3.19,-6.09], yaw:0 },
   { id:'three-tone-case', zone:'pit-wall', position:[4.46,1.17,-4.12], yaw:0 },
   { id:'science-note', zone:'telemetry', position:[-7.25,1.25,-4.4], yaw:0 },
   { id:'control-360', zone:'strategy-room', position:[7.09,1.27,3.08], yaw:-Math.PI/2 },
@@ -67,6 +67,8 @@ export function createPersonalDetails(r: Resources) {
     group.position.set(...layout.position);group.rotation.y=layout.yaw;root.add(group);return group
   })
   const [rec,kit,note,control,grip]=details
+  // Raised front stand-off joins the post face and clears trim/monitor sightlines.
+  r.box(rec,[.16,.3,.1],[0,0,-.115],metal)
   r.box(rec,[1.1,.74,.055],[0,0,-.035],metal)
   graphic(rec,0,[1.02,.66],[0,0,0])
   r.box(kit,[.88,.2,.43],[0,0,0],black)
