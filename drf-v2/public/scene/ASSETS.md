@@ -136,3 +136,18 @@ Suportes cilíndricos e juntas esféricas originais em `src/scene/car/wheels.ts`
 com geometrias compartilhadas e material metálico já existente. Sem novos mapas,
 downloads ou assets de terceiros. Registro/dispose existente preservado.
 Aplicam-se os termos do repositório; nenhuma licença externa nova.
+## Missão 12 — gravações de áudio CC0
+
+Arquivos locais sanitizados em `audio/`, obtidos em 2026-10-10 dos previews MP3
+públicos oferecidos nas próprias páginas do Freesound. Sem login ou bypass;
+originais WAV/FLAC/AIFF não foram baixados. Não são sons sintetizados pelo DRF.
+Licença dos três: [CC0 1.0](https://creativecommons.org/publicdomain/zero/1.0/),
+verificada individualmente nas páginas dos autores abaixo. Créditos preservados
+mesmo sem exigência de atribuição. MP3 distribuídos sem alteração; recorte/fade apenas
+em memória WebAudio após consentimento. Escuta humana/qualidade artística pendentes.
+
+| Arquivo | Autor / fonte oficial | Preview público | Bytes | SHA256 |
+|---|---|---|---:|---|
+| `audio/ventilation.mp3` | morosopher, [Hotel room ventilator](https://freesound.org/people/morosopher/sounds/185992/) | https://cdn.freesound.org/previews/185/185992_3226149-lq.mp3 | 875232 | `3704b5c38f8ea94b5ba209ae8039dded71e73a24a92b197380e09a4a8c83acbc` |
+| `audio/workshop.mp3` | SoundDesigner0101, [Workshop ambience](https://freesound.org/people/SoundDesigner0101/sounds/766013/) | https://cdn.freesound.org/previews/766/766013_15695818-lq.mp3 | 1074600 | `90e490033aab4dec6d0d775a02ee7761dd66ff7bb233124de67a21a7092f2de9` |
+| `audio/car-pass.mp3` | Johnnyfarmer, [Car Passing](https://freesound.org/people/Johnnyfarmer/sounds/209767/) | https://cdn.freesound.org/previews/209/209767_2012390-lq.mp3 | 36744 | `5a8b2b35d4bdc5840cc7548ddae217b8c9765a138f3cc1546290c7f3fe00b4ca` |

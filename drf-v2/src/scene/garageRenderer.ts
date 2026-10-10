@@ -10,6 +10,7 @@ import type { TracksideConfig } from './trackside/scheduler.ts'
 import { createTrackPass } from './trackside/TrackPass.ts'
 import { createTrackAudio } from './trackside/audio.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
+import { tracksideRoute } from './trackside/preparation.ts'
 
 type Transition = {
   sequence: number
@@ -40,7 +41,22 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let mobileFrame = false, invalidated = true
   let renderedFrames = 0
   const scheduler = createPassScheduler({ initialIntervalMs: [5000, 8000], ...config })
-  const audio = createTrackAudio()
+  const audio = createTrackAudio({ onUnavailable: () => onEvent({ type: 'AUDIO_STATUS', status: 'unavailable' }) })
+  const audioForward = new Vector3()
+  function publishAudio() {
+    const snapshot = audio.diagnostics
+    canvas.dataset.sceneAudioContext = snapshot.context
+    canvas.dataset.sceneAudioAssets = String(snapshot.assets)
+    canvas.dataset.sceneAudioPassStarts = String(snapshot.passStarts)
+    canvas.dataset.sceneAudioPass = snapshot.passId ?? 'idle'
+    canvas.dataset.sceneAudioVolume = String(snapshot.volume)
+    canvas.dataset.sceneAudioBytes = String(snapshot.retainedBytes)
+  }
+  function requestAudioFromGesture() {
+    return audio.requestAudioFromGesture().then(result => { publishAudio(); return result })
+  }
+  function muteAudio() { audio.muteAudio(); publishAudio() }
+  function setAudioVolume(volume: number) { audio.setAudioVolume(volume); publishAudio() }
   let trackTimeMs = 0
   let pass: ReturnType<typeof createTrackPass> | null = null
   const resources = createResources()
@@ -153,6 +169,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       const eligible = canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)
       const snapshot = scheduler.tick(trackTimeMs, state, ready && !transition && settledSequence === state.navigationSeq)
       pass?.update(snapshot.event, snapshot.progress, snapshot.visual)
+      camera.getWorldDirection(audioForward)
+      const audioX = snapshot.event?.direction === 'right-to-left' ? 1 - snapshot.progress : snapshot.progress
+      audio.updatePass(snapshot.event, snapshot.progress, snapshot.started,
+        [tracksideRoute.start[0] + (tracksideRoute.end[0] - tracksideRoute.start[0]) * audioX, tracksideRoute.start[1], tracksideRoute.start[2]],
+        camera.position.toArray(), audioForward.toArray())
+      publishAudio()
       canvas.dataset.sceneReducedMotion = String(state.reducedMotion)
       canvas.dataset.sceneAmbientEnabled = String(state.ambientEnabled)
       canvas.dataset.scenePassX = pass?.vehicle.position.x.toFixed(3) ?? '0'
@@ -230,7 +252,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   }
 
   if (import.meta.env.DEV) {
-    (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { trigger: () => {
+    (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { audio: () => audio.diagnostics, trigger: () => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
       scheduler.requestSoon(trackTimeMs); requestFrame(); return true
     } }
@@ -244,7 +266,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     const context = canvas.getContext('webgl2', { alpha: false, antialias: msaa, powerPreference: 'low-power' })
     if (!context) {
       fail('unavailable')
-      return { update: () => {}, dispose, requestAudioFromGesture: audio.requestAudioFromGesture, muteAudio: audio.muteAudio, setAudioVolume: audio.setAudioVolume }
+      return { update: () => {}, dispose, requestAudioFromGesture, muteAudio, setAudioVolume }
     }
     canvas.addEventListener('webglcontextlost', contextLost)
     canvas.addEventListener('click', selectHotspot)
@@ -299,7 +321,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   } catch { fail('error') }
 
   return {
-    requestAudioFromGesture: audio.requestAudioFromGesture, muteAudio: audio.muteAudio, setAudioVolume: audio.setAudioVolume,
+    requestAudioFromGesture, muteAudio, setAudioVolume,
     update(nextState, index) {
       if (disposed || failed || !renderer || !garage) return
       // An old delivery must never supersede a newer camera request.
@@ -307,6 +329,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       const previous = state
       invalidated = true
       state = nextState
+      audio.update(state)
       audio.setAudioVolume(state.audioVolume)
       if (state.audio === 'off' || state.audio === 'unavailable') audio.muteAudio()
       if (previousIndex !== index || previousLocale !== state.locale || previousProject !== state.target.projectId) {
@@ -337,6 +360,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         moveCamera(instant)
       }
       if (!canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) {
+        audio.cancelPass()
         scheduler.reset(); pass?.restore()
         canvas.dataset.scenePass = 'idle'; canvas.dataset.scenePassVisual = 'false'
         canvas.dataset.scenePassProgress = '0'; canvas.dataset.scenePassNextMs = ''
