@@ -39,3 +39,21 @@
   .drf-hud-status, .drf-zone-coordinate { top: 146px; }
   .drf-workstation { top: 198px; }
 }
+.drf-motion-control { position: relative; min-width: 0; font-size: .75rem; }
+.drf-motion-control > summary { min-height: 44px; padding: 6px 10px; background: var(--drf-carbon); border: 1px solid var(--drf-metal); cursor: pointer; }
+.drf-motion-control > summary small { display: block; margin-top: 3px; }
+.drf-motion-options { position: absolute; right: 0; top: calc(100% + 8px); width: min(300px, calc(100vw - 32px)); padding: 16px; background: var(--drf-carbon); border: 1px solid var(--drf-metal); box-shadow: 0 12px 30px #0008; }
+.drf-motion-options fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+.drf-motion-options legend { margin-bottom: 8px; font-weight: 700; }
+.drf-motion-options label { display: flex; align-items: center; gap: 8px; min-height: 44px; border-top: 1px solid var(--drf-metal); }
+.drf-motion-options input { accent-color: var(--drf-red); }
+.drf-motion-options p { margin-block: 12px; }
+.drf-public-cv { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-top: 20px; }
+@media (max-width: 600px) {
+  .drf-hud-environment { flex-wrap: wrap; }
+  .drf-motion-control { flex: 0 0 100%; }
+  .drf-motion-control > summary { min-height: 32px; padding-block: 4px; }
+  .drf-motion-control > summary small { display: inline; margin-left: 8px; }
+  .drf-hud-status, .drf-zone-coordinate { top: 188px; }
+  .drf-workstation { top: 236px; }
+}

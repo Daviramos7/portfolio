@@ -39,7 +39,9 @@ export function RecruiterView({ content, state, actions, onProject }: Props) {
       </div>
     </header>
     {reviewEnabled && LocalCvReview && <Suspense fallback={<p>{t.loadingDraft}</p>}><LocalCvReview locale={state.locale} /></Suspense>}
-    <div className="drf-intro"><div><p className="drf-code">{content.profile.location[state.locale]}</p><h1>{content.profile.name}</h1><p className="drf-lead">{content.profile.summary[state.locale]}</p></div><p className="drf-team-note">{t.fiction}</p></div>
+    <div className="drf-intro"><div><p className="drf-code">{content.profile.location[state.locale]}</p><h1>{content.profile.name}</h1><p className="drf-lead">{content.profile.summary[state.locale]}</p>
+      {content.profile.cvUrl && <div className="drf-public-cv"><a className="drf-button" href={content.profile.cvUrl} download>{t.downloadCv} ↓</a><small>{t.publicCv}</small></div>}
+    </div><p className="drf-team-note">{t.fiction}</p></div>
     <div className="drf-status-strip"><p role="status">{t.recruiterNotice}</p></div>
     <div id="drf-content" tabIndex={-1} className="drf-content">
       {content.zones.map((item, index) => <section key={item.id} className="drf-recruiter-zone" aria-labelledby={`drf-zone-${item.id}`}>

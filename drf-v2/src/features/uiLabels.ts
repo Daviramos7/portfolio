@@ -2,6 +2,10 @@ import type { Locale } from '../contracts/index.ts'
 
 const labels = {
   pt: {
+    motionReduced: 'Reduzido', motion: 'Movimento', system: 'Seguir sistema', cinematic: 'Cinematográfico', reduced: 'Movimento reduzido: ambiente estático.',
+    motionRestricted: 'Restrito: movimento reduzido', systemReduction: 'Seu sistema pede movimento reduzido.', systemFullMotion: 'Seu sistema permite movimento completo.',
+    motionActive: 'Movimento cinematográfico permitido.', motionOverride: 'Esta escolha substitui a preferência de movimento reduzido do sistema nesta sessão.', sessionOnly: 'Escolha válida somente nesta sessão. Não ativa áudio.',
+    downloadCv: 'Baixar currículo (PDF)', publicCv: 'Versão pública atual',
     navigation: 'Navegação pelas zonas', skip: 'Ir para o conteúdo', locale: 'Idioma',
     immersive: 'Imersivo', recruiter: 'Recruiter Mode', mode: 'Modo de leitura', returnGarage: 'Voltar à garagem',
     fiction: 'Equipe fictícia. Trabalho real de Davi.', identity: 'Portfólio de engenharia',
@@ -29,7 +33,7 @@ const labels = {
     choosePdf: 'Escolher PDF local', invalidPdf: 'Escolha um arquivo PDF válido.', downloadDraft: 'Baixar PDF rascunho — não aprovado', previewDraft: 'Prévia local do currículo rascunho', pdfFallback: 'Se a prévia não aparecer, baixe o rascunho para revisar no visualizador de PDF.',
     audioOptIn: 'Áudio desligado por padrão. Ative somente se desejar ouvir a cena.', environment: 'Controles do ambiente', environmentShort: 'Ambiente', paused: 'Pausado na leitura',
     ambient: 'Movimento ambiente', enabled: 'Ativado', disabled: 'Desativado',
-    reduced: 'Movimento reduzido: ambiente estático.', reading: 'Leitura aberta: eventos de pista suspensos.',
+    reading: 'Leitura aberta: eventos de pista suspensos.',
     recruiterNotice: 'Leitura direta do mesmo catálogo. Áudio e eventos de pista suspensos.',
     idle: 'Cena em preparação. O conteúdo já está disponível.', loading: 'Carregando cena. Continue pela leitura.',
     ready: 'Cena disponível', unavailable: 'Cena indisponível. O conteúdo permanece acessível.',
@@ -44,6 +48,10 @@ const labels = {
     sceneIdle: 'Cena em preparação', sceneLoading: 'Carregando cena', sceneUnavailable: 'Cena indisponível', sceneError: 'Falha da cena',
   },
   en: {
+    motionReduced: 'Reduced', motion: 'Motion', system: 'Follow system', cinematic: 'Cinematic', reduced: 'Reduced motion: static surroundings.',
+    motionRestricted: 'Restricted: reduced motion', systemReduction: 'Your system requests reduced motion.', systemFullMotion: 'Your system allows full motion.',
+    motionActive: 'Cinematic motion allowed.', motionOverride: 'This choice overrides your system’s reduced motion preference for this session.', sessionOnly: 'This session only. Does not enable audio.',
+    downloadCv: 'Download résumé (PDF)', publicCv: 'Current public version',
     navigation: 'Zone navigation', skip: 'Skip to content', locale: 'Language',
     immersive: 'Immersive', recruiter: 'Recruiter Mode', mode: 'Reading mode', returnGarage: 'Return to garage',
     fiction: 'Fictional team. Real work by Davi.', identity: 'Engineering portfolio',
@@ -71,7 +79,7 @@ const labels = {
     choosePdf: 'Choose local PDF', invalidPdf: 'Choose a valid PDF file.', downloadDraft: 'Download draft PDF — not approved', previewDraft: 'Local draft CV preview', pdfFallback: 'If the preview is unavailable, download the draft to review in your PDF viewer.',
     audioOptIn: 'Audio is off by default. Enable it only if you want to hear the scene.', environment: 'Environment controls', environmentShort: 'Ambient', paused: 'Paused for reading',
     ambient: 'Ambient motion', enabled: 'Enabled', disabled: 'Disabled',
-    reduced: 'Reduced motion: static surroundings.', reading: 'Reading open: track events suspended.',
+    reading: 'Reading open: track events suspended.',
     recruiterNotice: 'Direct reading of the same catalog. Audio and track events suspended.',
     idle: 'Scene in preparation. Content is already available.', loading: 'Loading scene. Continue with reading.',
     ready: 'Scene available', unavailable: 'Scene unavailable. Content remains accessible.',

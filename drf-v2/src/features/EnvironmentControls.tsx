@@ -6,7 +6,7 @@ export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps
   const t = uiLabels(state.locale)
   const audioEnabled = state.audio === 'on' || state.audio === 'requested'
   const audioLabel = { off: t.audioOff, on: t.audioOn, requested: t.audioRequested, unavailable: t.audioUnavailable }[state.audio]
-  const ambientLabel = state.reducedMotion ? t.disabled : state.ambientEnabled ? state.panelOpen ? t.paused : t.enabled : t.disabled
+  const ambientLabel = state.reducedMotion ? t.motionRestricted : state.ambientEnabled ? state.panelOpen ? t.paused : t.enabled : t.disabled
   return <div className="drf-hud-environment" role="group" aria-label={t.environment}>
     <span id="drf-audio-policy" className="drf-sr-only">{t.audioOptIn}</span>
     <button id="drf-audio-toggle" type="button" aria-pressed={audioEnabled} aria-describedby="drf-audio-policy" disabled={!audioEnabled && state.renderStatus !== 'ready'} title={t.audioOptIn} onClick={() => { void actions.setAudioEnabled(!audioEnabled) }}>
@@ -21,5 +21,24 @@ export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps
       {state.ambientEnabled && !state.reducedMotion ? <Activity size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
       <span>{t.environmentShort}<small aria-live="polite">{ambientLabel}</small></span>
     </button>
+    <details className="drf-motion-control" onKeyDown={event => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.currentTarget.open = false
+        event.currentTarget.querySelector('summary')?.focus({ preventScroll: true })
+      }
+    }}>
+      <summary>{t.motion}<small>{state.motionPreference === 'reduced' ? t.motionReduced : t[state.motionPreference]}</small></summary>
+      <div className="drf-motion-options">
+        <fieldset><legend>{t.motion}</legend>
+          {(['system', 'cinematic', 'reduced'] as const).map(choice => <label key={choice}>
+            <input type="radio" name="drf-motion" value={choice} checked={state.motionPreference === choice} onChange={() => actions.setMotionPreference(choice)} />{choice === 'reduced' ? t.motionReduced : t[choice]}
+          </label>)}
+        </fieldset>
+        <p aria-live="polite">{state.systemReducedMotion ? t.systemReduction : t.systemFullMotion} {state.reducedMotion ? t.reduced : t.motionActive}</p>
+        {state.motionPreference === 'cinematic' && state.systemReducedMotion && <p>{t.motionOverride}</p>}
+        <small>{t.sessionOnly}</small>
+      </div>
+    </details>
   </div>
 }
