@@ -1,7 +1,7 @@
 import type { ReactNode } from 'react'
 import { X } from 'lucide-react'
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
-import { ProjectDetail } from '../components/drf/ContentBlocks.tsx'
+import { CaseWorkbench } from '../components/drf/CaseWorkbench.tsx'
 import { useReadingFocus } from '../hooks/ui/useReadingFocus.ts'
 import { useRecruiterContext } from '../hooks/ui/useRecruiterContext.ts'
 import { ImmersiveHud } from './ImmersiveHud.tsx'
@@ -14,6 +14,7 @@ import './nightShift.css'
 import './stationInstruments.css'
 import './programShowcase.css'
 import '../styles/ui/typography.css'
+import '../styles/ui/readingInteractions.css'
 import { ProgramEvidenceStamp } from '../components/drf/ProgramIdentity.tsx'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.
@@ -67,13 +68,13 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
           <button type="button" className="drf-workstation-close" aria-label={t.close} onClick={close}><X size={18} aria-hidden="true" /></button>
         </div>
         <div className="drf-workstation-heading">
-          <p className="drf-code">{selected ? t.dossier : zone?.label[state.locale]}</p>
+          {selected && <p className="drf-code">{t.dossier}</p>}
           <h2 id="drf-reading-title" ref={headingRef} tabIndex={-1}>{selected ? selected.title[state.locale] : zone?.label[state.locale]}</h2>
           {selected && <ProgramEvidenceStamp project={selected} locale={state.locale} qualification={false} />}
           {state.target.zoneId === 'telemetry' && <p className="drf-documentary-label">{t.documentedOnly}</p>}
         </div>
         <div className="drf-workstation-body" key={`${state.target.zoneId}/${state.target.projectId ?? ''}`} tabIndex={0} aria-label={t.readingContent}>
-          {selected ? <ProjectDetail content={content} locale={state.locale} project={selected} /> : <ZoneContent content={content} locale={state.locale} zoneId={state.target.zoneId} recruiter={false} reducedMotion={state.reducedMotion} selectedProjectId={null} onProject={onProject} />}
+          {selected ? <CaseWorkbench content={content} locale={state.locale} project={selected} /> : <ZoneContent content={content} locale={state.locale} zoneId={state.target.zoneId} recruiter={false} reducedMotion={state.reducedMotion} selectedProjectId={null} onProject={onProject} />}
         </div>
         <div className="drf-workstation-foot"><span>{t.by} {content.profile.name}</span><span>{state.locale.toUpperCase()} / DRF</span></div>
       </section>}
