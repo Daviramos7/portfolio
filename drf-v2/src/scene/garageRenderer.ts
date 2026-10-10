@@ -48,10 +48,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const camera = new PerspectiveCamera(46, 1, .1, 85)
   const lookAt = new Vector3(...framings.garage.lookAt)
   const destination = new Vector3(), target = new Vector3()
-  const sun = new DirectionalLight('#d8edff', 2.3)
+  const sun = new DirectionalLight('#d8edff', 2)
   const workshopLight = new PointLight('#ffdfb8', 65, 12, 2)
-  const benchLight = new PointLight('#ffd4ac', 18, 8, 2)
-  const rimLight = new PointLight('#c5e7ff', 85, 16, 2)
+  const benchLight = new PointLight('#ffe1bd', 28, 8, 2)
+  const rimLight = new PointLight('#c5e7ff', 105, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
   let opening: ReturnType<typeof createTrackOpening> | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()

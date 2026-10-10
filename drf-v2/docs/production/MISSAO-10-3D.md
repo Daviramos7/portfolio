@@ -109,3 +109,32 @@ Passagem: `after/pass-390-10.jpg`, `after/pass-320-11.jpg` e sequências complet
 Dados/método/GPU/heap: `after/native-validation.json`, `before|after/msaa-cost.json`.
 Regressão: `smoke/smoke-result.json`, imagens PT/EN/mobile/fallback. Capturas
 ficam fora do produto e do commit; nenhum log privado novo em public.
+
+## Follow-up final — materiais/luz, base 1b96205
+
+Somente cinco materiais da palette em resources.ts foram recalibrados: panel
+off-white de baixa metalness/normalScale .12; structure grafite com roughness .44;
+polymer mais escuro/fosco; metal escovado roughness .42 com normalScale .18;
+paint vermelho mais legível com clearcoat .65 e clearcoatRoughness .28. Pintura
+agora reutiliza paintedMap/paintedNormal (normalScale .06). Nenhum pixel/mapa
+procedural, resolução ou recurso adicional criado; mesmos campos 256×256 e
+registro de dispose. Carbono, pneu, piso e environment procedural não mudaram.
+Teto passa a usar o material black existente, separando-o das paredes claras.
+
+Luzes existentes: sol 2.3→2; bancada 18→28 com cor quente suave #ffe1bd;
+recorte frio 85→105. Posições, câmera, sombra 1024, DPR, áudio e UI preservados.
+A comparação mostra separação parede/teto e vermelho/metal mais legíveis;
+ganho mobile é menor que desktop. Não se reivindica PBR premium completo.
+
+Lint/build/31 testes e diff-check passaram. Smoke dirigido Chrome headless:
+hero/telemetria PT em 1440/390, telemetria EN 390; zero erros console/log.
+Native reduced=true, Cinemático pela UI sem EmulatedMedia. Capturas após espera
+de document.fonts.ready e blur; antes reutiliza poses finais do commit 1b96205.
+Smoke integrado não repetido: Lead executará essa revisão. Nenhum teste físico.
+
+Hero mantém 84 calls/65406 triângulos desktop e 71/62010 mobile, DPR1 nas capturas.
+Nenhum custo de CPU/GPU/energia novo medido; contagens não são FPS. Bundle 3D
+610.99 kB / 159.06 kB gzip; texturas novas 0. Arte continua estilizada/aliasing fino.
+Evidência absoluta: `C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/.agent-grid/screenshots/mission-10-3d/material-follow-up/`:
+`index.html`, `hero-before|after-1440.png`, `hero-before|after-390.png`,
+`telemetry-after-*`, `telemetry-en-390.png` e `directed-smoke.json`.
