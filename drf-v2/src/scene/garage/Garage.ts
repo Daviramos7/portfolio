@@ -20,7 +20,7 @@ export function createGarage(r: Resources) {
   r.box(garage, [17, .18, 20], [0, -.1, 1.5], black)
   const floorTop = r.mesh(garage, r.geometry(new PlaneGeometry(17, 20)), floor, [0, -.007, 1.5])
   floorTop.rotation.x = -Math.PI / 2; floorTop.castShadow = false
-  r.box(garage, [17, .22, 19], [0, 4.65, 2.4], panel)
+  r.box(garage, [17, .22, 19], [0, 4.65, 2.4], black)
   for (const side of [-1, 1]) {
     r.box(garage, [.2, 4.6, 19], [side * 8.4, 2.3, 2.4], panel)
     r.box(garage, [.04, .22, 14.8], [side * 8.26, .55, .4], red)

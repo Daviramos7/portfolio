@@ -1,5 +1,15 @@
 # Assets da cena DRF
 
+### Missão10 — follow-up final de materiais
+
+Reutilizados, sem alteração de pixels/resolução, paintedMap/paintedNormal e
+metalMap/metalNormal autorais 256×256 existentes. Parede pintada clara, estrutura
+escura, bancada/metal escovado, polímero fosco e pintura vermelha receberam
+parâmetros distintos. Pintura passou a reutilizar normal/roughness pintados com
+normalScale baixo. Nenhum mapa/material adicional, download ou nova geometria;
+registro/dispose existente preservado. SHA256 de `garage/resources.ts`:
+`72458fe6afb53a902156649769acb0e12dad2453fbf396fd0f45a013016f0b3f`.
+
 ## Missão10 — 10/10/2026
 
 Remodelagem autoral em Three: aero traseiro compacto, borda de cockpit, volante,
