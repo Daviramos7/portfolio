@@ -23,7 +23,7 @@ export function createTrackPass(r: Resources, opening: { reflection: Group; ligh
     if (!event || !visual) { restore(); return }
     const p = event.direction === 'left-to-right' ? progress : 1 - progress
     const x = tracksideRoute.start[0] + (tracksideRoute.end[0] - tracksideRoute.start[0]) * p
-    vehicle.visible = true; vehicle.position.set(x, .05, -11)
+    vehicle.visible = true; vehicle.position.set(x, tracksideRoute.start[1], tracksideRoute.start[2])
     vehicle.rotation.y = event.direction === 'left-to-right' ? Math.PI / 2 : -Math.PI / 2
     const envelope = carPassEnvelope(progress)
     reflection.visible = true; reflection.position.x = Math.max(-3, Math.min(3, x * .18)); mat.opacity = envelope * .055
