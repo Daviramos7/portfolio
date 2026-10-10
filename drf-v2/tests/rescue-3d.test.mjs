@@ -35,7 +35,7 @@ test('production-injected first pass is 5â€“8 seconds, later intervals stay 25â€
   const end=s.tick(first.event.startMs+first.event.durationMs,state,true);assert.ok(end.nextMs>=first.event.startMs+first.event.durationMs+25000)
   s.reset();assert.ok(s.tick(60000,state,true).nextMs>=85000)
 })
-test('silence path never constructs AudioContext and remains safely unavailable/idempotent',async()=>{
+test('failed audio context remains safely unavailable/idempotent without consent from volume',async()=>{
   globalThis.AudioContext=class {constructor(){throw Error('must not create audio')}}
   const audio=createTrackAudio();audio.setAudioVolume(.9);audio.muteAudio();audio.muteAudio();assert.equal(await audio.requestAudioFromGesture(),'unavailable');audio.dispose();audio.dispose()
 })
