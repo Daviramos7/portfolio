@@ -1,0 +1,29 @@
+@font-face {
+  font-family: 'Barlow Condensed';
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url('/fonts/drf/barlow-condensed-latin-700.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+.drf-ui { font-family: var(--drf-font-body); line-height: var(--drf-leading-body); }
+.drf-ui :is(h1,h2,h3) { font-family: var(--drf-font-display); font-weight: 700; font-synthesis: none; line-height: 1.12; letter-spacing: .005em; overflow-wrap: break-word; }
+.drf-ui h2 { font-size: var(--drf-type-heading); }
+.drf-ui h3 { font-size: 1.65rem; }
+.drf-ui h4 { font-family: var(--drf-font-body); font-weight: 600; }
+.drf-ui[data-view-mode=recruiter] .drf-intro h1 { font-size: var(--drf-type-display); max-width: 18ch; line-height: .98; }
+.drf-ui .drf-workstation h2 { font-size: var(--drf-type-panel-title); }
+.drf-ui .drf-workstation-body h3 { font-size: 1.45rem; }
+.drf-ui .drf-showcase .drf-program-title { font-size: var(--drf-type-project-title); line-height: 1.15; margin-bottom: 10px; }
+.drf-ui .drf-showcase-copy h2 { font-size: var(--drf-type-project-title); }
+.drf-ui .drf-hud-brand h1 { font-family: var(--drf-font-body); font-weight: 650; }
+.drf-ui :is(.drf-code,.drf-field-label) { letter-spacing: var(--drf-tracking-label); }
+.drf-ui :is(.drf-program-count,.drf-nav-index,.drf-zone-coordinate,.drf-channel,.drf-instrument-value) { font-family: var(--drf-font-mono); font-variant-numeric: tabular-nums; }
+.drf-ui .drf-readout-caption h3 { font-family: var(--drf-font-body); font-size: .9rem; line-height: 1.45; font-weight: 550; letter-spacing: 0; }
+.drf-ui .drf-readout-project { font-family: var(--drf-font-display); font-weight: 700; font-size: 1.6rem; line-height: 1.15; }
+@media (max-width: 600px) {
+  .drf-ui .drf-showcase .drf-program-title { font-size: 1.25rem; }
+  .drf-ui .drf-workstation h2 { font-size: 1.5rem; }
+  .drf-ui[data-view-mode=recruiter] .drf-intro h1 { font-size: 3.25rem; }
+}
