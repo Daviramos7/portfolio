@@ -1,5 +1,25 @@
 # Assets da cena DRF
 
+## Missão10 — 10/10/2026
+
+Remodelagem autoral em Three: aero traseiro compacto, borda de cockpit, volante,
+inlet, rodas com braços curvos/chanfrados e aro usinado, bancada de montagem e
+veículo externo fechado. Nenhum modelo, imagem, marca, sample ou download novo.
+Licença: termos do repositório para código autoral; CC0 externo não aplicável.
+Assets binários adicionais: 0 bytes. Mapas existentes 256/512 e cinco superfícies
+1024×512 preservados/reutilizados. Indicadores DEMO nas cinco telas são pequenas
+geometrias, sem novos mapas ou uploads Canvas por quadro; o único nó público de
+Pit Wall recebe destaque de escala, sem adicionar experiências. Todos usam o
+registro de recursos/dispose e o relógio/gates já existentes. Áudio silencioso.
+
+SHA256 dos geradores desta entrega (bytes dos fontes no worktree):
+- `car/DRF01.ts`: `14623cde49bc363316be58a9987eb1ec99bb7a79d2dbd1a71b310b91516cc3a9`
+- `car/wheels.ts`: `ac66171d78028b6fe0492350604044d8ff7b8bc1e3f38f663f2f53fe6e40bbaf`
+- `garage/programmeScreen.ts`: `85af843fc3c663daa0bafab508fccdfca16fa2fd8940a968f2d7a18373b66f99`
+
+QA/referências: `docs/production/MISSAO-10-3D.md`; nenhuma evidência privada
+ou log novo é distribuído nesta pasta pública. As notas seguintes são históricas.
+
 ## Missão09 P1 — 10/10/2026
 
 Novos acabamentos e diagramas são autorais, gerados em Canvas/Three pelo worker

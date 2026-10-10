@@ -238,8 +238,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   onEvent({ type: 'SCENE_STATUS', status: 'loading' })
   try {
     // Check actual WebGL2 availability without letting Three log a thrown creation error.
-    const msaa = canvas.clientWidth > 820
-    const context = canvas.getContext('webgl2', { alpha: false, antialias: msaa, powerPreference: msaa ? 'high-performance' : 'low-power' })
+    // Native multisampling also smooths the thin workshop structure at DPR 1.
+    // The quality policy still caps low at 1 and balanced at 1.5.
+    const msaa = true
+    const context = canvas.getContext('webgl2', { alpha: false, antialias: msaa, powerPreference: 'low-power' })
     if (!context) {
       fail('unavailable')
       return { update: () => {}, dispose, requestAudioFromGesture: audio.requestAudioFromGesture, muteAudio: audio.muteAudio, setAudioVolume: audio.setAudioVolume }

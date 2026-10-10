@@ -1,4 +1,4 @@
-import { CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshStandardMaterial, Shape, Vector2 } from 'three'
+import { CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshStandardMaterial, Shape, TorusGeometry, Vector2 } from 'three'
 import type { Resources } from '../garage/resources.ts'
 
 // Original machined wheel layout. Local X is the axle; Y/Z form both wheel faces.
@@ -8,10 +8,11 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
   const discShape = r.geometry(new LatheGeometry([[.075,-.012],[.285,-.012],[.285,.012],[.075,.012],[.075,-.012]].map(([x,y])=>new Vector2(x,y)),40))
   const hubShape = r.geometry(new CylinderGeometry(.083,.083,.065,24))
   const nutShape = r.geometry(new CylinderGeometry(.043,.043,.04,6))
-  const spoke = new Shape();spoke.moveTo(-.025,.075);spoke.lineTo(.025,.075);spoke.lineTo(.036,.325);spoke.lineTo(-.036,.325);spoke.closePath()
-  const spokeShape = r.geometry(new ExtrudeGeometry(spoke,{depth:.028,bevelEnabled:true,bevelSize:.003,bevelThickness:.003,bevelSegments:1,steps:1}))
-  spokeShape.translate(0,0,-.014);spokeShape.rotateY(Math.PI/2)
-  const alloy = r.material(new MeshStandardMaterial({color:'#5b6269',metalness:.8,roughness:.48}))
+  const spoke = new Shape();spoke.moveTo(-.025,.075);spoke.quadraticCurveTo(-.01,.2,.018,.32);spoke.lineTo(.06,.32);spoke.quadraticCurveTo(.045,.19,.025,.075);spoke.closePath()
+  const spokeShape = r.geometry(new ExtrudeGeometry(spoke,{depth:.05,bevelEnabled:true,bevelSize:.007,bevelThickness:.007,bevelSegments:2,steps:1,curveSegments:6}))
+  spokeShape.translate(0,0,-.025);spokeShape.rotateY(Math.PI/2)
+  const beadShape = r.geometry(new TorusGeometry(.35,.012,8,48));beadShape.rotateY(Math.PI/2)
+  const alloy = r.material(new MeshStandardMaterial({color:'#85919b',metalness:.85,roughness:.32}))
   const brake = r.material(new MeshStandardMaterial({color:'#4e4b45',metalness:.65,roughness:.72}))
   const wheels: Group[]=[]
   for(const z of [-1.6,1.55])for(const side of [-1,1]) {
@@ -21,6 +22,7 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
     const disc=r.mesh(wheel,discShape,brake,[side*-.12,0,0]);disc.rotation.z=Math.PI/2;disc.name='brake-disc'
     const axle=r.rod(wheel,[-.2,0,0],[.2,0,0],.055,r.palette.black);axle.name='axle'
     for(const face of [-1,1]) {
+      const bead=r.mesh(wheel,beadShape,alloy,[face*.205,0,0]);bead.name='machined-rim-lip-'+face
       const hub=r.mesh(wheel,hubShape,alloy,[face*.185,0,0]);hub.rotation.z=Math.PI/2;hub.name='hub-'+face
       for(let n=0;n<8;n++){const arm=r.mesh(wheel,spokeShape,alloy,[face*.17,0,0]);arm.rotation.x=n*Math.PI/4;arm.name='spoke-'+face+'-'+n}
     }
