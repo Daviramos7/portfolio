@@ -117,6 +117,7 @@ export type SceneProps = Readonly<{
     projectId: ProjectId | null
     label: Localized
     media: readonly ContentMedia[]
+    screenLines?: readonly Localized[] // Sanitized presentation strings, never raw datasets.
   }>[]
   onEvent: (event: SceneEvent) => void
 }>

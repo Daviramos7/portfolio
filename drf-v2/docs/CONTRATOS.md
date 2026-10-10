@@ -199,3 +199,5 @@ Metas iniciais de aceite, não resultados medidos: JavaScript inicial ≤250 KiB
 ## Missão09 — escolha explícita de movimento
 
 Extensão aditiva: ExperienceState.motionPreference = system|cinematic|reduced, systemReducedMotion registra matchMedia e reducedMotion permanece a preferência efetiva consumida pela cena. UIActions.setMotionPreference altera somente a sessão. Padrão system respeita o dispositivo; cinematic exige escolha explícita na UI, reduced força experiência estática. Mudanças posteriores de matchMedia continuam registradas sem sobrescrever a escolha explícita. Não altera Windows/browser, não ativa áudio e não persiste a escolha após recarregar.
+
+SceneContentIndex adiciona screenLines opcional (Localized[]), somente strings públicas de apresentação derivadas pelo adaptador do Lead. Telas usam fatos do catálogo, não JSON de métricas/experiência, consultas externas ou informação interna. Telemetria identifica auditoria local e aponta leitura para condições; estratégia apresenta interesses, sem inventar roadmap. Informação animada demonstrativa deve ser marcada como demonstração e separada das métricas.

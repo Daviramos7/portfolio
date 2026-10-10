@@ -268,3 +268,12 @@ test('motion follows the system by default; only explicit session choice overrid
   stop()
   assert.equal(fixture().controller.getState().motionPreference, 'system')
 })
+
+test('scene readouts reuse public bilingual facts without fabricating career or roadmap', () => {
+  const index = buildSceneContentIndex(portfolioContent)
+  const zones = index.filter(item => item.projectId === null)
+  assert.ok(zones.every(item => item.screenLines.every(line => line.pt && line.en)))
+  assert.ok(zones.find(item => item.zoneId === 'telemetry').screenLines.some(line => line.en.includes('127,119')))
+  assert.deepEqual(zones.find(item => item.zoneId === 'strategy-room').screenLines.slice(1), portfolioContent.profile.interests.slice(0, 2))
+  assert.ok(index.find(item => item.projectId === 'atleta-hibrido').screenLines.some(line => line.pt.includes('React')))
+})
