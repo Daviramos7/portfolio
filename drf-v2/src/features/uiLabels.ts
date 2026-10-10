@@ -2,6 +2,8 @@ import type { Locale } from '../contracts/index.ts'
 
 const labels = {
   pt: {
+    chooseMetric: 'Selecionar resultado', instrumentControls: 'Controles do instrumento', previousMetric: 'Resultado anterior', nextMetric: 'Próximo resultado', replayValue: 'Repetir demonstração visual do valor',
+    staticValue: 'Valor final estático · movimento reduzido', valueDemo: 'Demonstração visual · valor documental final, sem atualização ao vivo', numberInspiration: 'Interação numérica inspirada em',
     motionReduced: 'Reduzido', motion: 'Movimento', system: 'Seguir sistema', cinematic: 'Cinematográfico', reduced: 'Movimento reduzido: ambiente estático.',
     motionRestricted: 'Restrito: movimento reduzido', systemReduction: 'Seu sistema pede movimento reduzido.', systemFullMotion: 'Seu sistema permite movimento completo.',
     motionActive: 'Movimento cinematográfico permitido.', motionOverride: 'Esta escolha substitui a preferência de movimento reduzido do sistema nesta sessão.', sessionOnly: 'Escolha válida somente nesta sessão. Não ativa áudio.',
@@ -48,6 +50,8 @@ const labels = {
     sceneIdle: 'Cena em preparação', sceneLoading: 'Carregando cena', sceneUnavailable: 'Cena indisponível', sceneError: 'Falha da cena',
   },
   en: {
+    chooseMetric: 'Select result', instrumentControls: 'Instrument controls', previousMetric: 'Previous result', nextMetric: 'Next result', replayValue: 'Replay visual value demonstration',
+    staticValue: 'Static final value · reduced motion', valueDemo: 'Visual demonstration · final documented value, no live updates', numberInspiration: 'Numeric interaction inspired by',
     motionReduced: 'Reduced', motion: 'Motion', system: 'Follow system', cinematic: 'Cinematic', reduced: 'Reduced motion: static surroundings.',
     motionRestricted: 'Restricted: reduced motion', systemReduction: 'Your system requests reduced motion.', systemFullMotion: 'Your system allows full motion.',
     motionActive: 'Cinematic motion allowed.', motionOverride: 'This choice overrides your system’s reduced motion preference for this session.', sessionOnly: 'This session only. Does not enable audio.',

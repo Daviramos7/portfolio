@@ -11,6 +11,7 @@ import { uiLabels } from './uiLabels.ts'
 import '../styles/ui/portfolio.css'
 import '../styles/ui/immersive.css'
 import './nightShift.css'
+import './stationInstruments.css'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.
 export function PortfolioShell({ content, state, actions, children }: PortfolioShellProps & { children?: ReactNode }) {
@@ -57,7 +58,7 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
         </div>
       </section>}
 
-      {state.panelOpen && <section id="drf-reading" className="drf-workstation" aria-labelledby="drf-reading-title">
+      {state.panelOpen && <section id="drf-reading" className="drf-workstation" data-station={state.target.zoneId} aria-labelledby="drf-reading-title">
         <div className="drf-workstation-toolbar">
           <p className="drf-code">{t.workstation}<span> / 0{content.zones.findIndex(item => item.id === state.target.zoneId) + 1}</span></p>
           <button type="button" className="drf-workstation-close" aria-label={t.close} onClick={close}><X size={18} aria-hidden="true" /></button>
@@ -68,7 +69,7 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
           {state.target.zoneId === 'telemetry' && <p className="drf-documentary-label">{t.documentedOnly}</p>}
         </div>
         <div className="drf-workstation-body" key={`${state.target.zoneId}/${state.target.projectId ?? ''}`} tabIndex={0} aria-label={t.readingContent}>
-          {selected ? <ProjectDetail content={content} locale={state.locale} project={selected} /> : <ZoneContent content={content} locale={state.locale} zoneId={state.target.zoneId} recruiter={false} selectedProjectId={null} onProject={onProject} />}
+          {selected ? <ProjectDetail content={content} locale={state.locale} project={selected} /> : <ZoneContent content={content} locale={state.locale} zoneId={state.target.zoneId} recruiter={false} reducedMotion={state.reducedMotion} selectedProjectId={null} onProject={onProject} />}
         </div>
         <div className="drf-workstation-foot"><span>{t.by} {content.profile.name}</span><span>{state.locale.toUpperCase()} / DRF</span></div>
       </section>}
