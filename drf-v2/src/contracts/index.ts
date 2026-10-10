@@ -95,6 +95,8 @@ export type ExperienceState = Readonly<{
   audio: AudioStatus
   audioVolume: number // 0..1; session-only, never enables audio implicitly
   reducedMotion: boolean
+  systemReducedMotion: boolean
+  motionPreference: 'system' | 'cinematic' | 'reduced'
   ambientEnabled: boolean
   panelOpen: boolean
   documentVisible: boolean
@@ -124,6 +126,7 @@ export type SceneHandle = {
   setAudioVolume?: (volume: number) => void
 }
 export type UIActions = Readonly<{
+  setMotionPreference: (preference: ExperienceState['motionPreference']) => void
   navigate: (target: NavigationTarget) => void
   setLocale: (locale: Locale) => void
   setMode: (mode: ViewMode) => void

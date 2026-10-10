@@ -195,3 +195,7 @@ type CarPass = Readonly<{
 Modelos originais/procedurais primeiro; GLB/texturas externos somente após licença/proveniência revisadas. Texturas pequenas, sombras limitadas, materiais compartilhados e sem pós-processamento obrigatório. Cena pausa rendering ocioso quando possível; animações/eventos solicitam quadros apenas enquanto ativos. Usar assets locais e evitar importação abrangente de helpers sem necessidade.
 
 Metas iniciais de aceite, não resultados medidos: JavaScript inicial ≤250 KiB gzip (3D lazy separado), primeiro conjunto de assets 3D ≤3 MiB transferidos, DPR low ≤1 e balanced ≤1,5. Medir antes de adicionar efeitos. Alvo 30 fps mobile/60 fps desktop em percurso definido; registrar dispositivo, viewport, navegador e mediana/p95 de frame time. Se o alvo falhar, reduzir qualidade/custo; revisão de orçamento é decisão do Lead registrada no plano, nunca promessa silenciosa.
+
+## Missão09 — escolha explícita de movimento
+
+Extensão aditiva: ExperienceState.motionPreference = system|cinematic|reduced, systemReducedMotion registra matchMedia e reducedMotion permanece a preferência efetiva consumida pela cena. UIActions.setMotionPreference altera somente a sessão. Padrão system respeita o dispositivo; cinematic exige escolha explícita na UI, reduced força experiência estática. Mudanças posteriores de matchMedia continuam registradas sem sobrescrever a escolha explícita. Não altera Windows/browser, não ativa áudio e não persiste a escolha após recarregar.

@@ -11,6 +11,8 @@ export function createExperienceController(content: PortfolioContent, environmen
     audio: 'off',
     audioVolume: 0.25,
     reducedMotion: environment.reducedMotion(),
+    systemReducedMotion: environment.reducedMotion(),
+    motionPreference: 'system',
     ambientEnabled: true,
     panelOpen: false,
     documentVisible: environment.documentVisible(),
@@ -57,6 +59,10 @@ export function createExperienceController(content: PortfolioContent, environmen
   }
 
   const actions: UIActions = {
+    setMotionPreference: preference => {
+      if (!['system', 'cinematic', 'reduced'].includes(preference)) return
+      update({ motionPreference: preference, reducedMotion: preference === 'system' ? state.systemReducedMotion : preference === 'reduced' })
+    },
     navigate: target => select({ ...state, target }, 'push'),
     setLocale: locale => { if (isLocale(locale)) select({ ...state, locale }, 'push') },
     setMode: mode => { if (isViewMode(mode)) select({ ...state, mode }, 'push') },
@@ -127,11 +133,12 @@ export function createExperienceController(content: PortfolioContent, environmen
     },
     start: () => {
       disconnect?.()
-      update({ reducedMotion: environment.reducedMotion(), documentVisible: environment.documentVisible() })
+      const systemReducedMotion = environment.reducedMotion()
+      update({ systemReducedMotion, reducedMotion: state.motionPreference === 'system' ? systemReducedMotion : state.motionPreference === 'reduced', documentVisible: environment.documentVisible() })
       syncLocation('replace')
       disconnect = environment.watch({
         location: () => select(resolveLocation(environment.readUrl(), content, environment.readPreferences()), 'replace'),
-        reducedMotion: reducedMotion => update({ reducedMotion }),
+        reducedMotion: systemReducedMotion => update({ systemReducedMotion, reducedMotion: state.motionPreference === 'system' ? systemReducedMotion : state.motionPreference === 'reduced' }),
         visibility: documentVisible => update({ documentVisible }),
       })
       return () => {
