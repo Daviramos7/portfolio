@@ -12,6 +12,8 @@ import '../styles/ui/portfolio.css'
 import '../styles/ui/immersive.css'
 import './nightShift.css'
 import './stationInstruments.css'
+import './programShowcase.css'
+import { ProgramEvidenceStamp } from '../components/drf/ProgramIdentity.tsx'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.
 export function PortfolioShell({ content, state, actions, children }: PortfolioShellProps & { children?: ReactNode }) {
@@ -66,6 +68,7 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
         <div className="drf-workstation-heading">
           <p className="drf-code">{selected ? t.dossier : zone?.label[state.locale]}</p>
           <h2 id="drf-reading-title" ref={headingRef} tabIndex={-1}>{selected ? selected.title[state.locale] : zone?.label[state.locale]}</h2>
+          {selected && <ProgramEvidenceStamp project={selected} locale={state.locale} qualification={false} />}
           {state.target.zoneId === 'telemetry' && <p className="drf-documentary-label">{t.documentedOnly}</p>}
         </div>
         <div className="drf-workstation-body" key={`${state.target.zoneId}/${state.target.projectId ?? ''}`} tabIndex={0} aria-label={t.readingContent}>

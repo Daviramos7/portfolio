@@ -2,6 +2,7 @@ import type { Locale } from '../contracts/index.ts'
 
 const labels = {
   pt: {
+    evidenceOne: 'evidência', evidenceMany: 'evidências',
     chooseMetric: 'Selecionar resultado', instrumentControls: 'Controles do instrumento', previousMetric: 'Resultado anterior', nextMetric: 'Próximo resultado', replayValue: 'Repetir demonstração visual do valor',
     staticValue: 'Valor final estático · movimento reduzido', valueDemo: 'Demonstração visual · valor documental final, sem atualização ao vivo', numberInspiration: 'Interação numérica inspirada em',
     motionReduced: 'Reduzido', motion: 'Movimento', system: 'Seguir sistema', cinematic: 'Cinematográfico', reduced: 'Movimento reduzido: ambiente estático.',
@@ -50,6 +51,7 @@ const labels = {
     sceneIdle: 'Cena em preparação', sceneLoading: 'Carregando cena', sceneUnavailable: 'Cena indisponível', sceneError: 'Falha da cena',
   },
   en: {
+    evidenceOne: 'evidence source', evidenceMany: 'evidence sources',
     chooseMetric: 'Select result', instrumentControls: 'Instrument controls', previousMetric: 'Previous result', nextMetric: 'Next result', replayValue: 'Replay visual value demonstration',
     staticValue: 'Static final value · reduced motion', valueDemo: 'Visual demonstration · final documented value, no live updates', numberInspiration: 'Numeric interaction inspired by',
     motionReduced: 'Reduced', motion: 'Motion', system: 'Follow system', cinematic: 'Cinematic', reduced: 'Reduced motion: static surroundings.',
