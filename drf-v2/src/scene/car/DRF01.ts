@@ -45,7 +45,8 @@ export function createDRF01(r: Resources) {
   const body = (sections: readonly Section[], mat: Material, p: Vec3 = [0, 0, 0]) => r.mesh(car, r.geometry(loft(sections)), mat, p)
   body([[-2.05, .4, .17, .23], [-1, .99, .17, .25], [.3, .96, .17, .25], [1.8, .39, .18, .24]], carbon)
   // Continuous sculpted nose, raised shoulders and separated cockpit opening.
-  body([[-.05, .37, .29, .72], [.45, .35, .28, .71], [1.35, .24, .29, .54], [2.4, .14, .24, .4], [2.72, .1, .23, .34]], red)
+  const nose=body([[-.05, .37, .29, .72], [.45, .35, .28, .71], [1.35, .24, .29, .54], [2.4, .14, .24, .4], [2.72, .1, .23, .34]], red)
+  nose.name='front-monocoque'
   body([[-2.02, .18, .29, .64], [-1.54, .34, .29, .83], [-1.2, .39, .28, .87]], red)
   for (const side of [-1, 1]) {
     body([[-1.9, .13, .28, .51], [-1.15, .24, .29, .8], [-.12, .13, .29, .74], [.3, .04, .28, .64]], red, [side * .46, 0, 0])

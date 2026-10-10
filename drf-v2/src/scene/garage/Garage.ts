@@ -176,14 +176,14 @@ export function createGarage(r: Resources) {
   }
   // Index-derived project plaques, never a parallel catalogue.
   const projectSigns = [
-    r.sign(garage, '', [2.2, .58], [-8.045, 2.38, -3]),
-    r.sign(garage, '', [2.2, .58], [-8.045, 1.7, -3]),
-    r.sign(garage, '', [2.2, .58], [-8.045, 1.02, -3]),
+    r.sign(garage, '', [2.2, .4], [-8.045, 1.45, -3]),
+    r.sign(garage, '', [2.2, .4], [-8.045, .98, -3]),
+    r.sign(garage, '', [2.2, .4], [-8.045, .51, -3]),
   ]
   projectSigns.forEach((sign, index) => { sign.object.rotation.y = Math.PI / 2; sign.object.name = 'programme-display-' + index })
-  r.box(garage, [.1, 2.05, 2.4], [-8.13, 1.7, -3], carbon)
-  r.box(garage,[.1,1.25,2.5],[-8.12,3.4,-3],polymer)
-  screen(garage,'garage',[2.4,1.2],[-8.045,3.4,-3]).object.rotation.y=Math.PI/2
+  r.box(garage, [.1, 1.42, 2.4], [-8.13, .98, -3], carbon)
+  r.box(garage,[.1,1.25,2.5],[-8.12,2.3,-3],polymer)
+  screen(garage,'garage',[2.4,1.2],[-8.045,2.3,-3]).object.rotation.y=Math.PI/2
 
   // Functional ventilation and a slow instrumentation sweep: the renderer owns their one clock.
   const fanAssembly = new Group(); fanAssembly.position.set(-8.03, 3.72, -.15); fanAssembly.rotation.y = Math.PI / 2
