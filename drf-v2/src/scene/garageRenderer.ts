@@ -10,7 +10,7 @@ import type { TracksideConfig } from './trackside/scheduler.ts'
 import { createTrackPass } from './trackside/TrackPass.ts'
 import { createTrackAudio } from './trackside/audio.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
-import { tracksideRoute } from './trackside/preparation.ts'
+import { tracksidePose } from './trackside/preparation.ts'
 
 type Transition = {
   sequence: number
@@ -170,9 +170,9 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       const snapshot = scheduler.tick(trackTimeMs, state, ready && !transition && settledSequence === state.navigationSeq)
       pass?.update(snapshot.event, snapshot.progress, snapshot.visual)
       camera.getWorldDirection(audioForward)
-      const audioX = snapshot.event?.direction === 'right-to-left' ? 1 - snapshot.progress : snapshot.progress
+      const audioPosition = snapshot.event ? tracksidePose(snapshot.event, snapshot.progress).position : [0, 0, 0]
       audio.updatePass(snapshot.event, snapshot.progress, snapshot.started,
-        [tracksideRoute.start[0] + (tracksideRoute.end[0] - tracksideRoute.start[0]) * audioX, tracksideRoute.start[1], tracksideRoute.start[2]],
+        audioPosition,
         camera.position.toArray(), audioForward.toArray())
       publishAudio()
       canvas.dataset.sceneReducedMotion = String(state.reducedMotion)

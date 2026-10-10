@@ -1,11 +1,12 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
 import { createPassScheduler, canSchedulePass } from '../src/scene/trackside/scheduler.ts'
+import { tracksideRoute } from '../src/scene/trackside/preparation.ts'
 const state = { renderStatus:'ready', mode:'immersive', ambientEnabled:true, documentVisible:true, panelOpen:false, reducedMotion:false, audio:'off' }
 test('seed is deterministic and initial interval/duration respect production bounds', () => {
   const a=createPassScheduler({seed:12}), b=createPassScheduler({seed:12})
   const first=a.tick(0,state,true); assert.ok(first.nextMs>=25000&&first.nextMs<=45000)
-  for(let t=0;t<200000;t+=100) { const x=a.tick(t,state,true); assert.deepEqual(x,b.tick(t,state,true)); if(x.event)assert.ok(x.event.durationMs>=3000&&x.event.durationMs<=5000) }
+  for(let t=0;t<200000;t+=100) { const x=a.tick(t,state,true); assert.deepEqual(x,b.tick(t,state,true)); if(x.event)assert.ok(x.event.durationMs>=tracksideRoute.durationMs[0]&&x.event.durationMs<=tracksideRoute.durationMs[1]) }
 })
 test('one active event retains identity until completion; next interval starts at end', () => {
   const s=createPassScheduler(), first=s.tick(0,state,true), start=s.tick(first.nextMs,state,true)

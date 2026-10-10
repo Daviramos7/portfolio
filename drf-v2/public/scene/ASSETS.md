@@ -151,3 +151,10 @@ em memória WebAudio após consentimento. Escuta humana/qualidade artística pen
 | `audio/ventilation.mp3` | morosopher, [Hotel room ventilator](https://freesound.org/people/morosopher/sounds/185992/) | https://cdn.freesound.org/previews/185/185992_3226149-lq.mp3 | 875232 | `3704b5c38f8ea94b5ba209ae8039dded71e73a24a92b197380e09a4a8c83acbc` |
 | `audio/workshop.mp3` | SoundDesigner0101, [Workshop ambience](https://freesound.org/people/SoundDesigner0101/sounds/766013/) | https://cdn.freesound.org/previews/766/766013_15695818-lq.mp3 | 1074600 | `90e490033aab4dec6d0d775a02ee7761dd66ff7bb233124de67a21a7092f2de9` |
 | `audio/car-pass.mp3` | Johnnyfarmer, [Car Passing](https://freesound.org/people/Johnnyfarmer/sounds/209767/) | https://cdn.freesound.org/previews/209/209767_2012390-lq.mp3 | 36744 | `5a8b2b35d4bdc5840cc7548ddae217b8c9765a138f3cc1546290c7f3fe00b4ca` |
+## Missão 12 — monoposto de pista original
+
+`src/scene/trackside/TrackCar.ts` gera o DRF-track-02 autoral: seções de carroceria,
+cockpit aberto, aero compacta, rodas de torno com duas faces e suspensão exposta.
+Rampa/pista em TrackOpening.ts e trajeto analítico em preparation.ts são autorais.
+Sem GLB, fotografia, marca, personagem, arquivo de modelo externo ou nova textura.
+Reutiliza materiais/mapas existentes e registro de dispose; termos do repositório.
