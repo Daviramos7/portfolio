@@ -52,7 +52,7 @@ test('catalogue preserves nine bilingual records and scoped execution evidence',
   assert.deepEqual(horta.metricIds, [])
   assert.equal(portfolioContent.experiences[0].start, null)
   assert.equal(portfolioContent.experiences[0].isCurrent, null)
-  assert.equal(portfolioContent.profile.cvUrl, null)
+  assert.equal(portfolioContent.profile.cvUrl, '/cv/Davi-Ramos-Ferreira-public-2026.pdf')
 })
 
 test('content boundary rejects broken references, metric ownership and non-finite values', () => {

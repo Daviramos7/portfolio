@@ -34,7 +34,7 @@ const baselineContent: PortfolioContent = {
     education: [text('Ciência da Computação — UNINASSAU. Conclusão prevista para 2027.', 'Computer Science — UNINASSAU. Expected graduation in 2027.')],
     interests: [text('Engenharia de dados, automação e desenvolvimento de aplicações.', 'Data engineering, automation, and application development.')],
     // Assets e currículo serão migrados após revisão; nenhum caminho inexistente é publicado.
-    cvUrl: null,
+    cvUrl: '/cv/Davi-Ramos-Ferreira-public-2026.pdf',
     contactLinks: [
       { id: 'github', label: text('GitHub', 'GitHub'), url: github },
       { id: 'linkedin', label: text('LinkedIn', 'LinkedIn'), url: 'https://www.linkedin.com/in/davi-ramos-ferreira-325354294/' },
