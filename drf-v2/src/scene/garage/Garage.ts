@@ -4,6 +4,7 @@ import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { createProgrammeScreen } from './programmeScreen.ts'
+import { createPersonalDetails } from './personalDetails.ts'
 
 export function createGarage(r: Resources) {
   const garage = new Group(); garage.name = 'DRF-interior-workshop'
@@ -194,6 +195,7 @@ export function createGarage(r: Resources) {
     blade.rotation.z = -n * Math.PI * 2 / 5; blade.userData.dynamic = true; blade.castShadow = false
   }
   garage.add(fanAssembly)
+  const personal=createPersonalDetails(r);garage.add(personal.root)
   const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .05, 8, 32)), metal, [-8, 3.72, -.15])
   fanRing.rotation.y = Math.PI / 2; fanRing.castShadow = false
   const projected = new Vector3()
@@ -203,6 +205,7 @@ export function createGarage(r: Resources) {
     screens.forEach(display=>display.updateAmbient(timeMs,camera))
   }
   function updateLabels(index: SceneProps['contentIndex'], locale: Locale, selectedProject: string | null) {
+    personal.updateLocale(locale)
     screens.forEach(display=>display.update(index,locale,selectedProject))
     for (const entry of index) if (entry.projectId === null) signs.get(entry.zoneId)?.setText(entry.label[locale])
     const projects = index.filter(entry => entry.zoneId === 'garage' && entry.projectId !== null)

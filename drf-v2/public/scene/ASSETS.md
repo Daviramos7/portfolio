@@ -158,3 +158,15 @@ cockpit aberto, aero compacta, rodas de torno com duas faces e suspensão expost
 Rampa/pista em TrackOpening.ts e trajeto analítico em preparation.ts são autorais.
 Sem GLB, fotografia, marca, personagem, arquivo de modelo externo ou nova textura.
 Reutiliza materiais/mapas existentes e registro de dispose; termos do repositório.
+
+## Missão 12 — cinco detalhes pessoais autorais
+
+Fonte: `src/scene/garage/personalDetails.ts`, autoria desta implementação DRF.
+Placa REC/PE com ponte/ondas inventadas; estojo vermelho/branco/preto; cartão
+observar/testar/iterar com esboço científico DEMO; controle abstrato 360; handgrip
+com inscrição constância. Geometrias e desenhos Canvas originais, sob os termos
+do repositório, sem arquivos baixados, logos, escudos, personagens ou modelos
+oficiais. As alusões não constituem fatos profissionais ou afirmações de rotina.
+Um atlas Canvas 512×512 gerado em memória, quatro tiles 256×256; materiais
+existentes compartilhados. Sem áudio, fonte nova ou asset binário adicional.
+Upload inicial e somente quando o idioma muda; dispose pelo registro Resources.
