@@ -3,6 +3,7 @@ import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
 import { EnvironmentControls } from './EnvironmentControls.tsx'
 import { ProgramIdentity } from '../components/drf/ProgramIdentity.tsx'
+import { ProgramContext } from '../components/drf/ProgramContext.tsx'
 
 type Props = PortfolioShellProps & {
   program: Project | undefined
@@ -71,6 +72,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         {state.panelOpen ? <X size={16} aria-hidden="true" /> : <Crosshair size={16} aria-hidden="true" />}
       </button>
       </div>
+      {inGarage && program && state.target.projectId && <ProgramContext project={program} locale={state.locale} reading={state.panelOpen} onInspect={onInspect} />}
     </section>
 
     <div className="drf-hud-status">
