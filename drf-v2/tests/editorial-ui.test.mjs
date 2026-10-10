@@ -140,6 +140,13 @@ try {
     await click('.drf-recruiter-switch')
     await waitFor('document.querySelector(".drf-ui").dataset.viewMode==="recruiter"')
     check(await evaluate(`!!document.querySelector('a[href="${portfolioContent.profile.cvUrl}"]')`),'existing public CV remains available')
+    for (const locale of ['pt', 'en']) {
+      await click(`.drf-segment button[aria-label="${locale === 'pt' ? 'Português' : 'English'}"]`)
+      await waitFor(`document.querySelector('.drf-ui').lang===${JSON.stringify(locale)}`)
+      const contacts = await evaluate(`(()=>{const links=[...document.querySelectorAll('a')].filter(a=>a.href.includes('linkedin.com'));return {links:links.map(a=>({href:a.href,target:a.target,rel:a.rel})),education:document.body.textContent.includes(${JSON.stringify(portfolioContent.profile.education[0][locale])})}})()`)
+      check(contacts.links.length > 0 && contacts.links.every(link => link.href === 'https://www.linkedin.com/in/daviramosferreira' && link.target === '_blank' && link.rel.includes('noopener')), `profile and footer use owner-confirmed LinkedIn ${locale}`)
+      check(contacts.education, `owner-confirmed semester and graduation rendered ${locale}`)
+    }
     check(errors.length===0,'no console/network errors')
     await writeFile(directory+'/results.json',JSON.stringify({checks,errors,diagnostic,samples},null,2))
     console.log(JSON.stringify({checks:checks.length,errors,directory},null,2))
