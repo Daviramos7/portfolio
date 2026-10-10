@@ -1,0 +1,17 @@
+/* A selected programme, not a second gallery floating over the garage. */
+.drf-program-identity { min-width: 0; }
+.drf-program-title > span { display: block; }
+.drf-program-evidence { display: flex; flex-wrap: wrap; justify-content: space-between; gap: 4px 12px; color: var(--drf-metal); font-size: .65rem; line-height: 1.5; }
+.drf-program-evidence > span:first-child { display: inline-flex; align-items: center; gap: 5px; }
+.drf-program-evidence[data-pending=true] { color: var(--drf-white); }
+.drf-program-position { display: flex; gap: 4px; margin-block: 10px; }
+.drf-program-position > span { flex: 1; height: 2px; background: #73798260; }
+.drf-program-position > span[data-active=true] { background: var(--drf-white); }
+.drf-workstation-heading .drf-program-evidence { margin-top: 12px; padding-top: 10px; border-top: 1px solid #73798280; }
+.drf-program-selector button:not(:disabled):hover, .drf-inspect:hover { background: #73798240; }
+.drf-program-selector button:active, .drf-inspect:active { box-shadow: inset 0 0 0 2px var(--drf-white); }
+.drf-inspect[data-reading=true] { border-color: var(--drf-white); }
+.drf-ui[data-reduced-motion=false] .drf-program-title > span { animation: drf-program-identify 180ms ease-out both !important; }
+.drf-ui[data-reduced-motion=false] .drf-workstation[data-station=garage] .drf-workstation-body { animation: drf-dossier-select 180ms ease-out both !important; }
+@keyframes drf-program-identify { from { opacity: .35; transform: translateX(6px); } to { opacity: 1; transform: none; } }
+@keyframes drf-dossier-select { from { opacity: .5; } to { opacity: 1; } }

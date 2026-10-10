@@ -2,6 +2,7 @@ import { ArrowLeft, ArrowRight, BookOpen, Crosshair, X } from 'lucide-react'
 import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
 import { EnvironmentControls } from './EnvironmentControls.tsx'
+import { ProgramIdentity } from '../components/drf/ProgramIdentity.tsx'
 
 type Props = PortfolioShellProps & {
   program: Project | undefined
@@ -55,7 +56,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         <p className="drf-code">{inGarage ? t.programs : t.briefing}</p>
         <span className="drf-program-count">{inGarage ? `${String(projectIndex + 1).padStart(2, '0')} / ${String(content.projects.length).padStart(2, '0')}` : `0${zoneIndex + 1} / 05`}</span>
       </div>
-      {inGarage && program && <h2 className="drf-program-title" aria-live="polite" aria-atomic="true">{program.title[state.locale]}</h2>}
+      {inGarage && program && <ProgramIdentity project={program} locale={state.locale} index={projectIndex} total={content.projects.length} />}
       <div className="drf-showcase-command">
       {inGarage && program ? <>
         <div className="drf-program-selector" role="group" aria-label={t.chooseProgram}>
@@ -66,7 +67,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         }}>{content.projects.map((project, index) => <option key={project.id} value={project.id}>{String(index + 1).padStart(2, '0')} — {project.title[state.locale]}</option>)}</select>
         <button type="button" onClick={() => changeProgram(1)} aria-label={t.next}><ArrowRight size={16} aria-hidden="true" /></button>
       </div></> : <div className="drf-showcase-copy" key={zone?.id}><h2 aria-live="polite" aria-atomic="true">{zone?.label[state.locale]}</h2></div>}
-      <button id="drf-inspect" type="button" className="drf-inspect" aria-label={state.panelOpen ? t.close : t.inspect} title={state.panelOpen ? t.close : t.inspect} aria-expanded={state.panelOpen} aria-controls={state.panelOpen ? 'drf-reading' : undefined} onClick={event => state.panelOpen ? onClose() : onInspect(event.currentTarget)}>
+      <button id="drf-inspect" type="button" className="drf-inspect" aria-label={state.panelOpen ? t.close : t.inspect} title={state.panelOpen ? t.close : t.inspect} data-reading={state.panelOpen} aria-expanded={state.panelOpen} aria-controls={state.panelOpen ? 'drf-reading' : undefined} onClick={event => state.panelOpen ? onClose() : onInspect(event.currentTarget)}>
         {state.panelOpen ? <X size={16} aria-hidden="true" /> : <Crosshair size={16} aria-hidden="true" />}
       </button>
       </div>
