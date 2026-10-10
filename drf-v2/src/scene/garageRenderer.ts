@@ -38,8 +38,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let environmentTarget: WebGLRenderTarget | null = null
   let lastTimestamp: number | null = null, lastRenderedAt = 0, ambientTimeMs = 0
   let mobileFrame = false, invalidated = true
-  const scheduler = createPassScheduler(config)
-  const audio = createTrackAudio(() => onEvent({ type: 'AUDIO_STATUS', status: 'unavailable' }))
+  const scheduler = createPassScheduler({ initialIntervalMs: [5000, 8000], ...config })
+  const audio = createTrackAudio()
   let trackTimeMs = 0
   let pass: ReturnType<typeof createTrackPass> | null = null
   const resources = createResources()
@@ -73,6 +73,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     canvas.removeEventListener('pointermove', hoverHotspot)
     canvas.removeEventListener('pointerleave', clearHover)
     canvas.style.cursor = ''
+    if (import.meta.env.DEV) delete (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside
     scheduler.reset(); pass?.restore(); audio.dispose()
     opening?.restore()
     scene.environment = null
@@ -149,13 +150,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         if (progress >= 1) transition = null
       }
       const eligible = canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)
-      audio.setGate(eligible)
-      const forward = target.copy(lookAt).sub(camera.position).normalize()
-      audio.updateListener(camera.position.toArray(), forward.toArray())
       const snapshot = scheduler.tick(trackTimeMs, state, ready && !transition && settledSequence === state.navigationSeq)
-      if (snapshot.started) audio.beginPass(state.audio === 'on')
       pass?.update(snapshot.event, snapshot.progress, snapshot.visual)
-      audio.updatePass(snapshot.event ? snapshot.progress : null, snapshot.event?.direction)
+      canvas.dataset.sceneReducedMotion = String(state.reducedMotion)
+      canvas.dataset.sceneAmbientEnabled = String(state.ambientEnabled)
+      canvas.dataset.scenePassX = pass?.vehicle.position.x.toFixed(3) ?? '0'
+      canvas.dataset.scenePassZ = pass?.vehicle.position.z.toFixed(3) ?? '0'
       canvas.dataset.scenePass = snapshot.event?.id ?? 'idle'
       canvas.dataset.scenePassProgress = snapshot.event ? snapshot.progress.toFixed(4) : '0'
       canvas.dataset.scenePassVisual = String(Boolean(snapshot.event && snapshot.visual))
@@ -174,6 +174,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneTriangles = String(renderer.info.render.triangles)
       canvas.dataset.sceneGeometryCount = String(renderer.info.memory.geometries)
       canvas.dataset.sceneTextureCount = String(renderer.info.memory.textures)
+      canvas.dataset.sceneCameraQuaternion = camera.quaternion.toArray().map(n => n.toFixed(5)).join(',')
       canvas.dataset.sceneCameraPosition = camera.position.toArray().map(n => n.toFixed(4)).join(',')
       canvas.dataset.sceneAmbient = animate ? 'running' : 'paused'
       canvas.dataset.sceneAmbientMs = String(Math.round(ambientTimeMs))
@@ -187,6 +188,14 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         button.style.visibility = inside ? '' : 'hidden'
         button.style.left = ((projected.x + 1) * 50) + '%'
         button.style.top = ((1 - projected.y) * 50) + '%'
+        const label = button.querySelector<HTMLElement>('.drf-scene__hotspot-label')
+        if (label && inside) {
+          const bounds = button.getBoundingClientRect(), stage = canvas.getBoundingClientRect()
+          const labelWidth = label.getBoundingClientRect().width, left = bounds.left - stage.left
+          const preferred = left + bounds.width + labelWidth <= stage.width - 8 ? bounds.width : -labelWidth
+          const offset = Math.max(8 - left, Math.min(preferred, stage.width - 8 - left - labelWidth))
+          button.style.setProperty('--scene-label-offset', offset + 'px')
+        }
       }
       if (!ready) {
         ready = true
@@ -216,6 +225,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       ...buildCameraPath(camera.position, destination), fromLookAt: lookAt.clone(), toLookAt: target.clone() }
   }
 
+  if (import.meta.env.DEV) {
+    (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { trigger: () => {
+      if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
+      scheduler.requestSoon(trackTimeMs); requestFrame(); return true
+    } }
+  }
   onEvent({ type: 'SCENE_STATUS', status: 'loading' })
   try {
     // Check actual WebGL2 availability without letting Three log a thrown creation error.
@@ -306,17 +321,17 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         rimLight.visible = shadows
         resize()
       }
-      if (previous && previous.reducedMotion !== state.reducedMotion) { scheduler.reset(); pass?.restore(); audio.updatePass(null) }
+      if (previous && previous.reducedMotion !== state.reducedMotion) { scheduler.reset(); pass?.restore() }
       const sequenceChanged = latestSequence !== state.navigationSeq
       const instant = !previous || state.reducedMotion
       if (sequenceChanged || (instant && transition)) {
         latestSequence = state.navigationSeq
-        scheduler.reset(); pass?.restore(); audio.updatePass(null)
+        scheduler.reset(); pass?.restore()
         opening?.restore()
         moveCamera(instant)
       }
       if (!canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) {
-        scheduler.reset(); pass?.restore(); audio.setGate(false); audio.updatePass(null)
+        scheduler.reset(); pass?.restore()
         canvas.dataset.scenePass = 'idle'; canvas.dataset.scenePassVisual = 'false'
         canvas.dataset.scenePassProgress = '0'; canvas.dataset.scenePassNextMs = ''
       }

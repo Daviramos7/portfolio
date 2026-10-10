@@ -1,4 +1,5 @@
-import { BufferGeometry, CatmullRomCurve3, CylinderGeometry, Float32BufferAttribute, Group, LatheGeometry, Shape, TorusGeometry, TubeGeometry, Vector2, Vector3, ExtrudeGeometry } from 'three'
+import { BufferGeometry, CatmullRomCurve3, CylinderGeometry, Float32BufferAttribute, Group, Shape, TorusGeometry, TubeGeometry, Vector3, ExtrudeGeometry } from 'three'
+import { createWheelAssemblies } from './wheels.ts'
 import type { Material } from 'three'
 import type { Resources, Vec3 } from '../garage/resources.ts'
 
@@ -40,7 +41,7 @@ function loft(sections: readonly Section[]) {
 
 export function createDRF01(r: Resources) {
   const car = new Group(); car.name = 'DRF-01-original-refined-prototype'
-  const { carbon, paint: red, black, metal, tire } = r.palette
+  const { carbon, paint: red, black, metal } = r.palette
   const body = (sections: readonly Section[], mat: Material, p: Vec3 = [0, 0, 0]) => r.mesh(car, r.geometry(loft(sections)), mat, p)
   body([[-2.05, .4, .17, .23], [-1, .99, .17, .25], [.3, .96, .17, .25], [1.8, .39, .18, .24]], carbon)
   // Continuous sculpted nose, raised shoulders and separated cockpit opening.
@@ -68,30 +69,7 @@ export function createDRF01(r: Resources) {
   body([[-1.85, .08, .73, .92], [-1.45, .18, .89, 1.46], [-1.23, .14, 1.02, 1.4], [-1.12, .08, 1.06, 1.25]], carbon)
   r.box(car, [.06, .02, .48], [0, 1.42, -1.48], red)
 
-  // Rounded tire shoulder profile, recessed rim, spokes, brake disc and central hub.
-  const profile = [new Vector2(.28, -.23), new Vector2(.5, -.23), new Vector2(.565, -.19), new Vector2(.59, -.13), new Vector2(.6, .13), new Vector2(.565, .21), new Vector2(.5, .235), new Vector2(.28, .235)]
-  const wheelShape = r.geometry(new LatheGeometry(profile, 48))
-  const rimShape = r.geometry(new LatheGeometry([new Vector2(.28, -.18), new Vector2(.335, -.18), new Vector2(.335, .18), new Vector2(.28, .18)], 32))
-  const shoulder = r.geometry(new TorusGeometry(.505, .007, 5, 48))
-  const hubShape = r.geometry(new CylinderGeometry(.095, .095, .075, 20))
-  const brake = r.geometry(new CylinderGeometry(.25, .25, .02, 32))
-  for (const z of [-1.6, 1.55]) for (const side of [-1, 1]) {
-    const x = side * 1.3
-    const wheel = r.mesh(car, wheelShape, tire, [x, .605, z]); wheel.rotation.z = Math.PI / 2
-    const rim = r.mesh(car, rimShape, black, [x, .605, z]); rim.rotation.z = Math.PI / 2
-    const disc = r.mesh(car, brake, metal, [x + side * .15, .605, z]); disc.rotation.z = Math.PI / 2
-    const innerDisc = r.mesh(car, brake, metal, [x - side * .15, .605, z]); innerDisc.rotation.z = Math.PI / 2
-    const ring = r.mesh(car, shoulder, metal, [x + side * .225, .605, z]); ring.rotation.y = Math.PI / 2
-    const hub = r.mesh(car, hubShape, metal, [x + side * .245, .605, z]); hub.rotation.z = Math.PI / 2
-    for (let n = 0; n < 8; n++) {
-      const a = n / 8 * Math.PI * 2
-      r.rod(car, [x + side * .24, .605, z], [x + side * .22, .605 + Math.cos(a) * .27, z + Math.sin(a) * .27], .018, metal)
-    }
-    for (const offset of [-.35, .35]) {
-      r.rod(car, [side * .3, .39, z + offset], [x, .48, z], .026, carbon)
-      r.rod(car, [side * .33, .67, z + offset], [x, .68, z], .018, metal)
-    }
-  }
+  createWheelAssemblies(r, car)
   // Airfoil cross-sections, curved tips and bevelled end plates replace rectangular slabs.
   const foil = new Shape(); foil.moveTo(-.2, 0); foil.quadraticCurveTo(-.05, .065, .2, .025); foil.quadraticCurveTo(.05, -.03, -.2, 0)
   const frontFoil = r.geometry(new ExtrudeGeometry(foil, { depth: 2.85, bevelEnabled: false, steps: 1, curveSegments: 10 }))
