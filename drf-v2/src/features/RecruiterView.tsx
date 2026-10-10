@@ -2,6 +2,7 @@ import type { PortfolioShellProps, Project } from '../contracts/index.ts'
 import { ZoneContent } from './ZoneContent.tsx'
 import { uiLabels } from './uiLabels.ts'
 import { lazy, Suspense } from 'react'
+import { Download } from 'lucide-react'
 
 const LocalCvReview = import.meta.env.DEV ? lazy(() => import('./LocalCvReview.tsx')) : null
 
@@ -40,7 +41,7 @@ export function RecruiterView({ content, state, actions, onProject }: Props) {
     </header>
     {reviewEnabled && LocalCvReview && <Suspense fallback={<p>{t.loadingDraft}</p>}><LocalCvReview locale={state.locale} /></Suspense>}
     <div className="drf-intro"><div><p className="drf-code">{content.profile.location[state.locale]}</p><h1>{content.profile.name}</h1><p className="drf-lead">{content.profile.summary[state.locale]}</p>
-      {content.profile.cvUrl && <div className="drf-public-cv"><a className="drf-button" href={content.profile.cvUrl} download>{t.downloadCv} ↓</a><small>{t.publicCv}</small></div>}
+      {content.profile.cvUrl && <div className="drf-public-cv"><a className="drf-button" href={content.profile.cvUrl} download><Download size={18} aria-hidden="true" />{t.downloadCv}</a><small>{t.publicCv}</small></div>}
     </div><p className="drf-team-note">{t.fiction}</p></div>
     <div className="drf-status-strip"><p role="status">{t.recruiterNotice}</p></div>
     <div id="drf-content" tabIndex={-1} className="drf-content">

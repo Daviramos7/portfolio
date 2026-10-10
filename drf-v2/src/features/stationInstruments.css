@@ -1,0 +1,46 @@
+/* Original DRF station surfaces. No imported component theme or chart data. */
+.drf-public-cv .drf-button { display: inline-flex; align-items: center; gap: 10px; }
+.drf-hud-header:has(.drf-motion-control[open]) { z-index: 6; }
+.drf-workstation[data-station=garage] .drf-facts { border-block: 1px solid var(--drf-metal); }
+.drf-workstation[data-station=garage] .drf-facts > div { border: 0; border-bottom: 1px solid #73798280; background: transparent; }
+.drf-workstation[data-station=telemetry] .drf-workstation-body { padding-top: 0; }
+.drf-instrument-console { display: grid; grid-template-columns: minmax(0,1fr) auto; gap: 10px; padding-block: 16px; margin-bottom: 20px; border-bottom: 1px solid var(--drf-metal); }
+.drf-instrument-console > label { grid-column: 1 / -1; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px; }
+.drf-instrument-console select { min-width: 0; width: 100%; padding: 8px; color: var(--drf-white); background: var(--drf-carbon); border: 1px solid var(--drf-metal); font-size: .75rem; }
+.drf-instrument-toolbar { display: flex; border: 1px solid var(--drf-metal); }
+.drf-instrument-toolbar button { display: grid; place-items: center; width: 40px; height: 44px; background: var(--drf-carbon); border: 0; }
+.drf-instrument-toolbar button + button { border-left: 1px solid #73798280; }
+.drf-instrument-toolbar button:last-child { border-left: 2px solid var(--drf-metal); }
+.drf-instrument-toolbar button:disabled { opacity: .45; cursor: default; }
+.drf-instrument-toolbar button:not(:disabled):hover { background: #73798240; }
+.drf-instrument-policy { grid-column: 1 / -1; font-size: .7rem; color: var(--drf-metal); line-height: 1.5; }
+.drf-instrument-metadata { display: grid; grid-template-columns: minmax(0,1fr); margin-top: 18px; border-block: 1px solid #73798280; }
+.drf-instrument-metadata > div { display: grid; grid-template-columns: 70px minmax(0,1fr); gap: 12px; padding-block: 10px; }
+.drf-instrument-metadata > div + div { border-top: 1px solid #73798280; }
+.drf-instrument-metadata dt { font-size: .65rem; color: var(--drf-metal); }
+.drf-instrument-metadata dd { font-size: .75rem; margin: 0; overflow-wrap: break-word; }
+.drf-instrument-credit { display: block; margin-top: 24px; color: var(--drf-metal); font-size: .65rem; }
+.drf-number-line { display: inline-flex; }
+.drf-number-window { display: inline-block; overflow: hidden; vertical-align: bottom; }
+.drf-number-glyph { display: inline-block; }
+.drf-ui[data-reduced-motion=false] .drf-instrument-value[data-animate=true] .drf-number-glyph { animation: drf-instrument-reveal 420ms cubic-bezier(.2,.7,.25,1) both !important; animation-delay: calc(min(var(--digit-order),12) * 16ms) !important; }
+.drf-ui[data-reduced-motion=false] .drf-instrument-value[data-animate=true][data-visible=false] .drf-number-glyph { animation-play-state: paused !important; }
+@keyframes drf-instrument-reveal { from { transform: translateY(65%); opacity: .3; } to { transform: none; opacity: 1; } }
+.drf-workstation[data-station=pit-wall] .drf-timeline { gap: 0; }
+.drf-workstation[data-station=pit-wall] .drf-timeline article { position: relative; padding: 0 0 28px 22px; border-left: 1px solid var(--drf-metal); }
+.drf-workstation[data-station=pit-wall] .drf-timeline article::before { content: ''; position: absolute; width: 7px; height: 7px; top: 8px; left: -4px; background: var(--drf-white); }
+.drf-workstation[data-station=pit-wall] .drf-timeline article > .drf-code { font-size: .8rem; letter-spacing: .02em; }
+.drf-workstation[data-station=driver-profile] .drf-workstation-heading { border-left: 4px solid var(--drf-white); }
+.drf-workstation[data-station=driver-profile] .drf-performance { margin-top: 24px; border-inline: 0; border-top: 2px solid var(--drf-metal); padding-inline: 0; }
+.drf-workstation[data-station=driver-profile] .drf-text-list { padding: 16px 16px 16px 30px; border-left: 1px solid var(--drf-metal); }
+.drf-workstation[data-station=strategy-room] .drf-strategies { gap: 28px; }
+.drf-workstation[data-station=strategy-room] .drf-strategies article { padding: 0; border: 0; border-top: 1px solid var(--drf-metal); padding-top: 18px; }
+.drf-strategy-decisions, .drf-strategy-limits { min-width: 0; }
+.drf-strategy-decisions .drf-field-label, .drf-strategy-limits .drf-field-label { margin-bottom: 10px; font-size: .75rem; }
+.drf-workstation .drf-strategy-limits { padding: 12px; border-left: 2px solid var(--drf-metal); background: #73798215; }
+@media (max-width: 600px) {
+  .drf-instrument-console { grid-template-columns: 122px minmax(0,1fr); }
+  .drf-instrument-console select { grid-column: 1 / -1; min-height: 44px; }
+  .drf-instrument-toolbar { justify-self: start; }
+  .drf-instrument-policy { grid-column: 2; min-width: 0; align-self: center; font-size: .65rem; }
+}
