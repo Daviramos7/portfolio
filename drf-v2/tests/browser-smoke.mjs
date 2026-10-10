@@ -17,7 +17,7 @@ const screenshots = process.env.DRF_SCREENSHOT_DIR
   : await mkdtemp(join(tmpdir(), 'drf-integrated-evidence-'))
 await mkdir(screenshots, { recursive: true })
 const checks = []
-const expectedMetrics = portfolioContent.metrics.filter(metric => metric.state !== 'missing').length
+const expectedMetrics = portfolioContent.metrics.length
 const sceneMeasures = []
 const fonts = new Map()
 
@@ -216,8 +216,10 @@ async function runBrowser(disableWebGL) {
       assert.ok(distance(await pose(), framings.telemetry.position) > 1, 'Opening the workstation does not snap the camera')
       await settled(before + 1)
       assert.equal(await evaluate('document.querySelector("canvas").dataset.sceneAmbient'), 'paused')
-      await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === ' + expectedMetrics)
+      await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === 1 && document.querySelectorAll("#drf-metric-select option").length === ' + expectedMetrics)
       assert.ok(await evaluate('document.querySelector("#drf-reading").textContent.includes("127.119")'))
+      await click('.drf-instrument-toolbar button:nth-child(2)')
+      await waitFor('document.querySelector(".drf-telemetry-readout")?.dataset.metricId === ' + JSON.stringify(portfolioContent.metrics[1].id))
       assert.ok(await evaluate('document.querySelector("#drf-reading").textContent.includes("7.803.361.234,91")'))
       await snapshot('integrated-telemetry')
       await keyboard('Escape')
@@ -365,7 +367,7 @@ async function runBrowser(disableWebGL) {
         await command('Input.dispatchTouchEvent', { type: 'touchEnd', touchPoints: [] })
         await zone('telemetry')
         await inspect()
-        await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === ' + expectedMetrics)
+        await waitFor('document.querySelectorAll(".drf-telemetry-readout").length === 1 && document.querySelectorAll("#drf-metric-select option").length === ' + expectedMetrics)
         assert.equal(await noOverflow(), true)
         assert.equal(await fullStage(), true)
         await snapshot('mobile-telemetry-' + width)

@@ -28,3 +28,19 @@ Exigir frames reais de navegação 01→02→03→04→05→01, interrupção, h
 Worker3D verificou Chrome sem emulação: matchMedia(reduce)=true, cena pronta, ambiente pausado e nenhum CAR_PASS agendado. Navegação direta é o ramo de acessibilidade, não demonstra falha da interpolação normal. Estado inicial de ambiente continua true; rótulo Desativado confunde restrição com escolha desligada. Evidências/browserframes devem permanecer no RESCUE-3D.
 
 a1b97c5 adiciona preferência explícita somente na sessão: system(default)/cinematic/reduced. System continua respeitando o dispositivo; escolha cinematográfica não modifica Windows/navegador e não ativa áudio. Teste de regressão verifica mudanças de matchMedia, modos, retorno ao sistema e reset após nova sessão. Lint/build21testes passaram. Workers sincronizados enquanto estavam limpos.
+
+## Checkpoint P0 integrado
+
+4066a37 integra dd19c46: quatro rodas/aros/discos/cubos/montantes, extrusão simétrica, suspensão fora do envelope do pneu. Letras empilhadas reproduzidas nos hotspots (largura auto + overflow-wrap:anywhere herdado) e corrigidas por largura explícita/quebra normal/offset limitado. Painéis HTML não reproduziram o defeito nas61combinações; são alvos distintos. Frames reais de navegação/passagem, antes/depois em .agent-grid/screenshots/rescue-09/3d-p0/index.html. Reduced nativo estático visível; primeiro evento observado5,35s em condição normal. Mobile ainda tem oclusão parcial da pista.
+
+Áudio tonal removido: unavailable seguro/nenhum AudioContext; silêncio por qualidade. Não se reivindica atmosfera sonora concluída. TriggerCAR_PASS existe somente DEV no canvas.drfDebugTrackside.trigger(); gates e dispose conferidos, ausente no bundle de produção.
+
+fc70d9c adiciona screenLines opcionais públicos PT/EN para telas: catálogo, auditoria local, experiência pública, formação e interesses. Sem roadmap/fatos inventados, dados brutos ou consultas de negócio. Lint/build26testes passaram; smoke principal P0 em p0-integrated passou, console/rede vazios.
+
+## Checkpoint UI P1
+
+9fc8b43 integra499e716/4025614: toolbar direcional, seleção dos7resultados, revelação dos dígitos finais e pausa offscreen, estações HTML diferenciadas, rótulos ambientais por status efetivo e botãoCV com Download. Padrões adaptados autoralmente de Origin/coss, Skiper37 e Cult; fontes/licenças/atribuição em component-adoption.md. Nenhum código Pro, novas dependências ou gráficos de dados inventados.
+
+Teste dirigido principal:49verificaçõesPASS; lint/build26testesPASS. Smoke antigo falhou por expectativa obsoleta de7cards simultâneos; adaptação exige1instrumento/7opções e troca real entre dois valores. Rerun principalPASS; console/rede vazios, mobile390/320 emulado. Capturas p1-ui-integrated e p1-ui-main-smoke. Guardas de documento novo/scene-ready no harness eliminaram captura anterior sem garagem; imagem preta não atribuída à cena como defeito sem reprodução.
+
+DEV principal pronto em http://127.0.0.1:5176/ ; preview produção em http://127.0.0.1:5173/ . Para experimentar a câmera nesta máquina, selecionar explicitamente Movimento→Cinematográfico; o padrão continua Seguir sistema. Não altera configuração de acessibilidade do computador. Revisão privada: DEV ?mode=recruiter&cv-review=1 ; selecionar PDF local. Novo CV nunca substitui o PDF público automaticamente.
