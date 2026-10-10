@@ -15,3 +15,15 @@
 .drf-ui[data-reduced-motion=false] .drf-workstation[data-station=garage] .drf-workstation-body { animation: drf-dossier-select 180ms ease-out both !important; }
 @keyframes drf-program-identify { from { opacity: .35; transform: translateX(6px); } to { opacity: 1; transform: none; } }
 @keyframes drf-dossier-select { from { opacity: .5; } to { opacity: 1; } }
+
+/* Selected programme context stays below the identity, independent of camera. */
+.drf-program-context { min-width: 0; margin-top: 10px; border-top: 1px solid var(--hud-border); }
+.drf-program-context-copy { padding: 10px 0 8px; }
+.drf-ui .drf-program-summary { margin: 0 0 10px; color: var(--drf-white); font-size: .8rem; line-height: 1.55; overflow-wrap: break-word; }
+.drf-program-context .drf-code { margin-bottom: 6px; font-size: .65rem; }
+.drf-program-stack { display: flex; flex-wrap: wrap; gap: 5px; list-style: none; padding: 0; margin: 0; min-width: 0; }
+.drf-program-stack li { max-width: 100%; padding: 3px 6px; border: 1px solid var(--hud-border); color: var(--drf-white); font-size: .7rem; line-height: 1.4; overflow-wrap: anywhere; }
+.drf-program-context-actions { display: flex; flex-wrap: wrap; gap: 0 12px; border-top: 1px solid var(--hud-border); }
+.drf-program-context-actions :is(button,a) { display: inline-flex; align-items: center; justify-content: flex-start; gap: 4px; min-height: 44px; max-width: 100%; padding: 0; background: none; border: 0; color: var(--drf-white); font-size: .7rem; text-decoration: underline; text-underline-offset: 4px; overflow-wrap: break-word; }
+.drf-program-context-actions button { font-weight: 650; }
+.drf-program-context-actions :is(button,a):hover { color: var(--drf-metal); }
