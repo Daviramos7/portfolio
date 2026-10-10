@@ -38,6 +38,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let environmentTarget: WebGLRenderTarget | null = null
   let lastTimestamp: number | null = null, lastRenderedAt = 0, ambientTimeMs = 0
   let mobileFrame = false, invalidated = true
+  let renderedFrames = 0
   const scheduler = createPassScheduler({ initialIntervalMs: [5000, 8000], ...config })
   const audio = createTrackAudio()
   let trackTimeMs = 0
@@ -162,12 +163,15 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.scenePassNextMs = String(snapshot.nextMs ?? '')
       canvas.dataset.sceneClockMs = String(Math.round(trackTimeMs))
       const animate = ambientActive()
-      if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs) }
+      if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
       if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { requestFrame(); return }
       // Idle ambience is capped at 30 rendered fps; camera travel retains native pacing.
       if (!current && ready && (animate || eligible) && nowMs - lastRenderedAt < 1000 / 30) { requestFrame(); return }
       camera.lookAt(lookAt)
       renderer.render(scene, camera)
+      canvas.dataset.sceneRenderedFrames = String(++renderedFrames)
+      canvas.dataset.sceneFrameTimestamp = nowMs.toFixed(3)
+      canvas.dataset.sceneScreenUploads = String(garage?.screenUploads ?? 0)
       invalidated = false
       lastRenderedAt = nowMs
       canvas.dataset.sceneDrawCalls = String(renderer.info.render.calls)

@@ -7,6 +7,9 @@ export function createTrackPass(r: Resources, opening: { reflection: Group; ligh
   const vehicle = new Group(); vehicle.name = 'DRF-track-01-original'; vehicle.visible = false
   const { paint, carbon, tire, metal, glass } = r.palette
   r.box(vehicle, [1.1, .3, 2.8], [0, .45, 0], paint)
+  // Original service-test livery: light shoulder stripe distinguishes the vehicle against the fence.
+  r.box(vehicle,[.34,.04,2.4],[0,.62,.05],r.palette.white)
+  for(const side of [-1,1])r.box(vehicle,[.018,.12,1.2],[side*.56,.48,.25],r.palette.white)
   r.box(vehicle, [.7, .15, 1.2], [0, .38, 1.7], carbon)
   r.box(vehicle, [.62, .34, .9], [0, .76, -.1], glass)
   r.box(vehicle, [1.65, .07, .4], [0, .95, -1.55], carbon)
