@@ -1,6 +1,7 @@
 import type { Locale, Metric, PortfolioContent, Project } from '../../contracts/index.ts'
 import { uiLabels } from '../../features/uiLabels.ts'
 import { InstrumentValue } from './InstrumentValue.tsx'
+import { EvidenceExplorer } from './EvidenceExplorer.tsx'
 
 type ContentProps = { content: PortfolioContent; locale: Locale }
 
@@ -37,11 +38,16 @@ export function MetricCards({ content, locale, metrics = content.metrics }: Cont
   })}</div> : <p className="drf-muted">{t.noMetrics}</p>
 }
 
-export function ProjectDetail({ project, content, locale }: ContentProps & { project: Project }) {
+export function ProjectDetail({ project, content, locale, section = 'all' }: ContentProps & { project: Project; section?: 'all' | 'overview' | 'engineering' | 'evidence' }) {
   const t = uiLabels(locale)
   const media = content.media.filter(media => project.mediaIds.includes(media.id))
   const metrics = content.metrics.filter(metric => project.metricIds.includes(metric.id))
+  const overview = section === 'all' || section === 'overview'
+  const engineering = section === 'all' || section === 'engineering'
+  const evidence = section === 'all' || section === 'evidence'
+  const sources = project.evidenceIds.length > 0 ? <><h4>{t.sources}</h4>{section === 'all' ? <EvidenceList content={content} locale={locale} ids={project.evidenceIds} /> : <EvidenceExplorer content={content} locale={locale} ids={project.evidenceIds} />}</> : null
   return <div className="drf-project-detail">
+    {overview && <>
     <p className="drf-tag">{project.contentStatus === 'pending-evidence' ? t.pending : t.reviewed}</p>
     <p className="drf-lead">{project.summary[locale]}</p>
     {(project.problem || project.contribution || project.productStatus) && <dl className="drf-facts">
@@ -50,15 +56,23 @@ export function ProjectDetail({ project, content, locale }: ContentProps & { pro
       {project.productStatus && <div><dt>{t.productStatus}</dt><dd>{project.productStatus[locale]}</dd></div>}
     </dl>}
     {project.technologies.length > 0 && <><h4>{t.stack}</h4><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul></>}
+    </>}
+    {engineering && <>
     {project.decisions.length > 0 && <><h4>{t.decisions}</h4><ul className="drf-text-list">{project.decisions.map((decision, i) => <li key={i}>{decision[locale]}</li>)}</ul></>}
     {project.limitations.length > 0 && <div className="drf-callout"><h4>{t.limitations}</h4><ul className="drf-text-list">{project.limitations.map((limit, i) => <li key={i}>{limit[locale]}</li>)}</ul></div>}
+    </>}
+    {evidence && <>
+    {section === 'evidence' && sources}
     {metrics.length > 0 && <><h4>{content.zones.find(zone => zone.id === 'telemetry')?.label[locale]}</h4><MetricCards content={content} locale={locale} metrics={metrics} /></>}
-    {project.evidenceIds.length > 0 && <><h4>{t.sources}</h4><EvidenceList content={content} locale={locale} ids={project.evidenceIds} /></>}
+    {section === 'all' && sources}
+    </>}
+    {overview && <>
     {media.map(item => <figure key={item.id}><img src={item.src} alt={item.alt[locale]} loading="lazy" /><figcaption>{item.credit[locale]} · {item.licenseRef}</figcaption></figure>)}
     <div className="drf-links">
       {project.repositoryUrl && <a href={project.repositoryUrl} target="_blank" rel="noopener noreferrer">{t.repository} ↗</a>}
       {project.demoUrl && <a href={project.demoUrl} target="_blank" rel="noopener noreferrer">{t.demo} ↗</a>}
     </div>
     {project.demoUrl && <p className="drf-muted"><small>{t.demoNotice}</small></p>}
+    </>}
   </div>
 }
