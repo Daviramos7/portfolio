@@ -1,5 +1,5 @@
-import { CanvasTexture, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
-import type { Group } from 'three'
+import { CanvasTexture, Group, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace, Vector3 } from 'three'
+import type { Camera } from 'three'
 import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
 
@@ -9,6 +9,17 @@ export function screenPresentation(zone: ZoneId, index: SceneProps['contentIndex
   return { title: entry?.label[locale] ?? 'DRF-01', lines: entry?.screenLines?.map(line => line[locale]) ?? [] }
 }
 
+// Demonstration cursor only: never a changing business metric or fabricated timeline.
+export function screenActivity(zone: ZoneId, timeMs: number, publicNodes = 1): readonly [number,number] {
+  const phase=(timeMs%12000)/12000
+  if(zone==='garage')return [90,155+190*(.5-.5*Math.cos(phase*Math.PI*2))]
+  if(zone==='telemetry')return [45+phase*250,225+Math.sin(phase*44*.24)*43+Math.cos(phase*44*.53)*15]
+  if(zone==='pit-wall')return [78,145+110*Math.min(Math.max(0,publicNodes-1),Math.floor(phase*Math.max(1,publicNodes)))]
+  if(zone==='driver-profile')return [170+84*Math.cos(phase*Math.PI*2),216+84*Math.sin(phase*Math.PI*2)]
+  const points=[[93,163],[248,244],[106,363]], segment=Math.floor(phase*3),t=phase*3-segment
+  return [points[segment][0]*(1-t)+points[(segment+1)%3][0]*t,points[segment][1]*(1-t)+points[(segment+1)%3][1]*t]
+}
+
 // Original canvas diagrams; source text is supplied solely by the Lead's scene projection.
 export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId, size: readonly [number, number], position: Vec3) {
   const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512
@@ -16,11 +27,18 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
   const material = r.material(new MeshBasicMaterial({ map, toneMapped: false }))
   const object = r.mesh(parent, r.geometry(new PlaneGeometry(...size)), material, position)
   object.name = 'programme-screen-' + zone; object.castShadow = false
+  const activity=new Group();object.add(activity)
+  const marker=r.mesh(activity,r.geometry(new PlaneGeometry(size[0]*10/1024,size[1]*10/512)),r.material(new MeshBasicMaterial({color:'#f3d0ab',toneMapped:false})),[0,0,.004])
+  marker.userData.dynamic=true;marker.castShadow=false;marker.name='demo-cursor-'+zone
+  const [initialX,initialY]=screenActivity(zone,0)
+  marker.position.set((initialX/1024-.5)*size[0],(.5-initialY/512)*size[1],.004)
+  const projected=new Vector3();let publicNodes=1
   let previous = ''
   function update(index: SceneProps['contentIndex'], locale: Locale, projectId: string | null) {
     const presentation = screenPresentation(zone,index,locale,projectId), key = JSON.stringify([locale,presentation])
     if (!ctx || key === previous) return
     previous = key; object.userData.screenPresentation = presentation
+    publicNodes=Math.min(3,Math.max(1,presentation.lines.length))
     const en = locale === 'en'
     ctx.fillStyle = '#0c1720'; ctx.fillRect(0,0,1024,512)
     ctx.fillStyle = '#132934'; ctx.fillRect(20,20,300,472)
@@ -62,6 +80,7 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
       for(const [x,y]of [[93,163],[248,244],[106,363]]){ctx.fillStyle='#183845';ctx.fillRect(x-24,y-24,48,48);ctx.strokeStyle='#80c7d1';ctx.strokeRect(x-24,y-24,48,48)}
       text(en?'Areas of interest':'Áreas de interesse',45,455,254,22)
     }
+    ctx.font='500 16px sans-serif';ctx.fillStyle='#d0a785';ctx.fillText(en?'DEMO · ambient cursor':'DEMO · indicador ambiente',45,485,254)
     let y=text(presentation.title,350,66,630,32)+25
     ctx.fillStyle='#b7314c';ctx.fillRect(350,y-12,120,4);y+=26
     const lines: readonly string[] = presentation.lines.length ? presentation.lines : [en?'Details in reading':'Detalhes na leitura']
@@ -70,5 +89,13 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
   }
   // Every surface has a diagram even before optional presentation data arrives.
   update([],'pt',null)
-  return {object,update,get uploadVersion(){return map.version}}
+  function updateAmbient(timeMs:number,camera:Camera) {
+    object.getWorldPosition(projected);projected.project(camera)
+    if(projected.z<=-1||projected.z>=1||Math.abs(projected.x)>1.15||Math.abs(projected.y)>1.15)return
+    const [x,y]=screenActivity(zone,timeMs,publicNodes)
+    marker.position.set((x/1024-.5)*size[0],(.5-y/512)*size[1],.004)
+    // A single public experience still has activity, without adding fictitious nodes.
+    if(zone==='pit-wall')marker.scale.setScalar(1+.45*(.5-.5*Math.cos(timeMs*Math.PI*2/8000)))
+  }
+  return {object,update,updateAmbient,get uploadVersion(){return map.version}}
 }

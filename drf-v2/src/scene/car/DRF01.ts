@@ -63,11 +63,22 @@ export function createDRF01(r: Resources) {
   // Seat and cockpit walls sit below the lip; no character/model or protected livery.
   r.box(car, [.43, .08, .74], [0, .46, -.64], black)
   const seat = r.box(car, [.39, .45, .11], [0, .72, -1.12], black); seat.rotation.x = -.18
+  // A continuous cockpit rim, recessed bucket and steering yoke give the void a purpose.
+  const cockpitRim = [[-.32,.78,-1.12],[-.38,.77,-.7],[-.34,.72,-.22],[0,.72,-.12],[.34,.72,-.22],[.38,.77,-.7],[.32,.78,-1.12]].map(p=>new Vector3(...p))
+  const rim = r.mesh(car,r.geometry(new TubeGeometry(new CatmullRomCurve3(cockpitRim),32,.035,8,false)),carbon);rim.name='cockpit-continuous-rim'
+  for(const side of [-1,1]) {
+    r.rod(car,[side*.16,.5,-.94],[side*.16,.71,-1.08],.035,black)
+    r.rod(car,[side*.12,.77,-.25],[side*.12,.87,-.26],.025,black)
+    r.rod(car,[side*.12,.87,-.26],[side*.2,.84,-.25],.023,carbon)
+  }
+  r.rod(car,[-.12,.77,-.25],[.12,.77,-.25],.025,carbon)
   const haloPoints = [[-.34, .87, -1.06], [-.38, 1.18, -.83], [-.32, 1.22, -.28], [0, 1.17, .03], [.32, 1.22, -.28], [.38, 1.18, -.83], [.34, .87, -1.06]].map(p => new Vector3(...p))
   r.mesh(car, r.geometry(new TubeGeometry(new CatmullRomCurve3(haloPoints), 32, .035, 8, false)), carbon)
   r.rod(car, [0, 1.17, .03], [0, .7, .23], .025, carbon)
-  body([[-1.85, .08, .73, .92], [-1.45, .18, .89, 1.46], [-1.23, .14, 1.02, 1.4], [-1.12, .08, 1.06, 1.25]], carbon)
-  r.box(car, [.06, .02, .48], [0, 1.42, -1.48], red)
+  // Tapered engine cover and a compact inlet replace the tall abstract fin.
+  body([[-2.04,.08,.5,.66],[-1.72,.16,.57,.89],[-1.37,.19,.68,1.1],[-1.13,.12,.78,1.12]],red)
+  const airbox = r.mesh(car,r.geometry(new TorusGeometry(.09,.023,8,24)),carbon,[0,1.025,-1.105]);airbox.scale.set(1.15,.85,1)
+  r.mesh(car,r.geometry(new CylinderGeometry(.076,.076,.016,24)),black,[0,1.025,-1.12]).rotation.x=Math.PI/2
 
   createWheelAssemblies(r, car)
   // Airfoil cross-sections, curved tips and bevelled end plates replace rectangular slabs.
@@ -76,19 +87,19 @@ export function createDRF01(r: Resources) {
   for (let n = 0; n < 3; n++) {
     const wing = r.mesh(car, frontFoil, carbon, [-1.425, .26 + n * .06, 2.54 - n * .24]); wing.rotation.y = Math.PI / 2
   }
-  const rearFoil = r.geometry(new ExtrudeGeometry(foil, { depth: 2.45, bevelEnabled: false, steps: 1, curveSegments: 10 }))
+  const rearFoil = r.geometry(new ExtrudeGeometry(foil, { depth: 1.9, bevelEnabled: false, steps: 1, curveSegments: 10 }))
   for (let n = 0; n < 2; n++) {
-    const wing = r.mesh(car, rearFoil, carbon, [-1.225, 1.31 + n * .23, -2.08 - n * .18]); wing.rotation.y = Math.PI / 2
+    const wing = r.mesh(car, rearFoil, carbon, [-.95, 1.06 + n * .14, -2.08 - n * .18]); wing.rotation.y = Math.PI / 2;wing.name='rear-airfoil-'+n
   }
   const end = new Shape(); end.moveTo(-.4, -.15); end.lineTo(.3, -.15); end.quadraticCurveTo(.45, -.08, .36, .23); end.lineTo(-.32, .25); end.quadraticCurveTo(-.45, .23, -.4, -.15)
   const plate = r.geometry(new ExtrudeGeometry(end, { depth: .04, bevelEnabled: true, bevelSegments: 2, steps: 1, bevelSize: .016, bevelThickness: .012, curveSegments: 8 }))
   for (const side of [-1, 1]) {
     const tip = r.mesh(car, plate, red, [side * 1.44, .37, 2.49]); tip.rotation.y = Math.PI / 2
-    const rear = r.mesh(car, plate, red, [side * 1.24, 1.35, -2.17]); rear.rotation.y = Math.PI / 2; rear.scale.y = 1.6
-    r.rod(car, [side * .23, .44, -1.97], [side * .23, 1.29, -2.15], .035, metal)
+    const rear = r.mesh(car, plate, carbon, [side * .96, 1.12, -2.17]); rear.rotation.y = Math.PI / 2; rear.scale.set(.8,.8,1);rear.name='rear-endplate-'+side
+    r.rod(car, [side * .23, .44, -1.97], [side * .23, 1.03, -2.15], .028, metal)
   }
   for (const x of [-.7, -.35, 0, .35, .7]) r.box(car, [.035, .18, .7], [x, .26, -1.97], carbon)
   const number = r.sign(car, '01', [.32, .23], [0, .5, 1.65]); number.object.rotation.x = -Math.PI / 2
-  const plaque = r.sign(car, 'DRF-01', [.83, .2], [0, 1.59, -2.26]); plaque.object.rotation.x = -Math.PI / 2
+  const plaque = r.sign(car, 'DRF-01', [.48, .1], [0, 1.255, -2.26]); plaque.object.rotation.x = -Math.PI / 2
   return car
 }

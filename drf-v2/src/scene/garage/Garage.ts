@@ -29,14 +29,14 @@ export function createGarage(r: Resources) {
       r.box(garage, [.15, 4.5, .12], [side * 8.18, 2.25, z], metal)
       r.box(garage, [.1, .08, 1.6], [side * 8.05, 3.82, z + .7], light)
     }
-    r.box(garage, [4.45, 4.6, .24], [side * 6.17, 2.3, -6.6], panel)
-    r.box(garage, [.19, 4.35, .3], [side * 3.88, 2.2, -6.4], metal)
-    r.box(garage, [.055, 3.95, .055], [side * 3.74, 2.2, -6.21], light)
+    r.box(garage, [3.85, 4.6, .24], [side * 6.47, 2.3, -6.6], panel)
+    r.box(garage, [.19, 4.35, .3], [side * 4.48, 2.2, -6.4], metal)
+    r.box(garage, [.055, 3.95, .055], [side * 4.34, 2.2, -6.21], light)
   }
   r.box(garage, [17, .18, .5], [0, 4.43, -6.4], metal)
-  r.box(garage, [7.6, .26, .24], [0, 4.2, -6.39], black)
+  r.box(garage, [8.8, .26, .24], [0, 4.2, -6.39], black)
   // Roller shutter overhead, roof trusses and suspended lighting form repeated depth cues.
-  for (let n = 0; n < 7; n++) r.box(garage, [7.6, .075, .23], [0, 3.9 + n * .08, -6.42], metal)
+  for (let n = 0; n < 7; n++) r.box(garage, [8.8, .075, .23], [0, 3.9 + n * .08, -6.42], metal)
   for (const z of [-5.5, -2.6, .3, 3.2, 6.1]) {
     r.box(garage, [16.7, .15, .15], [0, 4.32, z], structure)
     r.box(garage, [16.5, .1, .12], [0, 4.04, z], structure)
@@ -97,6 +97,18 @@ export function createGarage(r: Resources) {
   r.rod(bench, [.65, 1.1, .25], [.9, 1.1, .25], .02, metal)
   r.box(bench, [.13, .045, .06], [.62, 1.1, .25], red)
   garage.add(bench); zoneSign('telemetry', [-5.7, 3.03, -5.02])
+  // Open, legible assembly bench: tubular feet and segregated component trays.
+  // Kept on the right service aisle, below the pit-wall monitor sightline.
+  const service=new Group();service.position.set(5.8,0,-1.2);service.name='component-assembly-bench'
+  r.box(service,[2.5,.065,.85],[0,1.02,0],metal)
+  for(const x of [-1.1,1.1])for(const z of [-.3,.3])r.rod(service,[x,.04,z],[x,1,z],.03,structure)
+  for(const z of [-.3,.3])r.rod(service,[-1.1,.27,z],[1.1,.27,z],.025,structure)
+  r.box(service,[1.7,.04,.56],[0,.27,0],polymer)
+  for(const x of [-.75,0,.75]){
+    r.box(service,[.55,.028,.42],[x,1.066,0],black)
+    r.rod(service,[x-.15,1.11,0],[x+.15,1.11,0],.045,metal)
+  }
+  garage.add(service)
   r.box(garage, [.7, 2.05, .78], [-7.72, 1.025, -4.95], polymer)
   for (let y = .3; y < 2; y += .18) r.box(garage, [.53, .025, .025], [-7.72, y, -4.53], metal)
 
@@ -184,19 +196,11 @@ export function createGarage(r: Resources) {
   garage.add(fanAssembly)
   const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .05, 8, 32)), metal, [-8, 3.72, -.15])
   fanRing.rotation.y = Math.PI / 2; fanRing.castShadow = false
-  const scanMaterial = r.material(new MeshBasicMaterial({ color: '#b7d8e6', transparent: true, opacity: .23, depthWrite: false, toneMapped: false }))
-  const scan = r.mesh(garage, r.geometry(new PlaneGeometry(.023, .023)), scanMaterial, [-6.65, 1.87, -4.905])
-  scan.userData.dynamic = true; scan.castShadow = false
   const projected = new Vector3()
   function updateAmbient(timeMs: number, camera: Camera) {
     const inView = (point: Vector3) => { projected.copy(point).project(camera);return projected.z>-1&&projected.z<1&&Math.abs(projected.x)<1.15&&Math.abs(projected.y)<1.15 }
     if(inView(fanAssembly.position))fan.rotation.z = -timeMs * .00028
-    if(inView(scan.position)) {
-      const phase = (.5 + .5 * Math.sin(timeMs * .0005)), pixelX = 45 + phase * 250
-      const pixelY = 225 + Math.sin(phase * 44 * .24) * 43 + Math.cos(phase * 44 * .53) * 15
-      scan.position.x = -5.7-1.4+pixelX/1024*2.8
-      scan.position.y = 1.87+.7-pixelY/512*1.4
-    }
+    screens.forEach(display=>display.updateAmbient(timeMs,camera))
   }
   function updateLabels(index: SceneProps['contentIndex'], locale: Locale, selectedProject: string | null) {
     screens.forEach(display=>display.update(index,locale,selectedProject))
