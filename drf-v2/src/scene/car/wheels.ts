@@ -1,4 +1,4 @@
-import { CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshStandardMaterial, Shape, TorusGeometry, Vector2 } from 'three'
+import { CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshStandardMaterial, Shape, SphereGeometry, TorusGeometry, Vector2 } from 'three'
 import type { Resources } from '../garage/resources.ts'
 
 // Original machined wheel layout. Local X is the axle; Y/Z form both wheel faces.
@@ -14,6 +14,8 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
   const beadShape = r.geometry(new TorusGeometry(.35,.012,8,48));beadShape.rotateY(Math.PI/2)
   const alloy = r.material(new MeshStandardMaterial({color:'#85919b',metalness:.85,roughness:.32}))
   const brake = r.material(new MeshStandardMaterial({color:'#4e4b45',metalness:.65,roughness:.72}))
+  const mountShape=r.geometry(new CylinderGeometry(.045,.045,.1,8))
+  const jointShape=r.geometry(new SphereGeometry(.026,8,6))
   const wheels: Group[]=[]
   for(const z of [-1.6,1.55])for(const side of [-1,1]) {
     const wheel = new Group();wheel.name=`wheel-${z<0?'rear':'front'}-${side<0?'left':'right'}`;wheel.position.set(side*1.3,.605,z);parent.add(wheel);wheels.push(wheel)
@@ -31,10 +33,20 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
     const upright=r.rod(parent,[side*1.04,.43,z],[side*1.04,.76,z],.028,alloy);upright.name=wheel.name+'-upright'
     const spindle=r.rod(parent,[side*1.04,.605,z],[side*1.14,.605,z],.045,alloy);spindle.name=wheel.name+'-spindle'
     for(const offset of [-.38,.38]) {
-      const lower=r.rod(parent,[side*.32,.36,z+offset],[side*1.04,.46,z],.021,r.palette.carbon);lower.name=wheel.name+'-lower-arm'
-      const upper=r.rod(parent,[side*.36,.72,z+offset],[side*1.04,.72,z],.016,r.palette.carbon);upper.name=wheel.name+'-upper-arm'
+      const front=z>0, aft=offset<0
+      const lowerPoint: readonly [number,number,number]=front?[side*(aft?.245:.18),aft?.35:.34,aft?.95:1.65]:[side*.32,.36,z+offset]
+      const upperPoint: readonly [number,number,number]=front?[side*(aft?.245:.18),aft?.5:.44,aft?.95:1.65]:[side*.36,.72,z+offset]
+      const lower=r.rod(parent,lowerPoint,[side*1.04,.46,z],.021,r.palette.carbon);lower.name=wheel.name+'-lower-arm'
+      const upper=r.rod(parent,upperPoint,[side*1.04,.72,z],.016,r.palette.carbon);upper.name=wheel.name+'-upper-arm'
+      if(front)for(const [kind,point] of [['lower',lowerPoint],['upper',upperPoint]] as const){
+        const mount=r.mesh(parent,mountShape,alloy,point);mount.rotation.z=Math.PI/2;mount.name=wheel.name+'-'+kind+'-mount'
+      }
     }
-    r.rod(parent,[side*.48,.84,z-.18],[side*1.04,.5,z],.018,alloy)
+    if(z>0) {
+      for(const y of [.46,.72])r.mesh(parent,jointShape,alloy,[side*1.04,y,z]).name=wheel.name+'-upright-joint'
+      const mount=r.mesh(parent,mountShape,alloy,[side*.28,.6,.5]);mount.rotation.z=Math.PI/2;mount.name=wheel.name+'-pushrod-mount'
+      r.rod(parent,[side*.28,.6,.5],[side*1.04,.5,z],.018,alloy).name=wheel.name+'-pushrod'
+    }else r.rod(parent,[side*.48,.84,z-.18],[side*1.04,.5,z],.018,alloy)
   }
   return wheels
 }

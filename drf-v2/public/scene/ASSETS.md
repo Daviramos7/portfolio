@@ -130,3 +130,9 @@ SHA256 do gerador de piso desta entrega:
 As texturas e materiais entram no registro existente de dispose. Não há
 requisições de assets adicionais; QA desta rodada em docs/production/SCENE-C2.md
 no repositório (fora dos assets distribuídos).
+## Missão 11 — suportes mecânicos autorais
+
+Suportes cilíndricos e juntas esféricas originais em `src/scene/car/wheels.ts`,
+com geometrias compartilhadas e material metálico já existente. Sem novos mapas,
+downloads ou assets de terceiros. Registro/dispose existente preservado.
+Aplicam-se os termos do repositório; nenhuma licença externa nova.
