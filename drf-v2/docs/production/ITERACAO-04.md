@@ -22,3 +22,9 @@ Rascunho privado: .agent-grid/artifacts/resume/night-shift/Davi_Ramos_Ferreira_C
 ## Critérios e evidências
 
 Exigir frames reais de navegação 01→02→03→04→05→01, interrupção, hotspots, histórico, Recruiter e reduced motion; antes/depois e closes das quatro rodas; carro atravessando abertura com áudiooff; PT/EN cinco estações em1440/390/320. Testes automatizados não equivalem a aprovação visual do proprietário. Resultados por área nos relatórios dos workers; capturas anteriores preservadas.
+
+## Diagnóstico confirmado e decisão de movimento
+
+Worker3D verificou Chrome sem emulação: matchMedia(reduce)=true, cena pronta, ambiente pausado e nenhum CAR_PASS agendado. Navegação direta é o ramo de acessibilidade, não demonstra falha da interpolação normal. Estado inicial de ambiente continua true; rótulo Desativado confunde restrição com escolha desligada. Evidências/browserframes devem permanecer no RESCUE-3D.
+
+a1b97c5 adiciona preferência explícita somente na sessão: system(default)/cinematic/reduced. System continua respeitando o dispositivo; escolha cinematográfica não modifica Windows/navegador e não ativa áudio. Teste de regressão verifica mudanças de matchMedia, modos, retorno ao sistema e reset após nova sessão. Lint/build21testes passaram. Workers sincronizados enquanto estavam limpos.
