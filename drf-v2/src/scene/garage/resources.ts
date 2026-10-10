@@ -10,7 +10,7 @@ export function createResources() {
   function geometry<T extends BufferGeometry>(resource: T): T { geometries.add(resource); return resource }
   function material<T extends Material>(resource: T): T { materials.add(resource); return resource }
   function texture(resource: Texture) { textures.add(resource); return resource }
-  function surface(kind: 'carbon' | 'metal' | 'rubber') {
+  function surface(kind: 'carbon' | 'metal' | 'rubber' | 'painted') {
     const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256
     const ctx = canvas.getContext('2d')
     if (ctx) {
@@ -18,10 +18,15 @@ export function createResources() {
       const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
       const pixels = ctx.createImageData(256, 256)
       for (let y = 0; y < 256; y++) for (let x = 0; x < 256; x++) {
-        const weave = ((Math.floor(x / 4) + Math.floor(y / 4)) % 2) * 17
-        const value = kind === 'carbon' ? 190 + weave + random() * 8 :
-          kind === 'metal' ? 200 + Math.sin(y * 3) * 16 + random() * 8 :
-          148 + random() * 22
+        // Twill yarn relief, directional machining and molded/painted finishes are different fields.
+        const over = (Math.floor(x / 8) + Math.floor(y / 8)) % 4 < 2
+        const yarn = Math.sin((over ? y : x) % 8 / 8 * Math.PI)
+        const brush = Math.sin(y * 1.7) * 5 + Math.sin(y * .19) * 2
+        const peel = Math.sin(x * .81 + Math.sin(y * .7)) * Math.cos(y * .87) * 8
+        const value = kind === 'carbon' ? 185 + yarn * 30 + (over ? 8 : 0) + random() * 4 :
+          kind === 'metal' ? 168 + brush + random() * 7 :
+          kind === 'painted' ? 194 + peel + Math.sin(x * .04) * 4 + random() * 4 :
+          211 + Math.sin(x * .34) * 3 + random() * 11
         const i = (y * 256 + x) * 4
         pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = value
         pixels.data[i + 3] = 255
@@ -29,10 +34,10 @@ export function createResources() {
       ctx.putImageData(pixels, 0, 0)
     }
     const map = texture(new CanvasTexture(canvas)); map.wrapS = map.wrapT = RepeatWrapping
-    map.repeat.set(3, 3)
+    map.repeat.set(kind === 'rubber' ? 12 : 3, kind === 'metal' ? 1 : 3)
     return map
   }
-  const carbonMap = surface('carbon'), metalMap = surface('metal'), rubberMap = surface('rubber')
+  const carbonMap = surface('carbon'), metalMap = surface('metal'), rubberMap = surface('rubber'), paintedMap = surface('painted')
   const floorSurface = createFloorSurface(texture)
   // Tangent-space normals from our own height field, wrapped at texture boundaries.
   function normalFromHeight(height: Texture, strength: number) {
@@ -59,15 +64,19 @@ export function createResources() {
     normal.repeat.copy(height.repeat); return normal
   }
   const carbonNormal = normalFromHeight(carbonMap, 2), rubberNormal = normalFromHeight(rubberMap, .8)
+  const metalNormal = normalFromHeight(metalMap, 1.3), paintedNormal = normalFromHeight(paintedMap, 1.5)
   const floorNormal = normalFromHeight(floorSurface.height, 2.5)
   const cube = geometry(new BoxGeometry(1, 1, 1)), cylinder = geometry(new CylinderGeometry(1, 1, 1, 20))
   const palette = {
-    carbon: material(new MeshPhysicalMaterial({ specularIntensity: .18, color: '#0a0e13', metalness: .02, roughness: .85, envMapIntensity: .25, normalMap: carbonNormal, normalScale: new Vector2(.18, .18), roughnessMap: carbonMap })),
-    paint: material(new MeshPhysicalMaterial({ color: '#930e29', metalness: .08, roughness: .34, clearcoat: .6, clearcoatRoughness: .25 })),
+    carbon: material(new MeshPhysicalMaterial({ specularIntensity: .18, color: '#10171c', metalness: .02, roughness: .9, envMapIntensity: .4, clearcoat: .04, clearcoatRoughness: .4, normalMap: carbonNormal, normalScale: new Vector2(.23, .23), roughnessMap: carbonMap })),
+    paint: material(new MeshPhysicalMaterial({ color: '#870c26', metalness: .14, roughness: .3, clearcoat: .85, clearcoatRoughness: .22, envMapIntensity: .8 })),
+    panel: material(new MeshStandardMaterial({ color: '#475760', metalness: .3, roughness: .88, roughnessMap: paintedMap, normalMap: paintedNormal, normalScale: new Vector2(.3,.3) })),
+    structure: material(new MeshStandardMaterial({ color: '#46545f', metalness: .78, roughness: .8, roughnessMap: metalMap, normalMap: metalNormal, normalScale: new Vector2(.16,.16) })),
+    polymer: material(new MeshPhysicalMaterial({ color: '#20323b', metalness: 0, roughness: .7, clearcoat: .12, normalMap: paintedNormal, normalScale: new Vector2(.2,.2) })),
     black: material(new MeshStandardMaterial({ color: '#11141a', roughness: .59, metalness: .22 })),
     red: material(new MeshStandardMaterial({ color: '#930e29', metalness: .55, roughness: .23 })),
     white: material(new MeshStandardMaterial({ color: '#d8e1e3', metalness: .42, roughness: .26 })),
-    metal: material(new MeshStandardMaterial({ color: '#8b97a1', metalness: .88, roughness: .35, bumpMap: metalMap, bumpScale: .004, roughnessMap: metalMap })),
+    metal: material(new MeshStandardMaterial({ color: '#a4b3bf', metalness: .9, roughness: .72, normalMap: metalNormal, normalScale: new Vector2(.25,.25), roughnessMap: metalMap })),
     floor: material(new MeshStandardMaterial({ color: '#a5a6a2', map: floorSurface.map, metalness: .015, roughness: .93, roughnessMap: floorSurface.roughness, normalMap: floorNormal, normalScale: new Vector2(.55, .55) })),
     concrete: material(new MeshStandardMaterial({ color: '#81878a', metalness: .02, roughness: .93 })),
     tire: material(new MeshStandardMaterial({ color: '#161819', roughness: .94, normalMap: rubberNormal, normalScale: new Vector2(.3, .3) })),

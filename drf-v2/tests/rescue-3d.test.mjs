@@ -1,6 +1,7 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { Group, Vector3 } from 'three'
+import { Group, Mesh, Vector3 } from 'three'
+import { createProgrammeScreen, screenPresentation } from '../src/scene/garage/programmeScreen.ts'
 import { createResources } from '../src/scene/garage/resources.ts'
 import { createWheelAssemblies } from '../src/scene/car/wheels.ts'
 import { buildCameraPath, framings, mobileFramings, programmeFramings } from '../src/scene/camera/framing.ts'
@@ -37,4 +38,25 @@ test('production-injected first pass is 5–8 seconds, later intervals stay 25�
 test('silence path never constructs AudioContext and remains safely unavailable/idempotent',async()=>{
   globalThis.AudioContext=class {constructor(){throw Error('must not create audio')}}
   const audio=createTrackAudio();audio.setAudioVolume(.9);audio.muteAudio();audio.muteAudio();assert.equal(await audio.requestAudioFromGesture(),'unavailable');audio.dispose();audio.dispose()
+})
+test('five screen functions use only supplied localized source, with project selection and safe missing seam',()=>{
+  const zones=['garage','telemetry','pit-wall','driver-profile','strategy-room']
+  const index=zones.map(zoneId=>({zoneId,projectId:null,label:{pt:zoneId,en:'EN '+zoneId},screenLines:[{pt:'Fonte '+zoneId,en:'Source '+zoneId}],media:[]}))
+  index.push({zoneId:'garage',projectId:'selected',label:{pt:'Projeto real',en:'Real project'},screenLines:[{pt:'Tech aprovada',en:'Approved tech'}],media:[]})
+  for(const zone of zones)assert.deepEqual(screenPresentation(zone,index,'en',null).lines,['Source '+zone])
+  assert.deepEqual(screenPresentation('garage',index,'pt','selected'),{title:'Projeto real',lines:['Tech aprovada']})
+  assert.equal(screenPresentation('telemetry',index,'en','selected').title,'EN telemetry')
+  assert.deepEqual(screenPresentation('garage',[],'pt',null),{title:'DRF-01',lines:[]})
+})
+test('canvas uploads occur only for changed presentation, never from repeated ambient frames',()=>{
+  const calls=[],ctx=new Proxy({measureText:text=>({width:text.length*12}),fillText:text=>calls.push(text)},{get:(obj,key)=>obj[key]??(()=>{})})
+  globalThis.document={createElement:()=>({getContext:()=>ctx})}
+  const textures=[],r={texture:t=>(textures.push(t),t),material:t=>t,geometry:t=>t,mesh:(p,g,m,pos)=>{const mesh=new Mesh(g,m);mesh.position.set(...pos);p.add(mesh);return mesh}}
+  const display=createProgrammeScreen(r,new Group(),'telemetry',[2.8,1.4],[0,0,0])
+  const index=[{zoneId:'telemetry',projectId:null,label:{pt:'Auditoria local',en:'Local audit'},screenLines:[{pt:'Condições na leitura',en:'Conditions in reading'}],media:[]}]
+  display.update(index,'pt',null);const version=display.uploadVersion
+  for(let i=0;i<900;i++)display.update(index,'pt',null)
+  assert.equal(display.uploadVersion,version);assert.ok(calls.includes('DEMO'));assert.ok(calls.join(' ').includes('Demonstração ambiental'))
+  display.update(index,'en',null);assert.equal(display.uploadVersion,version+1);assert.ok(calls.includes('Local audit'))
+  textures.forEach(t=>t.dispose());display.object.geometry.dispose();display.object.material.dispose()
 })

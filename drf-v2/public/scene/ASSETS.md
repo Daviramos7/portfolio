@@ -1,5 +1,31 @@
 # Assets da cena DRF
 
+## Missão09 P1 — 10/10/2026
+
+Novos acabamentos e diagramas são autorais, gerados em Canvas/Three pelo worker
+Codex para DRF Engineering. Nenhum download, asset CC0 de terceiros, sample,
+executável, dependência, marca ou carro protegido foi incorporado nesta fase.
+Gerador: `src/scene/garage/resources.ts`; quatro campos determinísticos 256×256
+(twill de carbono, escovação direcional, borracha moldada e pintura industrial),
+normais derivadas e roughness compartilhadas pelos materiais. O piso C2 foi
+preservado. Pintura do carro usa clearcoat controlado; armários usam polímero.
+
+`src/scene/garage/programmeScreen.ts` gera cinco CanvasTexture 1024×512 com
+diagramas originais. Textos são strings Localized públicas do SceneIndex do Lead,
+sem catálogo/API importados pela cena. Fonte local do sistema; sem fonte remota.
+Cada textura redesenha somente na mudança da apresentação/idioma/projeto.
+Animação visual limitada ao ventilador e ao marcador DEMO da telemetria, no
+relógio comum e com gates; demais telas são estáticas. Texturas, materiais e
+geometrias passam pelo registro existente de dispose. A faixa clara do veículo
+de pista é geometria autoral, sem textura ou logo externo.
+
+CAR_PASS está funcional desde D/P0; os parágrafos históricos abaixo que dizem
+“futuro/inativo” pertencem às rodadas anteriores. Áudio atual permanece silencioso
+e unavailable; fontes de áudio licenciadas/qualidade de escuta seguem pendentes.
+Licença externa/URL/hash de download: não aplicáveis, pois não houve download.
+QA, capturas e medições desta fase ficam em `docs/production/RESCUE-3D.md`,
+sem logs ou caminhos privados nos assets distribuídos.
+
 Marco C de 09/10/2026: ver [NIGHT-C.md](NIGHT-C.md) para a revisão de materiais,
 correção de oclusão, enquadramentos de programas e medidas atuais. As medidas
 de 08/10 abaixo pertencem à rodada visual anterior.
