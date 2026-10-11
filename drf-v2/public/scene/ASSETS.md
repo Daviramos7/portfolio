@@ -170,3 +170,16 @@ oficiais. As alusões não constituem fatos profissionais ou afirmações de rot
 Um atlas Canvas 512×512 gerado em memória, quatro tiles 256×256; materiais
 existentes compartilhados. Sem áudio, fonte nova ou asset binário adicional.
 Upload inicial e somente quando o idioma muda; dispose pelo registro Resources.
+
+## Missão 13 — DRF Sprint 03 autoral
+
+Asset `models/drf-sprint-03.glb`: 166.608 bytes; SHA-256
+`0c4f3052e87ad8e6e84f3677b8391588e581af55261ba27430c0555bc9bc53ec`.
+Fonte integral: `src/scene/tooling/build_track_model.py`, criação autoral desta
+implementação DRF em Blender 5.2.0 LTS batch. Sem conversão do modelo anterior,
+download, marca, modelo oficial ou textura externa. Uso sob os termos do
+repositório; não atribuído a CC0. Monocoque, cockpit, sidepods, asas perfiladas,
+suspensão e rodas construídos neste script. Cinco materiais; 13.710 triângulos
+por veículo, incluindo quatro rodas com geometria compartilhada. Sem imagens
+embutidas; a cena reutiliza seus materiais existentes. Studio/luzes/câmera de
+revisão não são exportados. Fallback procedural anterior preservado.

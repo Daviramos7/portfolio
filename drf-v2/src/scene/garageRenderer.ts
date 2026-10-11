@@ -91,7 +91,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     canvas.removeEventListener('pointerleave', clearHover)
     canvas.style.cursor = ''
     if (import.meta.env.DEV) delete (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside
-    scheduler.reset(); pass?.restore(); audio.dispose()
+    scheduler.reset(); pass?.dispose(); audio.dispose()
     opening?.restore()
     scene.environment = null
     environmentTarget?.dispose()
@@ -184,6 +184,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.scenePassVisual = String(Boolean(snapshot.event && snapshot.visual))
       canvas.dataset.scenePassNextMs = String(snapshot.nextMs ?? '')
       canvas.dataset.sceneClockMs = String(Math.round(trackTimeMs))
+      canvas.dataset.sceneTrackModel = pass?.modelStatus ?? 'fallback'
       const animate = ambientActive()
       if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
       if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { requestFrame(); return }
@@ -300,6 +301,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     opening = createTrackOpening(resources)
     pass = createTrackPass(resources, opening)
     scene.add(pass.vehicle)
+    void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
     resources.batch(opening.track)
     scene.add(garage.garage, opening.track, opening.anchors)
