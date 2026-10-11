@@ -15,6 +15,7 @@ import './stationInstruments.css'
 import './programShowcase.css'
 import '../styles/ui/typography.css'
 import '../styles/ui/readingInteractions.css'
+import '../styles/ui/readingRefinement.css'
 import { ProgramEvidenceStamp } from '../components/drf/ProgramIdentity.tsx'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.
@@ -68,7 +69,6 @@ export function PortfolioShell({ content, state, actions, children }: PortfolioS
           <button type="button" className="drf-workstation-close" aria-label={t.close} onClick={close}><X size={18} aria-hidden="true" /></button>
         </div>
         <div className="drf-workstation-heading">
-          {selected && <p className="drf-code">{t.dossier}</p>}
           <h2 id="drf-reading-title" ref={headingRef} tabIndex={-1}>{selected ? selected.title[state.locale] : zone?.label[state.locale]}</h2>
           {selected && <ProgramEvidenceStamp project={selected} locale={state.locale} qualification={false} />}
           {state.target.zoneId === 'telemetry' && <p className="drf-documentary-label">{t.documentedOnly}</p>}
