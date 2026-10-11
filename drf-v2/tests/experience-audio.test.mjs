@@ -12,7 +12,7 @@ function fixture(overrides={}){
   const ctx={state:'suspended',currentTime:0,destination:{},listener:Object.fromEntries(['positionX','positionY','positionZ','forwardX','forwardY','forwardZ','upX','upY','upZ'].map(k=>[k,param()])),
     resume:async()=>{ctx.state='running'},suspend:async()=>{ctx.state='suspended'},close:async()=>{ctx.state='closed'},
     createGain:()=>node({gain:param()}),createPanner:()=>node({positionX:param(),positionY:param(),positionZ:param()}),
-    createBufferSource:()=>node({playbackRate:param(),start(){this.started=true},stop(){this.stopped=true}}),
+    createBufferSource:()=>node({playbackRate:param(),start(...args){this.started=true;this.startArgs=args},stop(){this.stopped=true}}),
     decodeAudioData:async()=>buffer(),createBuffer:buffer}
   Object.assign(ctx,overrides.context)
   const audio=createTrackAudio({createContext:()=>{contexts.push(ctx);return ctx},fetchAsset:async()=>{requests++;return {ok:true,arrayBuffer:async()=>new ArrayBuffer(1)}},...overrides.options})
@@ -58,4 +58,53 @@ test('consent mid-pass waits for the next event; one engine follows shared progr
 test('invalid volume clamps safely and never grants consent',()=>{for(const [v,want] of [[-2,0],[2,1],[NaN,0],[Infinity,0],[.4,.4]])assert.equal(safeAudioVolume(v),want)})
 test('shorter passes select a central source window without changing original pitch',()=>{
   for(const durationMs of [1500,2400,5000]){const window=passAudioWindow(4.788,durationMs);assert.ok(window.seconds<=durationMs/1000);assert.ok(window.offset>=0&&window.offset+window.seconds<=4.788);assert.ok(Math.abs(window.offset+window.seconds/2-4.788/2)<1e-8)}
+})
+
+// Fake AudioContext clock: policy/scheduling evidence, never an auditory benchmark.
+test('native one-shot room excerpts have deterministic pauses and no same-layer overlap',async()=>{
+  const f=fixture({context:{decodeAudioData:async()=>buffer(2,48_000*30)},options:{random:()=>.5}})
+  f.audio.update(state);await f.audio.requestAudioFromGesture()
+  const sources=()=>f.nodes.filter(n=>n.started)
+  const ventilation=sources()[0],workshop=sources()[1]
+  assert.equal(ventilation.loop,false);assert.equal(workshop.loop,false)
+  assert.deepEqual(ventilation.startArgs,[.1,3,10])
+  assert.deepEqual(workshop.startArgs,[32,9.75,4.5])
+  f.ctx.currentTime=36.5;workshop.onended()
+  const next=sources().at(-1)
+  assert.equal(next.startArgs[0],68.5)
+  assert.equal(workshop.disconnected,true)
+  assert.equal(f.audio.diagnostics.roomSources,2)
+  assert.deepEqual(f.audio.diagnostics.roomCounts,[1,2])
+  f.audio.dispose();assert.ok(sources().every(n=>n.stopped&&n.disconnected))
+})
+
+test('hide/recruiter/not-ready/zero cancel queued room events; stale ended callbacks cannot spawn',async()=>{
+  for(const change of [{documentVisible:false},{mode:'recruiter'},{renderStatus:'error'},{audioVolume:0}]){
+    const f=fixture();f.audio.update(state);await f.audio.requestAudioFromGesture()
+    const voices=f.nodes.filter(n=>n.started),callbacks=voices.map(n=>n.onended)
+    f.audio.update({...state,...change})
+    assert.equal(f.audio.diagnostics.roomSources,0);assert.equal(f.audio.diagnostics.masterGain,0)
+    assert.ok(voices.every(n=>n.stopped&&n.disconnected&&n.onended===null))
+    callbacks.forEach(fn=>fn());assert.equal(f.nodes.filter(n=>n.started).length,2)
+    f.audio.dispose()
+  }
+})
+
+test('a pass cancels workshop including queued events and leaves supplied spatial pose intact',async()=>{
+  const f=fixture({context:{decodeAudioData:async()=>buffer(2,48_000*30)},options:{random:()=>.5}})
+  f.audio.update(state);await f.audio.requestAudioFromGesture()
+  const workshop=f.nodes.filter(n=>n.started)[1]
+  f.ctx.currentTime=5
+  f.audio.updatePass(event,.5,true,[3,1,-8],[0,2,8],[0,0,-1])
+  assert.equal(workshop.stopped,true)
+  const schedule=f.audio.diagnostics.roomSchedule.find(v=>v.layer===1)
+  assert.equal(schedule.start,41)
+  assert.ok(schedule.start>=5+event.durationMs/1000+22)
+  const panner=f.nodes.find(n=>n.positionX)
+  assert.equal(panner.positionX.value,3);assert.equal(panner.positionZ.value,-8)
+  const pass=f.nodes.filter(n=>n.started).at(-1)
+  assert.equal(pass.playbackRate.value,1)
+  f.audio.setAudioVolume(0)
+  assert.equal(pass.stopped,true);assert.equal(f.audio.diagnostics.passId,null)
+  f.audio.dispose()
 })

@@ -1,8 +1,8 @@
 import type { CarPass, ExperienceState } from '../../contracts/index.ts'
 
 export const audioAssets = [
-  { id: 'ventilation', src: '/scene/audio/ventilation.mp3', seconds: 16, gain: .075 },
-  { id: 'workshop', src: '/scene/audio/workshop.mp3', seconds: 24, gain: .06 },
+  { id: 'ventilation', src: '/scene/audio/ventilation.mp3', seconds: 16, gain: .022 },
+  { id: 'workshop', src: '/scene/audio/workshop.mp3', seconds: 24, gain: .018 },
   { id: 'pass', src: '/scene/audio/car-pass.mp3', seconds: 8, gain: .42 },
 ] as const
 
@@ -10,8 +10,9 @@ type Options = {
   createContext?: () => AudioContext
   fetchAsset?: typeof fetch
   onUnavailable?: () => void
+  random?: () => number
 }
-type Voice = { source: AudioBufferSourceNode; gain: GainNode; panner?: PannerNode }
+type Voice = { source: AudioBufferSourceNode; gain: GainNode; panner?: PannerNode; layer?: number; start?: number; end?: number; peak?: number }
 export function audioRoomEligible(state: ExperienceState | null) {
   return !!state && state.mode === 'immersive' && state.documentVisible && state.renderStatus === 'ready'
 }
@@ -29,6 +30,11 @@ export function createTrackAudio(options: Options = {}) {
   let state: ExperienceState | null = null, consent = false, disposed = false, serial = 0, volume = .25
   let buffers: AudioBuffer[] = [], room: Voice[] = [], engine: Voice | null = null, passId: string | null = null
   let passStarts = 0, blockedPassId: string | null = null
+  let seed = 0x445246, workshopAfter = 0
+  const random = options.random ?? (() => { seed = (Math.imul(seed, 1664525) + 1013904223) >>> 0; return seed / 4294967296 })
+  const between = (a: number, b: number) => a + (b - a) * Math.max(0, Math.min(1, random()))
+  const roomCounts = [0, 0]
+  function stopRoom() { room.forEach(stop); room = [] }
   const stop = (voice: Voice) => {
     voice.source.onended = null
     try { voice.source.stop() } catch { /* already ended */ }
@@ -36,7 +42,7 @@ export function createTrackAudio(options: Options = {}) {
   }
   function cancelPass() { if (engine) stop(engine); engine = null; passId = null }
   function release() {
-    cancelPass(); room.forEach(stop); room = []; buffers = []
+    cancelPass(); stopRoom(); buffers = []
     master?.disconnect(); master = null
     const old = context; context = null
     if (old && old.state !== 'closed') void old.close().catch(() => {})
@@ -54,21 +60,48 @@ export function createTrackAudio(options: Options = {}) {
     param.setValueAtTime(param.value, context.currentTime)
     param.linearRampToValueAtTime(value, context.currentTime + seconds)
   }
+  function scheduleRoom(layer: number, initial = false) {
+    if (!consent || !context || !master || !audioRoomEligible(state) || volume === 0 || room.some(v => v.layer === layer)) return
+    const buffer = buffers[layer]
+    if (!buffer) return
+    // Native one-shots, including their future start, use the AudioContext clock.
+    // onended is only a wake-up: no wall-clock timer or independent car clock.
+    const seconds = Math.min(buffer.duration, layer === 0 ? between(8, 12) : between(3, 6))
+    const pause = layer === 0 ? (initial ? .1 : between(3, 7)) : between(22, 42)
+    const start = Math.max(context.currentTime + pause, layer === 1 ? workshopAfter : 0)
+    const offset = between(0, Math.max(0, buffer.duration - seconds))
+    const source = context.createBufferSource(), gain = context.createGain()
+    const peak = audioAssets[layer].gain * between(.7, 1), fade = Math.min(seconds / 2, layer === 0 ? 2 : .65)
+    source.buffer = buffer; source.loop = false
+    gain.gain.value = 0
+    gain.gain.setValueAtTime(0, start)
+    gain.gain.linearRampToValueAtTime(peak, start + fade)
+    gain.gain.setValueAtTime(peak, start + seconds - fade)
+    gain.gain.linearRampToValueAtTime(0, start + seconds)
+    source.connect(gain); gain.connect(master)
+    const voice: Voice = { source, gain, layer, start, end: start + seconds, peak }
+    room.push(voice); roomCounts[layer]++
+    source.onended = () => {
+      if (!room.includes(voice)) return
+      room = room.filter(v => v !== voice); stop(voice)
+      scheduleRoom(layer)
+    }
+    source.start(start, offset, seconds)
+  }
   function roomSources() {
-    if (!context || !master || room.length || buffers.length !== audioAssets.length) return
-    room = buffers.slice(0, 2).map((buffer, i) => {
-      const source = context!.createBufferSource(), gain = context!.createGain()
-      source.buffer = buffer; source.loop = true; gain.gain.value = audioAssets[i].gain
-      source.connect(gain); gain.connect(master!); source.start()
-      return { source, gain }
-    })
+    if (buffers.length !== audioAssets.length) return
+    scheduleRoom(0, true); scheduleRoom(1, true)
   }
   function update(next: ExperienceState) {
     state = next; setAudioVolume(next.audioVolume)
     if (!consent || !context || !master) return
     if (!audioRoomEligible(state)) {
-      cancelPass(); master.gain.cancelScheduledValues(context.currentTime); master.gain.setValueAtTime(0, context.currentTime)
+      cancelPass(); stopRoom(); master.gain.cancelScheduledValues(context.currentTime); master.gain.setValueAtTime(0, context.currentTime)
       if (context.state === 'running') { const current = context; void current.suspend().catch(() => { if (context === current) unavailable() }) }
+      return
+    }
+    if (volume === 0) {
+      master.gain.cancelScheduledValues(context.currentTime); master.gain.setValueAtTime(0, context.currentTime)
       return
     }
     if (context.state === 'suspended') {
@@ -85,7 +118,12 @@ export function createTrackAudio(options: Options = {}) {
     const next = safeAudioVolume(value)
     if (next === volume) return
     volume = next
-    if (consent && master && audioRoomEligible(state)) ramp(master.gain, volume, .06)
+    if (volume === 0) { cancelPass(); stopRoom() }
+    else roomSources()
+    if (consent && master && context && audioRoomEligible(state)) {
+      if (volume === 0) { master.gain.cancelScheduledValues(context.currentTime); master.gain.setValueAtTime(0, context.currentTime) }
+      else ramp(master.gain, volume, .06)
+    }
   }
   function requestAudioFromGesture(): Promise<'on' | 'unavailable'> {
     if (disposed) return Promise.resolve('unavailable')
@@ -111,10 +149,7 @@ export function createTrackAudio(options: Options = {}) {
             const buffer = ctx.createBuffer(decoded.numberOfChannels, length, decoded.sampleRate)
             for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
               buffer.copyToChannel(decoded.getChannelData(channel).subarray(0, length), channel)
-              if (asset.id !== 'pass') {
-                const data = buffer.getChannelData(channel), fade = Math.min(Math.round(buffer.sampleRate * .3), Math.floor(length / 2))
-                for (let j = 0; j < fade; j++) { data[j] *= j / fade; data[length - 1 - j] *= j / fade }
-              }
+              // Original PCM stays intact; every excerpt has its own native gain envelope.
             }
             return buffer
           }))
@@ -137,24 +172,30 @@ export function createTrackAudio(options: Options = {}) {
   function updatePass(event: CarPass | null, progress: number, started: boolean,
     position: readonly number[], listener: readonly number[], forward: readonly number[]) {
     if (!event) { cancelPass(); blockedPassId = null; return }
-    if (!consent || !context || !master || state?.audio !== 'on' || !audioRoomEligible(state) || state.panelOpen || !state.ambientEnabled) {
+    if (!consent || !context || !master || volume === 0 || state?.audio !== 'on' || !audioRoomEligible(state) || state.panelOpen || !state.ambientEnabled) {
       blockedPassId = event.id; cancelPass(); return
     }
     if (started && blockedPassId !== event.id && buffers[2]) {
       cancelPass()
+      // A workshop event cannot compete with the approaching car, even if queued.
+      room.filter(v => v.layer === 1).forEach(stop); room = room.filter(v => v.layer !== 1)
+      workshopAfter = context.currentTime + event.durationMs / 1000 + between(22, 42)
+      scheduleRoom(1)
       const source = context.createBufferSource(), gain = context.createGain(), panner = context.createPanner()
       source.buffer = buffers[2]; source.playbackRate.value = 1
       const window = passAudioWindow(buffers[2].duration, event.durationMs)
+      const margin = Math.min(.18, window.offset)
+      window.offset += between(-margin, margin)
       panner.panningModel = 'HRTF'; panner.distanceModel = 'inverse'; panner.refDistance = 6; panner.rolloffFactor = .7
       gain.gain.value = 0; source.connect(gain); gain.connect(panner); panner.connect(master)
-      engine = { source, gain, panner }; passId = event.id; passStarts++
+      engine = { source, gain, panner, peak: audioAssets[2].gain * between(.75, .95) }; passId = event.id; passStarts++
       source.start(context.currentTime, window.offset, window.seconds)
       source.onended = () => { if (engine?.source === source) cancelPass() }
     }
     if (passId !== event.id || !engine) return
     const { panner, gain } = engine
     // Same scheduler progress and world pose as the visible car. No second timer.
-    gain.gain.setTargetAtTime(audioAssets[2].gain * Math.sin(Math.PI * progress) ** 2, context.currentTime, .035)
+    gain.gain.setTargetAtTime(engine.peak! * Math.sin(Math.PI * Math.max(0, Math.min(1, progress))) ** 2, context.currentTime, .035)
     panner!.positionX.value = position[0]; panner!.positionY.value = position[1]; panner!.positionZ.value = position[2]
     const ear = context.listener
     ear.positionX.value = listener[0]; ear.positionY.value = listener[1]; ear.positionZ.value = listener[2]
@@ -165,7 +206,9 @@ export function createTrackAudio(options: Options = {}) {
     requestAudioFromGesture, muteAudio, setAudioVolume, update, updatePass, cancelPass,
     get diagnostics() { return { context: context?.state ?? 'none', consent, assets: buffers.length, roomSources: room.length,
       passId, blockedPassId, passStarts, audioState: state?.audio ?? 'off', roomEligible: audioRoomEligible(state),
-      volume, masterGain: master?.gain.value ?? 0, retainedBytes: buffers.reduce((n, b) => n + b.length * b.numberOfChannels * 4, 0) } },
+      volume, masterGain: master?.gain.value ?? 0, roomCounts: [...roomCounts],
+      roomSchedule: room.map(v => ({ layer: v.layer, start: v.start, end: v.end })),
+      retainedBytes: buffers.reduce((n, b) => n + b.length * b.numberOfChannels * 4, 0) } },
     dispose() { if (!disposed) { disposed = true; muteAudio() } },
   }
 }
