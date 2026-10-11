@@ -217,3 +217,23 @@ estável; primeiro run teve404 de fonte durante rebuild concorrente, preservado
 como falha de harness, não usado como aprovação. Chrome instalado headless,
 mobile emulado: sem teste físico, escuta humana ou performance/GPU física.
 Sem refinamentos/fase adicional; encerrar preview próprio, commit exclusivo.
+
+### Correção final — hotspot HTML da Garagem
+
+Sobre9122b85: somente a âncora HTML da Garagem no hero (zonaGarage/projectIdnull)
+passa a usar projeção perto da placa REC/PE, com deslocamento3D lateral. Volumes
+raycast, framing, câmera e SELECT_TARGET permanecem iguais. Tooltip é limitado
+pelos retângulos reais de header/showcase/viewport, sem posição viewport fixa;
+hover/foco recebe prioridade somente sobre os outros hotspots da cena. Primeiro
+hit-test encontrou Telemetria interceptando um ponto; CSS local corrigiu isso.
+Outras quatro âncoras e Garagem com projeto selecionado mantêm posição anterior.
+
+Chrome headless: PT/EN1440/390/320, defaultFichaCompleta, foco teclado/hover,
+elementFromPoint no número e em9 pontos da dica, clique desktop e toque mobile
+com clique observado:6 casos PASS,5 zonas preservadas, sem erros de console.
+Capturas finais em .agent-grid/screenshots/mission-13/garage-anchor-fix/,
+focus-/hover-{1440,390,320}-{pt,en}.png eqa.json. A dica/número já ficam visíveis
+acima da ficha; esta correção substitui o limite anterior do tooltip da Garagem.
+Lint/build +8 testes relevantes +diff-check PASS; smoke/core gerais deP1 foram
+reutilizados, não executados novamente. Sem teste de telefone físico. Nenhum
+asset/objeto/modelo/áudio/conteúdo/UI foi alterado. Preview próprio encerrado.
