@@ -169,7 +169,17 @@ async function runBrowser(disableWebGL) {
       assert.equal(await fullStage(), true, 'Garage occupies the entire viewport without document scrolling')
       assert.equal(await evaluate('document.querySelectorAll("[data-scene-hotspot]").length'), 5)
       assert.equal(await evaluate('document.querySelectorAll(".drf-intro,.drf-project-card,.drf-footer").length'), 0)
-      assert.ok(await evaluate('document.querySelector(".drf-showcase").getBoundingClientRect().height < innerHeight * .25'))
+      // Default now includes the displayed programme's complete context. Keep a
+      // measured desktop footprint, and check actual visible content, not DOM only.
+      assert.ok(await evaluate('document.querySelector(".drf-showcase").getBoundingClientRect().height < innerHeight * .45'), 'Default desktop context leaves most of the scene visible')
+      assert.equal(await evaluate(`(() => {
+        const context = document.querySelector('.drf-program-context');
+        const nodes = [...document.querySelectorAll('.drf-program-title,.drf-program-summary,.drf-program-stack li,#drf-open-case')];
+        return context && !context.hidden && nodes.length >= 8 && nodes.every(node => {
+          const r = node.getBoundingClientRect(), hit = document.elementFromPoint(r.x + r.width / 2, r.y + r.height / 2);
+          return r.width > 0 && r.height > 0 && r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight && (hit === node || node.contains(hit));
+        });
+      })()`), true, 'Default name, summary, complete stack and action are visible and unobstructed')
       assert.equal(await evaluate('document.querySelector(".drf-program-title").textContent'), 'Plataforma de Análise de Receitas Municipais')
       assert.equal(await evaluate('document.querySelector(".drf-hud-nav").getBoundingClientRect().width'), 44)
       const measure = await evaluate('(() => { const c = document.querySelector("canvas"); const gl = c.getContext("webgl2"); const ext = gl.getExtension("WEBGL_debug_renderer_info"); return {drawCalls:Number(c.dataset.sceneDrawCalls),triangles:Number(c.dataset.sceneTriangles),dpr:Number(c.dataset.sceneDpr),gpu:ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "unavailable"} })()')
@@ -184,7 +194,7 @@ async function runBrowser(disableWebGL) {
       }))()`)
       sceneMeasures.push({ viewport: '1440x900', ...measure, resourceSnapshot })
       await snapshot('integrated-desktop')
-      checks.push('Full-screen Garage, compact HUD, five anchors, balanced DPR <= 1.5')
+      checks.push('Full-screen Garage, visible default programme context, five anchors, balanced DPR <= 1.5')
 
       // Actual canvas raycast, using the renderer's desktop framing and FOV.
       const start = await pose()
