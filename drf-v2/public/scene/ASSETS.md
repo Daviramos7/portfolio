@@ -194,3 +194,14 @@ RoundedBoxGeometry é helper da Three instalada, não asset de terceiros.
 Barlow Condensed700 e Geist Variable existentes são carregadas pelos nomes
 CSS locais; arquivos/licenças das fontes não foram alterados. Meshes/mapas
 continuam sob dispose de Resources. Termos do repositório; sem atribuição CC0.
+
+## Missão 14 P1 — estojo e gamepad
+
+Fonte autoral `src/scene/garage/gamepad.ts` e montagem em `personalDetails.ts`.
+Controle de carcaça/pegas curvas, caps côncavos e controles sem marcas, letras
+oficiais ou modelo comercial copiado. Geometria procedural original; helpers
+Three instalados. Estojo com faixas geometricamente afastadas do corpo.
+Reutiliza materiais e atlas512 existentes, sem novo mapa/arquivo/download.
+Cinco detalhes totalizam4256 triângulos nesta versão; controle2750. Recursos
+compartilhados pertencem a Resources/dispose. Termos do repositório; não CC0.
+REC/PE, science e handgrip e seus textos originais permanecem inalterados.

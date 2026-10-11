@@ -1,8 +1,9 @@
-import { CanvasTexture, CylinderGeometry, ExtrudeGeometry, Group, MeshBasicMaterial, PlaneGeometry, Shape, SRGBColorSpace, TorusGeometry } from 'three'
+import { CanvasTexture, Group, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace, TorusGeometry } from 'three'
 import type { Locale, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { bodyFont, displayFont } from './canvasText.ts'
+import { createGamepad, gamepadBadgePosition } from './gamepad.ts'
 
 export const personalDetailDescriptions: Record<ZoneId, Record<Locale, string>> = {
   garage: {pt:'REC/PE — ponte e mar na placa da abertura.',en:'REC/PE — bridge and sea on the opening plaque.'},
@@ -27,7 +28,6 @@ export function createPersonalDetails(r: Resources) {
   const atlas=r.texture(new CanvasTexture(canvas));atlas.colorSpace=SRGBColorSpace
   const ink=r.material(new MeshBasicMaterial({map:atlas,toneMapped:false}))
   const {black,white,paint,metal,tire}=r.palette
-  const knob=r.geometry(new CylinderGeometry(.055,.06,.035,16));knob.rotateX(Math.PI/2)
   const coil=r.geometry(new TorusGeometry(.07,.016,6,20))
   let locale: Locale | null=null, uploads=0
   function updateLocale(next: Locale) {
@@ -80,9 +80,10 @@ export function createPersonalDetails(r: Resources) {
   r.rod(rec,[-.56,1.15,-.25],[0,.33,-.07],.035,metal)
   r.box(rec,[1.1,.74,.055],[0,0,-.035],metal)
   graphic(rec,0,[1.02,.66],[0,0,0])
-  r.mesh(kit,r.geometry(new RoundedBoxGeometry(.92,.2,.46,1,.035)),black)
+  r.mesh(kit,r.geometry(new RoundedBoxGeometry(.92,.2,.46,1,.035)),black).name='case-body'
   r.mesh(kit,r.geometry(new RoundedBoxGeometry(.94,.055,.48,1,.022)),metal,[0,.126,0])
-  for(const [i,material] of [paint,white,black].entries())r.box(kit,[.26,.13,.014],[-.27+i*.27,0,.223],material)
+  // Entire stripe slab stands in front of the body's +Z face; no coplanar back/front.
+  for(const [i,material] of [paint,white,black].entries())r.box(kit,[.26,.13,.014],[-.27+i*.27,0,.247],material).name='case-front-stripe-'+i
   for(const x of [-.35,.35])r.box(kit,[.035,.055,.035],[x,.02,.24],metal)
   const handle=r.geometry(new TorusGeometry(.13,.018,6,18,Math.PI))
   r.mesh(kit,handle,tire,[0,.17,.03])
@@ -91,14 +92,12 @@ export function createPersonalDetails(r: Resources) {
   graphic(note,1,[.59,.48],[0,0,.012]);note.rotation.x=-.16
   r.rod(note,[-.27,-.23,-.02],[-.27,-.23,-.18],.02,metal)
   r.rod(note,[.27,-.23,-.02],[.27,-.23,-.18],.02,metal)
-  // Original asymmetric pad: no official silhouette, letter keys, logo or branded colors.
-  const shell=new Shape();shell.moveTo(-.43,.03);shell.quadraticCurveTo(-.42,.2,-.27,.2);shell.lineTo(.26,.2);shell.quadraticCurveTo(.41,.2,.44,.015);shell.lineTo(.37,-.24);shell.quadraticCurveTo(.3,-.35,.23,-.25);shell.lineTo(.13,-.11);shell.quadraticCurveTo(0,-.065,-.14,-.11);shell.lineTo(-.25,-.25);shell.quadraticCurveTo(-.33,-.34,-.39,-.23);shell.closePath()
-  const body=r.mesh(control,r.geometry(new ExtrudeGeometry(shell,{depth:.15,curveSegments:5,bevelEnabled:true,bevelSize:.03,bevelThickness:.03,bevelSegments:2,steps:1})),white,[0,0,-.075]);body.name='rounded-controller-shell'
-  graphic(control,2,[.13,.13],[0,.095,.109])
-  for(const p of [[-.22,.065,.115],[.17,-.015,.115]] as const)r.mesh(control,knob,tire,p)
-  for(const [x,y] of [[.26,.12],[.32,.07],[.25,.02]])r.mesh(control,knob,paint,[x,y,.105]).scale.setScalar(.42)
+  createGamepad(r,control)
+  graphic(control,2,[.105,.105],gamepadBadgePosition)
   // Rear support ends below the shell, never hiding grips or face controls.
-  for(const x of [-.27,.27])r.rod(control,[x,-.28,-.11],[x,-.1,-.11],.025,black)
+  for(const x of [-.27,.27])r.rod(control,[x,-.43,-.11],[x,-.1,-.11],.025,black)
+  // Tilt in the object's local frame: both grips remain above the worktop after station yaw.
+  control.rotation.order='YXZ'
   control.rotation.x=-.3
   r.mesh(grip,coil,metal,[0,.13,0])
   r.rod(grip,[-.035,.11,0],[-.16,-.11,0],.024,metal);r.rod(grip,[.035,.11,0],[.16,-.11,0],.024,metal)

@@ -196,3 +196,57 @@ GLB recarregado. Recursos após retry não cresceram; contagem menor depende
 do aquecimento de uploads, não prova isoladamente ausência de todo vazamento.
 Teste unitário cobre ownership/dispose. Sem aprovação subjetiva premium ou
 escuta humana. P1 estojo/controle permanece pendente; encerrar neste marco.
+
+## P1 estreito — estojo e controle
+
+Base integrada196b694; somente esses dois objetos foram alterados. REC/PE,
+science e handgrip conservam geometria/posição/textos; atlas512 e seus quatro
+tiles não foram editados. Câmera/framing, UI, passagem, áudio e contratos
+intactos. Nenhuma interação nova.
+
+Estojo: frente das faixas antiga coincidia com o corpo em z=.230. Os três
+slabs agora têm verso em z=.240 e frente em z=.254, afastados da face do
+corpo. Nomes case-body/case-front-stripe-* permitem raycast de separação e
+normal externa; sem polygonOffset, mudança de atlas ou disfarce de shader.
+Closes Chrome nas três larguras confirmam remoção do padrão de interferência
+preto/vermelho/branco. Em320 o estojo continua pequeno, mas as faixas ficam
+uniformes em pixels reais.
+
+Controle: módulo autoral gamepad.ts, carcaça abaulada e face separada à
+frente, pegas de perfil variável, dois analógicos assimétricos com colares e
+caps côncavos, cruz direcional, quatro botões sem letras/logos, bumpers e
+gatilhos traseiros embutidos. Materiais existentes polymer/panel/tire/black/
+metal/paint; geometria de face/carçaça e peças repetidas compartilhada.
+Inclinação local YXZ conserva as duas pegas acima da bancada; suporte preto
+existente prolongado até ela. Posição/layout original mantidos. A câmera
+natural mostra frente e pegas; gatilhos traseiros ficam pouco expostos e não
+se reivindica descoberta deles em mobile. Modelo estilizado, não CAD/scan de
+produto oficial. Nenhum asset/download/dependência adicional.
+
+Provas duráveis externas ao Git:
+`.agent-grid/screenshots/mission-14/p1-before/` e `p1-after/` no checkout
+principal. Arquivos `case-{1440,390,320}.png`, `gamepad-{1440,390,320}.png` e
+respectivos `*-close-{width}.png`: mesmas poses/câmera/luz/resolução, clips
+nativos sem zoom de câmera. Baseline integrado capturado antes da edição;
+qa.json registra poses/datasets. Chrome instalado headless, preferência
+nativa reduced=true, áudio OFF. Pixels finais inspecionados desktop/mobile;
+controle reconhecível na estação320, inscrições e detalhes finos permanecem
+pequenos. Não medidos telefone físico/GPU/FPS percebido/aceite humano.
+
+Custos dos snapshots estáticos: Pit28calls/15890tri antes/depois. Strategy
+desktop29→43calls,16134→18046tri; mobile27→41calls,15834→17746tri.
+Acréscimo14calls/1912tri quando esse objeto é visível; nenhuma textura nova.
+Snapshots geometria49→57 desktop,10→18 mobile Strategy; texturas17/15
+inalteradas. Cinco detalhes agora4256tri (controle2750), limite de teste4500;
+limite anterior2500 foi atualizado por modelagem explícita, não omitido.
+SceneRoot668.21kB/gzip176.39kB, antes666.08/gzip175.63; aviso chunk>500kB
+permanece. DPR1/MSAA nos registros, política inalterada.
+
+Lint/build e70 testes core passaram (rg node:test + exclusão *-ui.test.mjs).
+Tests verificam raios/normais/separação de frente, quatro botões/distância
+dos analógicos/Dpad, pés dos botões, concavidade, encaixe traseiro, bounds da
+bancada, cinco itens/atlas e dispose único. Teste core inicialmente detectou
+o nome de mesh legado e clearance da bancada; ambos corrigidos preservando
+o teste. Smoke dirigido de produção cobre menu Pit↔Strategy nas três larguras,
+ready/render e console; evidências directed-smoke.json. Sem repetir tráfego
+ou áudio, cuja QA integrada pertence ao Lead. Encerrar P1 sem outra frente.
