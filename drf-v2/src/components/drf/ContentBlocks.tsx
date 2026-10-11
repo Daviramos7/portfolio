@@ -38,7 +38,7 @@ export function MetricCards({ content, locale, metrics = content.metrics }: Cont
   })}</div> : <p className="drf-muted">{t.noMetrics}</p>
 }
 
-export function ProjectDetail({ project, content, locale, section = 'all' }: ContentProps & { project: Project; section?: 'all' | 'overview' | 'engineering' | 'evidence' }) {
+export function ProjectDetail({ project, content, locale, section = 'all', qualification = true }: ContentProps & { project: Project; section?: 'all' | 'overview' | 'engineering' | 'evidence'; qualification?: boolean }) {
   const t = uiLabels(locale)
   const media = content.media.filter(media => project.mediaIds.includes(media.id))
   const metrics = content.metrics.filter(metric => project.metricIds.includes(metric.id))
@@ -48,14 +48,14 @@ export function ProjectDetail({ project, content, locale, section = 'all' }: Con
   const sources = project.evidenceIds.length > 0 ? <><h4>{t.sources}</h4>{section === 'all' ? <EvidenceList content={content} locale={locale} ids={project.evidenceIds} /> : <EvidenceExplorer content={content} locale={locale} ids={project.evidenceIds} />}</> : null
   return <div className="drf-project-detail">
     {overview && <>
-    <p className="drf-tag">{project.contentStatus === 'pending-evidence' ? t.pending : t.reviewed}</p>
+    {qualification && <p className="drf-tag">{project.contentStatus === 'pending-evidence' ? t.pending : t.reviewed}</p>}
     <p className="drf-lead">{project.summary[locale]}</p>
+    {project.technologies.length > 0 && <div className="drf-case-stack"><h4>{t.stack}</h4><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul></div>}
     {(project.problem || project.contribution || project.productStatus) && <dl className="drf-facts">
       {project.problem && <div><dt>{t.problem}</dt><dd>{project.problem[locale]}</dd></div>}
       {project.contribution && <div><dt>{t.contribution}</dt><dd>{project.contribution[locale]}</dd></div>}
       {project.productStatus && <div><dt>{t.productStatus}</dt><dd>{project.productStatus[locale]}</dd></div>}
     </dl>}
-    {project.technologies.length > 0 && <><h4>{t.stack}</h4><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul></>}
     </>}
     {engineering && <>
     {project.decisions.length > 0 && <><h4>{t.decisions}</h4><ul className="drf-text-list">{project.decisions.map((decision, i) => <li key={i}>{decision[locale]}</li>)}</ul></>}

@@ -1,15 +1,26 @@
 import { Activity, Pause, Volume2, VolumeX } from 'lucide-react'
+import { useSyncExternalStore } from 'react'
 import type { PortfolioShellProps } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
 
+const mobileQuery = () => window.matchMedia('(max-width: 600px)')
+const subscribeMobile = (notify: () => void) => {
+  const query = mobileQuery()
+  query.addEventListener('change', notify)
+  return () => query.removeEventListener('change', notify)
+}
+const isMobile = () => mobileQuery().matches
+const serverMobile = () => false
+
 export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps, 'state' | 'actions'>) {
   const t = uiLabels(state.locale)
+  const mobile = useSyncExternalStore(subscribeMobile, isMobile, serverMobile)
   const audioEnabled = state.audio === 'on' || state.audio === 'requested'
   const audioLabel = { off: t.audioOff, on: t.audioOn, requested: t.audioRequested, unavailable: t.audioUnavailable }[state.audio]
   const sceneLabel = { idle: t.sceneIdle, loading: t.sceneLoading, ready: t.enabled, unavailable: t.sceneUnavailable, error: t.sceneError }[state.renderStatus]
   const ambientActive = state.renderStatus === 'ready' && state.ambientEnabled && !state.reducedMotion && !state.panelOpen
   const ambientLabel = state.renderStatus !== 'ready' ? sceneLabel : state.reducedMotion ? t.motionRestricted : state.ambientEnabled ? state.panelOpen ? t.paused : t.enabled : t.disabled
-  return <div className="drf-hud-environment" role="group" aria-label={t.environment}>
+  const secondary = <>
     <span id="drf-audio-policy" className="drf-sr-only">{t.audioOptIn}</span>
     <button id="drf-audio-toggle" type="button" aria-pressed={audioEnabled} aria-describedby="drf-audio-policy" disabled={!audioEnabled && state.renderStatus !== 'ready'} title={t.audioOptIn} onClick={() => { void actions.setAudioEnabled(!audioEnabled) }}>
       {audioEnabled ? <Volume2 size={16} aria-hidden="true" /> : <VolumeX size={16} aria-hidden="true" />}
@@ -23,6 +34,19 @@ export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps
       {ambientActive ? <Activity size={16} aria-hidden="true" /> : <Pause size={16} aria-hidden="true" />}
       <span>{t.environmentShort}<small aria-live="polite">{ambientLabel}</small></span>
     </button>
+  </>
+  return <div className="drf-hud-environment" role="group" aria-label={t.environment}>
+    {mobile ? <details className="drf-environment-panel" onKeyDown={event => {
+      if (event.key === 'Escape') {
+        event.preventDefault()
+        event.stopPropagation()
+        event.currentTarget.open = false
+        event.currentTarget.querySelector('summary')?.focus({ preventScroll: true })
+      }
+    }}>
+      <summary>{t.environmentShort}<small className="drf-environment-state" aria-live="polite">{ambientLabel}</small><small>{t.audio}: {audioLabel}</small></summary>
+      <div className="drf-environment-options">{secondary}</div>
+    </details> : secondary}
     <details className="drf-motion-control" onKeyDown={event => {
       if (event.key === 'Escape') {
         event.preventDefault()

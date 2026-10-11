@@ -23,7 +23,7 @@ export function ZoneContent({ content, locale, zoneId, recruiter, reducedMotion 
     {content.projects.map((project, index) => <article key={project.id} className="drf-project-card" data-selected={selectedProjectId === project.id}>
       <div className="drf-card-top"><span className="drf-code">{String(index + 1).padStart(2, '0')} / DRF</span><span className="drf-tag">{project.contentStatus === 'pending-evidence' ? t.pending : t.reviewed}</span></div>
       <h3 id={`drf-project-${project.id}`} tabIndex={-1}>{project.title[locale]}</h3>
-      {recruiter ? <ProjectDetail project={project} content={content} locale={locale} /> : <>
+      {recruiter ? <ProjectDetail project={project} content={content} locale={locale} qualification={false} /> : <>
         <p>{project.summary[locale]}</p><ul className="drf-chips">{project.technologies.map(tech => <li key={tech}>{tech}</li>)}</ul>
         <button id={`drf-select-${project.id}`} type="button" className="drf-card-action" onClick={event => onProject(project, event.currentTarget)}>
           {selectedProjectId === project.id ? `${t.selected} · ${t.read}` : t.openProject} <span className="drf-sr-only">{project.title[locale]}</span><span aria-hidden="true">↗</span>

@@ -72,7 +72,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         {state.panelOpen ? <X size={16} aria-hidden="true" /> : <Crosshair size={16} aria-hidden="true" />}
       </button>
       </div>
-      {inGarage && program && state.target.projectId && <ProgramContext project={program} locale={state.locale} reading={state.panelOpen} onInspect={onInspect} />}
+      {inGarage && program && <ProgramContext project={program} locale={state.locale} reading={state.panelOpen} onInspect={onInspect} />}
     </section>
 
     <div className="drf-hud-status">
