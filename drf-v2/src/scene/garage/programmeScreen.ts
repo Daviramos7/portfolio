@@ -2,6 +2,7 @@ import { CanvasTexture, Group, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace,
 import type { Camera } from 'three'
 import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
+import { bodyFont, displayFont, fitCanvasBlocks, wrapCanvasText } from './canvasText.ts'
 
 export function screenPresentation(zone: ZoneId, index: SceneProps['contentIndex'], locale: Locale, projectId: string | null) {
   const selected = zone === 'garage' ? index.find(e => e.zoneId === zone && e.projectId === projectId) : undefined
@@ -34,7 +35,9 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
   marker.position.set((initialX/1024-.5)*size[0],(.5-initialY/512)*size[1],.004)
   const projected=new Vector3();let publicNodes=1
   let previous = ''
+  let lastInput: readonly [SceneProps['contentIndex'], Locale, string | null] = [[], 'pt', null]
   function update(index: SceneProps['contentIndex'], locale: Locale, projectId: string | null) {
+    lastInput=[index,locale,projectId]
     const presentation = screenPresentation(zone,index,locale,projectId), key = JSON.stringify([locale,presentation])
     if (!ctx || key === previous) return
     previous = key; object.userData.screenPresentation = presentation
@@ -47,9 +50,9 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
       ctx.strokeStyle = color; ctx.lineWidth = 4; ctx.beginPath();points.forEach(([x,y],i)=>i?ctx.lineTo(x,y):ctx.moveTo(x,y));if(close)ctx.closePath();ctx.stroke()
     }
     const text = (label: string, x: number, y: number, width: number, font = 28) => {
-      ctx.font = `500 ${font}px sans-serif`;ctx.fillStyle = '#dbe8ec'
-      const lines=[''];for(const word of label.split(/\s+/)){const line=lines.at(-1)!;if(line&&ctx.measureText(line+' '+word).width>width)lines.push(word);else lines[lines.length-1]=[line,word].filter(Boolean).join(' ')}
-      for(const line of lines){if(y>474)break;ctx.fillText(line,x,y,width);y+=font*1.3}return y
+      ctx.font = `700 ${font}px ${displayFont}`;ctx.fillStyle = '#dbe8ec'
+      const lines=wrapCanvasText(label,width,value=>ctx.measureText(value).width)
+      for(const line of lines){ctx.fillText(line,x,y);y+=font*1.3}return y
     }
     if(zone==='garage') {
       path([[166,96],[198,96],[207,208],[239,292],[232,367],[209,399],[151,399],[128,367],[121,292],[153,208]],'#80c7d1',true)
@@ -80,15 +83,24 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
       for(const [x,y]of [[93,163],[248,244],[106,363]]){ctx.fillStyle='#183845';ctx.fillRect(x-24,y-24,48,48);ctx.strokeStyle='#80c7d1';ctx.strokeRect(x-24,y-24,48,48)}
       text(en?'Areas of interest':'Áreas de interesse',45,455,254,22)
     }
-    ctx.font='500 16px sans-serif';ctx.fillStyle='#d0a785';ctx.fillText(en?'DEMO · ambient cursor':'DEMO · indicador ambiente',45,485,254)
-    let y=text(presentation.title,350,66,630,32)+25
-    ctx.fillStyle='#b7314c';ctx.fillRect(350,y-12,120,4);y+=26
+    ctx.font=`500 16px ${bodyFont}`;ctx.fillStyle='#d0a785';ctx.fillText(en?'DEMO · ambient cursor':'DEMO · indicador ambiente',45,485)
     const lines: readonly string[] = presentation.lines.length ? presentation.lines : [en?'Details in reading':'Detalhes na leitura']
-    lines.forEach((line,i)=>{if(y>452)return;ctx.fillStyle='#486775';ctx.fillRect(350,y-18,5,20);y=text(line,369,y,606,26)+28;if(zone==='pit-wall'&&i<lines.length-1)path([[369,y-15],[930,y-15]],'#223b46')})
+    const selected=zone==='garage'&&index.some(entry=>entry.zoneId===zone&&entry.projectId===projectId&&projectId!==null)
+    const copy=[presentation.title,...lines.map((line,i)=>selected?`${i===0?'STACK':en?'STATUS':'ESTADO'} · ${line}`:line)]
+    const layout=fitCanvasBlocks(ctx,copy,616,414)
+    object.userData.textLayout=layout;object.userData.textFits=layout.fits
+    for(const [index,block] of layout.blocks.entries()){
+      ctx.font=`${index===0?700:500} ${block.font}px ${block.family}`;ctx.fillStyle=index===0?'#f0f4f2':'#dbe8ec'
+      const start=49+block.y+block.font
+      block.lines.forEach((line,i)=>ctx.fillText(line,350,start+i*block.font*1.3))
+      if(index===0){ctx.fillStyle='#b7314c';ctx.fillRect(350,start+(block.lines.length-1)*block.font*1.3+8,120,3)}
+    }
+    if(!layout.fits){ctx.font=`500 26px ${bodyFont}`;ctx.fillStyle='#f0d0af';ctx.fillText(en?'Full text in reading':'Texto integral na leitura',350,260)}
     map.needsUpdate = true
   }
   // Every surface has a diagram even before optional presentation data arrives.
   update([],'pt',null)
+  r.onFontsReady?.(()=>{previous='';update(...lastInput)})
   function updateAmbient(timeMs:number,camera:Camera) {
     object.getWorldPosition(projected);projected.project(camera)
     if(projected.z<=-1||projected.z>=1||Math.abs(projected.x)>1.15||Math.abs(projected.y)>1.15)return

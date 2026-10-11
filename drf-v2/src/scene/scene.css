@@ -6,6 +6,7 @@
 .drf-scene__zone-number { display: grid; place-content: center; width: 28px; height: 28px; flex-shrink: 0; border: 1px solid #92a6b2; background: #0c1421d9; border-radius: 50%; font: 500 .6rem monospace; }
 .drf-scene__hotspot-label { position: absolute; left: var(--scene-label-offset, 100%); top: 50%; transform: translateY(-50%); box-sizing: border-box; width: 190px; max-width: calc(100vw - 32px); padding: .5rem .7rem; white-space: normal; overflow-wrap: normal; word-break: normal; background: #0c1421f2; border-left: 2px solid #b82c45; opacity: 0; visibility: hidden; }
 .drf-scene__zones button:hover .drf-scene__hotspot-label, .drf-scene__zones button:focus-visible .drf-scene__hotspot-label { opacity: 1; visibility: visible; }
+.drf-scene__discovery-hint { display: block; margin-top: .35rem; color: #bdccd5; font-size: .72rem; line-height: 1.45; }
 .drf-scene__zones button[aria-current] .drf-scene__zone-number { background: #621728df; border-color: #ea879a; }
 .drf-scene__zones button:focus-visible { outline: 2px solid #fff; outline-offset: 3px; border-radius: 50%; }
 .drf-scene[data-panel-open="true"] .drf-scene__zones { visibility: hidden; }

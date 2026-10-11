@@ -59,7 +59,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   function setAudioVolume(volume: number) { audio.setAudioVolume(volume); publishAudio() }
   let trackTimeMs = 0
   let pass: ReturnType<typeof createTrackPass> | null = null
-  const resources = createResources()
+  const resources = createResources(() => { if (!disposed) { invalidated = true; canvas.dataset.sceneScreenLayouts = JSON.stringify(garage?.screenLayouts ?? []); requestFrame() } })
   const scene = new Scene()
   const camera = new PerspectiveCamera(46, 1, .1, 85)
   const lookAt = new Vector3(...framings.garage.lookAt)
@@ -338,6 +338,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         availableZones.clear()
         for (const entry of index) if (entry.projectId === null) availableZones.add(entry.zoneId)
         garage.updateLabels(index, state.locale, state.target.projectId)
+        canvas.dataset.sceneScreenLayouts = JSON.stringify(garage.screenLayouts)
         previousIndex = index
         previousLocale = state.locale
         previousProject = state.target.projectId
