@@ -30,14 +30,17 @@ export function createGarage(r: Resources) {
       r.box(garage, [.15, 4.5, .12], [side * 8.18, 2.25, z], metal)
       r.box(garage, [.1, .08, 1.6], [side * 8.05, 3.82, z + .7], light)
     }
-    r.box(garage, [3.85, 4.6, .24], [side * 6.47, 2.3, -6.6], panel)
-    r.box(garage, [.19, 4.35, .3], [side * 4.48, 2.2, -6.4], metal)
-    r.box(garage, [.055, 3.95, .055], [side * 4.34, 2.2, -6.21], light)
+    r.box(garage, [side < 0 ? 1.01 : 3.85, 4.6, .24], [side < 0 ? -7.89 : 6.47, 2.3, -6.6], panel)
+    r.box(garage, [.19, 4.35, .3], [side < 0 ? -7.32 : 4.48, 2.2, -6.4], metal)
+    r.box(garage, [.055, 3.95, .055], [side < 0 ? -7.18 : 4.34, 2.2, -6.21], light)
   }
+  // The asymmetric service opening clears the approved mobile sightline.
+  // Existing REC/PE sign retains its location on a header-mounted bracket.
+  r.rod(garage, [-4.48, 4.2, -6.4], [-4.48, 3.19, -6.2], .04, metal)
   r.box(garage, [17, .18, .5], [0, 4.43, -6.4], metal)
-  r.box(garage, [8.8, .26, .24], [0, 4.2, -6.39], black)
+  r.box(garage, [11.6, .26, .24], [-1.42, 4.2, -6.39], black)
   // Roller shutter overhead, roof trusses and suspended lighting form repeated depth cues.
-  for (let n = 0; n < 7; n++) r.box(garage, [8.8, .075, .23], [0, 3.9 + n * .08, -6.42], metal)
+  for (let n = 0; n < 7; n++) r.box(garage, [11.6, .075, .23], [-1.42, 3.9 + n * .08, -6.42], metal)
   for (const z of [-5.5, -2.6, .3, 3.2, 6.1]) {
     r.box(garage, [16.7, .15, .15], [0, 4.32, z], structure)
     r.box(garage, [16.5, .1, .12], [0, 4.04, z], structure)

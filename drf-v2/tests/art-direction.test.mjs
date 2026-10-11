@@ -33,7 +33,7 @@ test('compact rear aero and sculpted wheel faces retain four closed assemblies',
 test('pit lane stays outside the garage with a low separator behind its route',()=>{
   globalThis.document={createElement:()=>({getContext:()=>null})}
   const r=createResources(),opening=createTrackOpening(r),barrier=opening.track.getObjectByName('low-paddock-separator')
-  assert.ok(tracksideRoute.start[2]<-6.6&&tracksideRoute.start[2]>-12.3)
+  assert.ok(tracksideRoute.start[2]<-6.6&&tracksideRoute.start[2]>barrier.position.z)
   assert.ok(barrier.position.z<tracksideRoute.start[2])
   const vehicle=createTrackPass(r,opening).vehicle
   assert.ok(new Box3().setFromObject(barrier).getSize(new Vector3()).y<new Box3().setFromObject(vehicle).getSize(new Vector3()).y*.6,'separator is lower than the passing vehicle')

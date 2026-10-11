@@ -93,3 +93,60 @@ dirigido produziu pixels/estado sem erros. Headless não valida dispositivo fís
 percepção de velocidade humana, qualidade de áudio ou picos GPU/memória.
 
 Encerrar preview próprio e aguardar revisão/follow-up. Commit desta etapa: só este doc.
+
+## Etapa 2 — P0 implementado
+
+Base f8f90a7 + diagnóstico a12c70e; branch feat/drf-engineering-3d.
+Novo DRF Sprint 03 autoral Blender batch: tub contínuo, cockpit escavado escuro,
+sidepods volumétricos, asas perfiladas, quatro rodas fechadas e suspensão.
+Após revisão, raízes dianteiras recolocadas dentro do tub: raycasts em ambos os
+sentidos confirmam conexão, e teste verifica folga do envelope dos pneus.
+Asset166.608 bytes /13.710 triângulos /cinco materiais; autoria/hash em ASSETS.md.
+Não é conversão do modelo anterior nem alegação de acabamento premium.
+
+GLTFLoader lazy, cache somente de bytes CPU. Cada renderer possui seu grafo,
+com disposal idempotente e cancelamento do resultado tardio. Materiais da garagem
+compartilhados não são liberados pelo asset. HTTP/parse/bounds inválidos mantêm
+fallback anterior, sem qualidade equivalente. Fallback continua alocado até
+teardown. Retry recria grafo; erro de bytes é retirado do cache.
+
+Faixa em z=-12,7, plataforma apoiada de1,14 m, rampa4,1 m (~15,5 graus) e
+abertura ampliada à esquerda. REC/PE conserva posição com suporte no cabeçalho;
+separador atrás da rota, apoiado na plataforma. Câmera/controlador/framing/UI/
+áudio/contratos intactos. Rota18 m, duração2,2–2,6 s, média paramétrica6,92–8,18
+m/s, sem física. Primeiro intervalo5–8 s e seguintes25–45 s preservados.
+Tentativa20 m/3–3,4 s substituída após revisão; mais frames não bastavam.
+
+Provas em `.agent-grid/screenshots/mission-13/` na raiz do repositório:
+- `scene-before/`: baseline preservado.
+- `model-review/{three-quarter,front,side}.png`: três vistas Blender.
+- `scene-candidate-01/`: tentativa com oclusão, preservada.
+- `scene-after/pass-{1440,390,320}-{0.1,0.3,0.42,0.48,0.54,0.6,0.7,0.9}.png`:
+  passagem natural de produção, mesmos enquadramentos.
+- `scene-dev-sequence/`, `scene-dev-reverse/`: screencast JPEG real CDP, timestamps,
+  progresso/transforms em qa.json. Fixture temporária compilada DEV usa seam
+  existente; produção não expõe trigger. Native reduced=true, Cinemático escolhido
+  na UI, áudio desligado, sem contexto/autoplay. Em320, R→L: pass-320-0-045.jpg e
+  049.jpg; L→R: pass-320-3-032.jpg até035.jpg em scene-dev-reverse mostram silhueta
+  inteira. Entrada/saída têm corte nas bordas; monitor esquerdo oculta o carro
+  ao deixar a janela. Não se declara visibilidade integral do percurso.
+- `asset-fallback/{404-readable-390,retry-loaded-390}.png`: HTTP404 contido,
+  cena/HTML disponíveis; retry real de contexto carrega GLB após falha do cache.
+  404 de rede esperado registrado; nenhuma exceção de console.
+- `smoke/`: regressões integradas desktop/mobile/PT/EN/câmera/fallback.
+
+Custos máximos capturados nos screencasts (renderer.info, não FPS):1440:97 calls/
+80.584 triângulos/29 texturas;390 e320:83 calls/77.016 triângulos/24 texturas.
+Baseline106/72.970 desktop e92/69.402 mobile: menos calls, mais triângulos.
+Sombras/frustum variam; não são garantia de picos globais. DPR/MSAA/sombras
+preservados. SceneRoot658,17 kB/gzip172,50; GLTFLoader lazy45,18/gzip13,46 kB;
+baseline625,14/gzip164,15. Aviso preexistente chunk>500 kB permanece.
+
+QA: lint/build,57 core (52 existentes+5 novos), diff-check e smoke integrado sem
+erros críticos. Novos testes: GLB real/topologia/raízes/envelope, janela geométrica
+nas duas direções, cache/404 e cleanup tardio/exatamente uma vez. Dois testes
+antigos agora comparam posição real do separador. Teste geométrico não substitui
+pixels. Chrome instalado headless com WebGL real/mobile emulado; telefone físico,
+GPU/performance física, escuta de áudio e percepção humana de velocidade não
+medidos. Nenhuma alteração de áudio/Easter/Canvas além do suporte estrutural.
+Encerrar preview e aguardar Lead, sem iniciar outras frentes.

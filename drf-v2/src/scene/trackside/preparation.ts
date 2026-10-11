@@ -2,11 +2,11 @@ import type { CarPass, ExperienceState } from '../../contracts/index.ts'
 
 // Original route and envelopes, driven by the renderer's single monotonic clock.
 export const tracksideRoute = {
-  start: [-13, .425, -11.1] as const,
-  end: [13, .425, -11.1] as const,
+  start: [-11.5, 1.145, -12.7] as const,
+  end: [6.5, 1.145, -12.7] as const,
   vehicleId: 'drf-track-02',
   intervalMs: [25000, 45000] as const,
-  durationMs: [1800, 2400] as const,
+  durationMs: [2200, 2600] as const,
 }
 
 export function tracksidePose(event: CarPass, progress: number) {

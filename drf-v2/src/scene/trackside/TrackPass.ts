@@ -1,13 +1,18 @@
-import { MeshBasicMaterial, PlaneGeometry } from 'three'
-import type { Group } from 'three'
+import { Group, Mesh, MeshBasicMaterial, PlaneGeometry } from 'three'
 import type { CarPass } from '../../contracts/index.ts'
 import type { Resources } from '../garage/resources.ts'
 import { carPassEnvelope, tracksidePose } from './preparation.ts'
 import { createTrackCar } from './TrackCar.ts'
+import { createTrackModelLease } from './TrackModel.ts'
 
 export function createTrackPass(r: Resources, opening: { reflection: Group; lightweight: import('three').Mesh; restore: () => void }) {
-  const vehicle = createTrackCar(r); vehicle.visible = false
-  r.batch(vehicle)
+  const vehicle = new Group(), fallback=createTrackCar(r); vehicle.visible = false
+  r.batch(fallback);vehicle.add(fallback)
+  const lease=createTrackModelLease(root=>{
+    const palette={ivory:r.palette.white,wine:r.palette.paint,carbon:r.palette.carbon,rubber:r.palette.tire,alloy:r.palette.metal}
+    root.traverse(object=>{if(object instanceof Mesh){object.castShadow=true;object.receiveShadow=true;const convert=(material:import('three').Material)=>palette[material.name as keyof typeof palette]??r.palette.carbon;object.material=Array.isArray(object.material)?object.material.map(convert):convert(object.material)}})
+    r.batch(root);vehicle.add(root);fallback.visible=false
+  })
   const mat = r.material(new MeshBasicMaterial({ color: '#b2d9ec', transparent: true, opacity: 0, depthWrite: false }))
   const reflection = r.mesh(opening.reflection, r.geometry(new PlaneGeometry(3.6, 1.5)), mat)
   reflection.rotation.x = -Math.PI / 2; reflection.castShadow = false; reflection.visible = false
@@ -23,5 +28,5 @@ export function createTrackPass(r: Resources, opening: { reflection: Group; ligh
     opening.lightweight.position.y += Math.sin(progress * Math.PI * 24) * envelope * .0015
     opening.lightweight.rotation.z = rest + Math.sin(progress * Math.PI * 20) * envelope * .004
   }
-  return { vehicle, update: (event: CarPass | null, progress: number, visual: boolean) => { opening.restore(); update(event, progress, visual) }, restore }
+  return { vehicle, get modelStatus(){return lease.status}, load:()=>lease.load(new URL('scene/models/drf-sprint-03.glb',document.baseURI).href), dispose:()=>{restore();lease.dispose()}, update: (event: CarPass | null, progress: number, visual: boolean) => { opening.restore(); update(event, progress, visual) }, restore }
 }
