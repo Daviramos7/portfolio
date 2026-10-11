@@ -11,6 +11,16 @@ import { createTrackPass } from './trackside/TrackPass.ts'
 import { createTrackAudio } from './trackside/audio.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
+import { personalDetailLayout } from './garage/personalDetails.ts'
+
+export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
+  const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
+  return {
+    left:Math.max(free.left,Math.min(preferred,free.right-label.width)),
+    top:Math.max(free.top,Math.min(button.top+(button.height-label.height)/2,free.bottom-label.height)),
+    fits:label.width<=free.right-free.left&&label.height<=free.bottom-free.top,
+  }
+}
 
 type Transition = {
   sequence: number
@@ -210,7 +220,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       for (const [id, volume] of Object.entries(hotspotVolumes)) {
         const button = canvas.parentElement?.parentElement?.querySelector<HTMLElement>('[data-scene-hotspot="' + id + '"]')
         if (!button) continue
-        projected.set(...volume.anchor).project(camera)
+        const heroGarage=id==='garage'&&state.target.zoneId==='garage'&&state.target.projectId===null
+        if(id==='garage')button.dataset.sceneHeroAnchor=String(heroGarage)
+        const rec=heroGarage?personalDetailLayout.find(detail=>detail.id==='rec-pe'):undefined
+        projected.set(...(rec?.position??volume.anchor))
+        if(rec)projected.x+=1.15 // beside the authored plaque, not over its lettering
+        projected.project(camera)
         const inside = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) < .88 && Math.abs(projected.y) < .76
         button.style.visibility = inside ? '' : 'hidden'
         button.style.left = ((projected.x + 1) * 50) + '%'
@@ -222,6 +237,17 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
           const preferred = left + bounds.width + labelWidth <= stage.width - 8 ? bounds.width : -labelWidth
           const offset = Math.max(8 - left, Math.min(preferred, stage.width - 8 - left - labelWidth))
           button.style.setProperty('--scene-label-offset', offset + 'px')
+          if(heroGarage){
+            const header=document.querySelector('.drf-hud-header')?.getBoundingClientRect()
+            const showcase=document.querySelector('.drf-showcase')?.getBoundingClientRect()
+            const free={left:stage.left+8,right:stage.right-8,top:Math.max(stage.top,header?.bottom??stage.top)+8,bottom:Math.min(stage.bottom,showcase?.top??stage.bottom)-8}
+            const placed=clampHeroTooltip(bounds,label.getBoundingClientRect(),free)
+            button.style.setProperty('--scene-label-offset',(placed.left-bounds.left)+'px')
+            button.style.setProperty('--scene-label-top',(placed.top-bounds.top)+'px')
+            button.style.setProperty('--scene-label-shift','0%')
+          }else{
+            button.style.removeProperty('--scene-label-top');button.style.removeProperty('--scene-label-shift')
+          }
         }
       }
       if (!ready) {
