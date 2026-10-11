@@ -2,8 +2,12 @@ import type { CarPass, ExperienceState } from '../../contracts/index.ts'
 
 // Original route and envelopes, driven by the renderer's single monotonic clock.
 export const tracksideRoute = {
-  start: [-11.5, 1.145, -12.7] as const,
-  end: [6.5, 1.145, -12.7] as const,
+  start: [-16.8, 1.55, -27.6] as const,
+  end: [11.2, 1.55, -14.6] as const,
+  bendZ: -11.2,
+  depth: 9.9,
+  approachSkew: 6.5,
+  vehicleScale: 1.2,
   vehicleId: 'drf-track-02',
   intervalMs: [25000, 45000] as const,
   durationMs: [2200, 2600] as const,
@@ -11,11 +15,19 @@ export const tracksideRoute = {
 
 export function tracksidePose(event: CarPass, progress: number) {
   const p = Math.min(1, Math.max(0, progress)), direction = event.direction === 'left-to-right' ? 1 : -1
-  const x = tracksideRoute.start[0] + (tracksideRoute.end[0] - tracksideRoute.start[0]) * (direction > 0 ? p : 1 - p)
-  // A shallow outside lane bend: approach the opening, cross it, recede.
-  const z = tracksideRoute.start[2] - .5 * (2 * p - 1) ** 2
-  const dz = -2 * (2 * p - 1), dx = direction * (tracksideRoute.end[0] - tracksideRoute.start[0])
-  return { position: [x, tracksideRoute.start[1], z] as const, yaw: Math.atan2(dx, dz) }
+  // Slower distant approach/recession, energetic centre; identical geometry in reverse.
+  const t = p + .05 * Math.sin(2 * Math.PI * (p - .5)), u = direction > 0 ? t : 1 - t
+  const span = tracksideRoute.end[0] - tracksideRoute.start[0]
+  const depth = tracksideRoute.depth, skew = tracksideRoute.approachSkew
+  const x = tracksideRoute.start[0] + span * u
+  const z = tracksideRoute.bendZ - depth * (2 * u - 1) ** 2 + skew * (2 * u - 1)
+  const dz = direction * (-4 * depth * (2 * u - 1) + 2 * skew), dx = direction * span
+  // Exact arc length of this parabola. Wheel rotation does not depend on frame rate.
+  const b = 4 * depth
+  const primitive = (v: number) => (v * Math.hypot(span, v) + span * span * Math.asinh(v / span)) / 2
+  const arc = (v: number) => (primitive(b * (2 * v - 1) - 2 * skew) - primitive(-b - 2 * skew)) / (2 * b)
+  const distance = direction > 0 ? arc(t) : arc(1) - arc(1 - t)
+  return { position: [x, tracksideRoute.start[1], z] as const, yaw: Math.atan2(dx, dz), distance }
 }
 
 export function carPassProgress(event: CarPass, nowMs: number): number {

@@ -6,26 +6,27 @@ export function createTrackOpening(r: Resources) {
   track.name = 'trackside-static-opening'
   const { carbon, red, white, metal, concrete: floor } = r.palette
   r.box(track, [60, .1, 18], [0, -.1, -13], floor)
-  // Raised service lane has real support and a shallow access ramp, not a floating car.
-  const deck=r.box(track, [60, 1.14, 5.6], [0, .57, -13.7], floor);deck.name='supported-service-lane'
-  r.box(track, [60, .07, 5.6], [0, 1.105, -13.7], carbon)
-  const rise=1.14, run=4.1
-  const apron=r.mesh(track,r.geometry(new PlaneGeometry(11.6,Math.hypot(rise,run))),floor,[-1.4,rise/2,-8.85])
-  apron.rotation.x=-Math.PI/2+Math.atan(rise/run);apron.name='service-lane-access-ramp'
-  for (const z of [-10.9, -16.5]) r.box(track, [60, .015, .1], [0, 1.155, z], white)
-  for (let x = -24; x <= 24; x += 2) r.box(track, [2, .03, .4], [x, 1.155, -16.1], x % 4 === 0 ? red : white)
+  // Track terrace rests on a retaining foundation; access is a shallow lateral ramp.
+  const deck=r.box(track, [60, 1.545, 26], [0, .7725, -20.75], floor);deck.name='supported-service-lane'
+  r.box(track, [60, .07, 26], [0, 1.515, -20.75], carbon)
+  const rise=1.55, run=14
+  const apronShape=r.geometry(new PlaneGeometry(Math.hypot(rise,run),26));apronShape.rotateX(-Math.PI/2)
+  const apron=r.mesh(track,apronShape,floor,[-37,rise/2,-20.75])
+  apron.rotation.z=Math.atan(rise/run);apron.name='service-lane-access-ramp'
+  for (const z of [-7.75, -33.75]) r.box(track, [60, .015, .1], [0, 1.565, z], white)
+  for (let x = -24; x <= 24; x += 2) r.box(track, [2, .03, .4], [x, 1.565, -33.35], x % 4 === 0 ? red : white)
   // A low separator behind the lane, with fencing at its flanks. No bars across the pit sightline.
-  const barrier=r.box(track, [60, .42, .35], [0, 1.35, -16.3], floor);barrier.name='low-paddock-separator'
-  r.box(track, [46, .16, 7.8], [0, 4.2, -23], carbon)
+  const barrier=r.box(track, [60, .42, .35], [0, 1.76, -33.6], floor);barrier.name='low-paddock-separator'
+  r.box(track, [46, .16, 7.8], [0, 4.2, -37], carbon)
   for (let x = -20; x <= 20; x += 4) {
-    r.rod(track, [x, .2, -24], [x, 4.15, -24], .08, metal)
-    if(Math.abs(x)>=8)r.rod(track, [x, 1.56, -16.4], [x, 3.54, -16.4], .025, metal)
+    r.rod(track, [x, .2, -38], [x, 4.15, -38], .08, metal)
+    if(Math.abs(x)>=8)r.rod(track, [x, 1.97, -33.7], [x, 4.2, -33.7], .025, metal)
   }
-  for (const y of [1.1, 1.45, 1.8, 2.15])for(const side of [-1,1])r.rod(track, [side*8, y+1.14, -16.4], [side*24, y+1.14, -16.4], .012, metal)
+  for (const y of [1.1, 1.45, 1.8, 2.15])for(const side of [-1,1])r.rod(track, [side*8, y+1.55, -33.7], [side*24, y+1.55, -33.7], .012, metal)
   // Abstract local horizon; original low-poly industrial/coastal forms.
   for (let n = 0; n < 12; n++) {
     const height = 1 + (n * 7 % 5) * .45
-    r.box(track, [1.5, height, 1.8], [-24 + n * 4.5, height / 2, -24 - (n % 3)], metal)
+    r.box(track, [1.5, height, 1.8], [-24 + n * 4.5, height / 2, -38 - (n % 3)], metal)
   }
   const anchors = new Group()
   anchors.name = 'trackside-effect-anchors-inactive'
