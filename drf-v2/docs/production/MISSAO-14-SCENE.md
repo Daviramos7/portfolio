@@ -119,3 +119,80 @@ confirmado; pipeline batch autoral existente viável para reaproveitar malha,
 sem instalar/configurar sistema. Não reconstruir carro nem converter por rótuloGLB.
 Escolher ajuste específico após revisão de pixels; custo bounded sem alvo
 artificial de polígonos. Nada implementado nesta etapa; aguardar Lead.
+
+## P0 implementado — passagem e rolamento
+
+Reutilizado o GLB existente (166608 bytes, 13710 triângulos), sem novos assets,
+texturas ou dependências. Rota curva assimétrica com aproximação profunda,
+cruzamento em três quartos e afastamento; escala1.2 e pista apoiada em deck
+com acesso lateral inclinado. Endpoints: (-16.8,1.55,-27.6) e
+(11.2,1.55,-14.6); duração natural2.2–2.6s. Câmera, framing, UI, áudio,
+projetos e Easter permanecem intactos.
+
+Batching separado do corpo e dos quatro pivôs wheel-* do GLB. Rolamento
+absoluto pelo comprimento de arco percorrido e raio de cada roda, sem
+acumulação por frame; orientação original restaurada no cancelamento/fim.
+Lease continua proprietário dos recursos originais; buffers de instâncias
+pertencem ao registro da cena. Teste verifica quatro pivôs, geometria
+compartilhada, rolamento, reversão e disposal exatamente uma vez.
+
+DEVtrigger agora usa 2400ms e esquerda→direita quando a direção é omitida.
+Override privado valida direção/duração, rejeita evento ativo e valores
+inválidos, limpa no reset e após consumo. O sorteio natural continua sendo
+consumido na mesma ordem. Gatilho permanece dentro de import.meta.env.DEV;
+build de produção não contém drfDebugTrackside.
+
+### Evidências e método
+
+Raiz durável externa ao Git:
+`.agent-grid/screenshots/mission-14/scene-after/` no checkout principal.
+`qa.json`, `projection.json`, `gates.json` e `video-verify.json` preservam
+clock/progress, câmera, contagens e verificação de decoding. Os vídeos
+`garage-{1440,390,320}-{left-to-right,right-to-left}.webm` usam
+canvas.captureStream/MediaRecorder; os correspondentes `-viewport.webm`
+codificam screencast CDP contínuo com HUD e timestamps reais. Não são
+montagens de poses ou animação offline. Início/meio/fim foram decodificados
+no Chrome; duração dos vídeos canvas2.636–2.815s, viewport2.584–2.694s.
+
+Chrome instalado headless, reduced nativo true, opção Cinemático escolhida
+pela UI, áudio OFF. Gravações anteriores à correção final DEV usaram direção
+fixa e duração sorteada2.2–2.6s (atividade observada aproximadamente
+2436–2569ms); não foram repetidas por alteração exclusiva do gatilho.
+Baseline próprio canvas-only em `scene-before/`; Lead preservou baseline
+viewport completo com HUD nas três larguras, permitindo comparação integrada.
+
+PNGs integrados `garage-{width}-{direction}-pass-{progress}.png` e frames
+`decoded-garage-320-{direction}-viewport-{3,4,5}.png` mostram veículo inteiro
+na janela útil em ambas as direções. Entrada/saída ainda podem cortar o
+veículo. Primeiro candidato parcialmente encoberto pela placa REC foi
+preservado em `candidate-left-occlusion/` e corrigido pela composição da rota.
+
+### Medidas, QA e limites
+
+Projeção do centro entre25–75% (não segmentação de pixels nem FPS): antes
+1440/390/320 =403/207/168px/s; depois aproximadamente663/333/270px/s.
+AABB projetado conservador central antes309×82/159×42/129×34px, depois
+aproximadamente463×114/230×56/187×46px. AABB inclui cantos vazios durante
+yaw; silhueta real mobile ocupa aproximadamente110–140×30–40px, avaliação
+visual sem segmentação automática. Não afirmar visibilidade integral durante
+toda a passagem: janela completa mobile é breve (teste geométrico exige
+ao menos200ms), com múltiplos frames reais. Driver/Strategy olham para fora
+da rota; Telemetry/Pit continuam tendo oclusões contextuais por monitores.
+
+Contagens registradas: desktop idle91calls/67348tri, passagem105/81060;
+mobile idle75/63564, passagem89/77276. Aumento de6calls somente no evento,
+triângulos inalterados. Snapshot geometria/texturas73/29 desktop e60/24
+mobile; sem mapas adicionais. DPR registrado1, política e MSAA preservados.
+Build final SceneRoot665.05kB/gzip175.25kB; aviso existente de chunk>500kB.
+Não foram medidos FPS percebido, GPU física ou telefone real.
+
+Lint/build e65 testes core passaram após a correção DEV; seleção explícita
+exclui os cinco harnesses *-ui.test.mjs (primeira tentativa indiscriminada
+falhou por portas incorretas e não conta como aprovação). Smoke de produção
+13 grupos passou antes do ajuste exclusivamente DEV, console/network sem
+erros; evidências em `production-smoke/`. Gates dirigidos confirmaram
+ambientOFF/reduced, navegação rápida, cancelamento e contextloss/retry com
+GLB recarregado. Recursos após retry não cresceram; contagem menor depende
+do aquecimento de uploads, não prova isoladamente ausência de todo vazamento.
+Teste unitário cobre ownership/dispose. Sem aprovação subjetiva premium ou
+escuta humana. P1 estojo/controle permanece pendente; encerrar neste marco.

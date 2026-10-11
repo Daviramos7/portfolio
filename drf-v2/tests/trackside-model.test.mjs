@@ -19,12 +19,12 @@ test('original external monoposto has four closed wheels, finite normals, X axle
   let triangles=0;car.traverse(o=>{if(o.geometry){for(const key of ['position','normal'])assert.ok([...o.geometry.attributes[key].array].every(Number.isFinite));triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3}})
   assert.ok(triangles<10000,'small passing model has a bounded topology budget');assert.ok(car.getObjectByName('open-cockpit-seat'));assert.ok(car.getObjectByName('tapered-nose'));r.dispose()
 })
-test('shallow track bend stays outside workshop and separator, turns continuously, and reverses symmetrically',()=>{
+test('track bend stays outside workshop and separator, turns continuously, and reverses symmetrically',()=>{
   const {r,car}=fixture(),separator=createTrackOpening(r).track.getObjectByName('low-paddock-separator');let previous=null
   for(let i=0;i<=100;i++){
-    const p=i/100,pose=tracksidePose(event,p);car.position.set(...pose.position);car.rotation.y=pose.yaw;car.updateMatrixWorld(true)
+    const p=i/100,pose=tracksidePose(event,p);car.scale.setScalar(tracksideRoute.vehicleScale);car.position.set(...pose.position);car.rotation.y=pose.yaw;car.updateMatrixWorld(true)
     const bounds=new Box3().setFromObject(car);assert.ok(bounds.max.z<-6.8,'car never crosses workshop wall');assert.ok(bounds.min.z>separator.position.z+.175,'car stays ahead of separator')
-    if(previous){assert.ok(Math.abs(pose.yaw-previous.yaw)<.02);assert.ok(pose.position[0]>previous.position[0])}previous=pose
+    if(previous){assert.ok(Math.abs(pose.yaw-previous.yaw)<.12,'continuous tangent without abrupt turns');assert.ok(pose.position[0]>previous.position[0])}previous=pose
     const reverse=tracksidePose({...event,direction:'right-to-left'},1-p);assert.ok(new Vector3(...reverse.position).distanceTo(new Vector3(...pose.position))<1e-8)
     assert.ok(Math.abs(Math.sin(reverse.yaw-pose.yaw))<1e-8)
   }

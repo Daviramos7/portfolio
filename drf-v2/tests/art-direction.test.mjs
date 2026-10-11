@@ -37,7 +37,8 @@ test('pit lane stays outside the garage with a low separator behind its route',(
   assert.ok(barrier.position.z<tracksideRoute.start[2])
   const vehicle=createTrackPass(r,opening).vehicle
   assert.ok(new Box3().setFromObject(barrier).getSize(new Vector3()).y<new Box3().setFromObject(vehicle).getSize(new Vector3()).y*.6,'separator is lower than the passing vehicle')
-  assert.equal(tracksideRoute.start[2],tracksideRoute.end[2]);r.dispose()
+  for(const endpoint of [tracksideRoute.start,tracksideRoute.end])assert.ok(endpoint[2]<-6.6&&endpoint[2]>barrier.position.z,'both ends remain outside garage and ahead of separator')
+  r.dispose()
 })
 test('five distinct ambient indicators move without uploading canvas or changing source facts',()=>{
   const ctx=new Proxy({measureText:t=>({width:t.length*12})},{get:(o,k)=>o[k]??(()=>{})})
