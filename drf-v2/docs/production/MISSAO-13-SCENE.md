@@ -150,3 +150,70 @@ pixels. Chrome instalado headless com WebGL real/mobile emulado; telefone físic
 GPU/performance física, escuta de áudio e percepção humana de velocidade não
 medidos. Nenhuma alteração de áudio/Easter/Canvas além do suporte estrutural.
 Encerrar preview e aguardar Lead, sem iniciar outras frentes.
+
+## P1 — cinco detalhes e legibilidade Canvas
+
+Base integrada a43a35a, FF seguro de tree limpa, branch feat/drf-engineering-3d.
+Exatamente cinco famílias continuam passivas; não há clique/ação nova nos objetos:
+- Garagem: REC/PE no suporte da abertura, agora em x=-3,92/y=3,05/z=-6,09,
+  placa à frente da estrutura e suspensão ligada ao cabeçalho. Ponte/ondas autorais.
+- Pit wall: estojo tricolor em4,46/1,17/-4,12; tampa, cantos arredondados,
+  alça semicircular, dobradiças e fechos. Nenhum escudo/logotipo.
+- Telemetria: cartão observar/testar/iterar em-7,22/1,39/-4,18; apoio coerente,
+  área gráfica maior, sem fatos/métricas novos. Diagrama científico DEMO.
+- Estratégia: controle360 em7,09/1,50/3,08, pegas curvas e espessura real;
+  sem marca/silhueta oficial. Pegas acima da bancada, suporte atrás da carcaça.
+  O bloco invasivo era o anchor leve trackside, não o controle: foi recuado para
+  7,55/1,23/0,9 na mesma bancada; relógio/efeito/restauração continuam iguais.
+- Perfil: handgrip em-6,96/0,998/2,90; mola e pegas desobstruídas, legenda
+  abaixo do equipamento, base apoiada no banco. Não se inventa rotina pessoal.
+
+Pista visual curta PT/EN no tooltip já existente de hover/foco dos hotspots,
+com descrição equivalente por aria-describedby. Clique permanece SELECT_TARGET
+para zona; descoberta dos objetos é observação, não interação com eles. Não se
+considera frustum nem aria-describedby prova de descoberta visual. Em320 as formas
+são reconhecíveis, mas REC/PE e constância/360 são inscrições pequenas; texto do
+handgrip não é legível nessa captura. Tooltip das estações laterais oferece
+contexto legível. Texto completo no bitmap não garante leitura confortável dos monitores pequenos em320; HTML segue equivalente. Na Garagem mobile a Ficha Completa recobre parte do tooltip e
+boa parte do hero; dependência de composição da UI, não corrigida nesta frente.
+Placa vizinha REC continua contextual à Garagem e pode cortar na vista Telemetria.
+
+Canvas usa Barlow Condensed700/Geist Variable existentes, sem alterar arquivos
+fontes. document.fonts.load carrega ambas; completion provoca um redesenho por
+surface + um invalidate demand. Dispose cancela callbacks tardios; sem polling,
+RAF/timer novo ou upload por frame. Falha preserva texto fallback legível.
+Quebra por measureText, sem fillText(maxWidth) para títulos/stack/status e sem
+interromper linhas por y. Fit inclui todos os blocos com corpo mínimo18px;
+overflow explícito indica leitura HTML, nunca diz que coube ao ocultar dados.
+Todos os9 projetos/status disponíveis em PT/EN e1440/390/320:54 auditorias,
+fator final1, título38px/corpo27px, fits=true. Metadados sceneScreenLayouts
+atualizam em mudança de conteúdo/locale ou fontes, não por frame. Fonte do
+conteúdo segue exclusivamente screenLines; nenhum catálogo paralelo/API.
+Identificação/título das placas ganhou folga vertical para evitar colisão.
+
+Evidência sob .agent-grid/screenshots/mission-13, raiz do repositório:
+p1-before/ e p1-after/: mesmas cinco poses PT/EN1440/390/320; projetos mais
+longos capturados PT/EN no after (before de seleção somente PT). qa.json contém
+54 auditorias reais do Canvas com fontes carregadas. p1-title-final/ confirma o título de Estratégia com folga após ajuste final. p1-final-hints/ contém
+foco real das cinco zonas320 e Estratégia1440 após limpeza do texto público e
+folga final de título. p1-hints/ é inspeção preliminar anterior à limpeza, não
+prova do texto final. p1-smoke/: smoke integrado. Prova natural de passagem
+reutilizada do Lead em integrated-pass/results.json:18 frames PT/EN três
+viewports, nova UI default, áudioOFF eGLBloaded. Externa íntegra no miolo,
+entrada/saída cortam; não reivindicar visibilidade integral do percurso.
+
+Cinco detalhes somam2.344 triângulos (<2.500), um atlas512×512 compartilhado,
+sem arquivo asset/textura adicional. Máximos nas poses estáticas: desktop89→91
+calls/66.872→67.348tri; mobile75→75calls/63.304→63.564tri. Texturas máximas29
+/24. Contagens renderer.info, não FPS nem garantia de picos. SceneRoot662,81kB/
+gzip174,48; base658,17/gzip172,50. DPR/MSAA/shadow budgets preservados.
+Áudio, GLB, rota e câmera intactos; única mudança trackside é posição do anchor.
+
+Lint/build e60core PASS. Testes novos cobrem Unicode/quebra/fonte mínima/overflow,
+callback de fontes exactly-once e dispose antes da conclusão, cinco descrições
+curtas e pegas fora da bancada. Testes existentes mantêm cinco zonas, bounds,
+framing, atlas locale-only, topologia e dispose. Smoke13 grupos PASS em build
+estável; primeiro run teve404 de fonte durante rebuild concorrente, preservado
+como falha de harness, não usado como aprovação. Chrome instalado headless,
+mobile emulado: sem teste físico, escuta humana ou performance/GPU física.
+Sem refinamentos/fase adicional; encerrar preview próprio, commit exclusivo.

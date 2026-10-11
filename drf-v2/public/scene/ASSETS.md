@@ -183,3 +183,14 @@ suspensão e rodas construídos neste script. Cinco materiais; 13.710 triângulo
 por veículo, incluindo quatro rodas com geometria compartilhada. Sem imagens
 embutidas; a cena reutiliza seus materiais existentes. Studio/luzes/câmera de
 revisão não são exportados. Fallback procedural anterior preservado.
+
+## Missão 13 P1 — cinco detalhes autorais refinados
+
+Fonte `src/scene/garage/personalDetails.ts`: carcaça360 com pegas curvas,
+estojo de cantos arredondados/tampa/alça/fechos, suporte REC/PE, cartão e
+handgrip. Cinco famílias originais,2.344 triângulos; atlas Canvas512×512
+existente compartilhado. Sem modelo/logo/sample/download ou asset novo.
+RoundedBoxGeometry é helper da Three instalada, não asset de terceiros.
+Barlow Condensed700 e Geist Variable existentes são carregadas pelos nomes
+CSS locais; arquivos/licenças das fontes não foram alterados. Meshes/mapas
+continuam sob dispose de Resources. Termos do repositório; sem atribuição CC0.

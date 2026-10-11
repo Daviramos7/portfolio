@@ -32,7 +32,7 @@ export function createTrackOpening(r: Resources) {
   const reflection = new Group()
   reflection.name = 'opening-reflection-anchor'
   reflection.position.set(0, .02, -4.8)
-  const lightweight = r.box(anchors, [.14, .22, .14], [6.6, 1.23, 3.4], white)
+  const lightweight = r.box(anchors, [.14, .22, .14], [7.55, 1.23, .9], white)
   lightweight.name = 'lightweight-object-rest-pose'
   const restPosition = lightweight.position.clone()
   const restQuaternion = lightweight.quaternion.clone()

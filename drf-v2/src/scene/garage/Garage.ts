@@ -217,5 +217,7 @@ export function createGarage(r: Resources) {
     projectSigns.forEach((sign, i) => sign.setText(ordered[i]?.label[locale] ?? 'DRF-01', locale === 'pt' ? 'PROGRAMAS / PROJETO' : 'PROGRAMMES / PROJECT'))
     team.setText('DRF ENGINEERING', locale === 'pt' ? 'RECIFE / BRASIL · EQUIPE FICTÍCIA' : 'RECIFE / BRAZIL · FICTIONAL TEAM')
   }
-  return { garage, updateLabels, updateAmbient, get screenUploads(){return screens.reduce((sum,screen)=>sum+screen.uploadVersion,0)} }
+  return { garage, updateLabels, updateAmbient,
+    get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},
+    get screenUploads(){return screens.reduce((sum,screen)=>sum+screen.uploadVersion,0)} }
 }

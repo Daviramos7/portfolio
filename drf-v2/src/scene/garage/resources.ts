@@ -1,10 +1,23 @@
 import { BoxGeometry, CanvasTexture, CylinderGeometry, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
 import type { BufferGeometry, Group, Material, Texture } from 'three'
 import { createFloorSurface } from './floorSurface.ts'
+import { bodyFont, fitCanvasBlocks } from './canvasText.ts'
 
 export type Vec3 = readonly [number, number, number]
 
-export function createResources() {
+  export function createResources(invalidate: () => void = () => {}) {
+    let released = false, fontsReady = false
+    const fontListeners = new Set<() => void>()
+    if (document.fonts?.load) {
+      void Promise.all([document.fonts.load('700 38px "Barlow Condensed"'), document.fonts.load('500 27px "Geist Variable"')])
+        .then(results => {
+          if (released || results.some(result => result.length === 0)) return
+          fontsReady = true
+          for (const redraw of fontListeners) redraw()
+          fontListeners.clear(); invalidate()
+        }).catch(() => { /* Readable fallback remains; no repeated font polling. */ })
+    }
+    function onFontsReady(redraw: () => void) { if (released) return; if (fontsReady) redraw(); else fontListeners.add(redraw) }
   const geometries = new Set<BufferGeometry>(), materials = new Set<Material>()
   const textures = new Set<Texture>(), instances = new Set<InstancedMesh>()
   function geometry<T extends BufferGeometry>(resource: T): T { geometries.add(resource); return resource }
@@ -103,29 +116,23 @@ export function createResources() {
     const ctx = canvas.getContext('2d'), map = texture(new CanvasTexture(canvas)); map.colorSpace = SRGBColorSpace
     const mat = material(new MeshBasicMaterial({ map, toneMapped: false }))
     const object = mesh(parent, geometry(new PlaneGeometry(...size)), mat, position); object.castShadow = false
+    let currentLabel=text, currentDetail='DRF / ENGINEERING'
     const setText = (label: string, detail = 'DRF / ENGINEERING') => {
+      currentLabel=label;currentDetail=detail
       if (!ctx) return
       ctx.fillStyle = '#111820'; ctx.fillRect(0, 0, 1024, 256)
       ctx.fillStyle = '#a41431'; ctx.fillRect(0, 0, 8, 256)
-      ctx.fillStyle = '#a4b5c1'; ctx.font = '500 22px sans-serif'; ctx.fillText(detail.toUpperCase(), 34, 47, 950)
-      ctx.fillStyle = '#e9f0f2'; ctx.font = '600 50px sans-serif'
+      ctx.fillStyle = '#a4b5c1'; ctx.font = `500 22px ${bodyFont}`; ctx.fillText(detail.toUpperCase(), 34, 47)
+      ctx.fillStyle = '#e9f0f2'
       const title = label.toUpperCase()
-      if (ctx.measureText(title).width <= 950) ctx.fillText(title, 32, 143)
-      else {
-        // Physical programme displays retain readable letter proportions for long labels.
-        ctx.font = '600 44px sans-serif'
-        const words = title.split(' '), lines = ['']
-        for (const word of words) {
-          const candidate = [lines[lines.length - 1], word].filter(Boolean).join(' ')
-          if (lines.length < 2 && ctx.measureText(candidate).width > 950) lines.push(word)
-          else lines[lines.length - 1] = candidate
-        }
-        lines.forEach((line, index) => ctx.fillText(line, 32, 118 + index * 58, 950))
-      }
+      const layout=fitCanvasBlocks(ctx,[title],950,128,64)
+      object.userData.textFits=layout.fits
+      for(const block of layout.blocks){ctx.font=`700 ${block.font}px ${block.family}`;block.lines.forEach((line,index)=>ctx.fillText(line,32,(block.lines.length>1?118:143)+index*block.font*1.3))}
+      if(!layout.fits){ctx.font=`500 24px ${bodyFont}`;ctx.fillText('DRF · HTML',32,120)}
       ctx.fillStyle = '#293843'; ctx.fillRect(34, 197, 953, 2)
       ctx.fillStyle = '#bc2946'; ctx.fillRect(34, 197, 100, 2); map.needsUpdate = true
     }
-    setText(text); return { object, setText }
+    setText(text);onFontsReady(()=>setText(currentLabel,currentDetail));return { object, setText }
   }
   function batch(parent: Group) {
     parent.updateMatrixWorld(true); const inverse = new Matrix4().copy(parent.matrixWorld).invert()
@@ -144,12 +151,14 @@ export function createResources() {
     }
   }
   function dispose() {
+    if (released) return
+    released = true; fontListeners.clear()
     for (const item of instances) item.dispose()
     for (const item of textures) item.dispose()
     for (const item of geometries) item.dispose()
     for (const item of materials) item.dispose()
     instances.clear(); textures.clear(); geometries.clear(); materials.clear()
   }
-  return { geometry, material, texture, palette, box, rod, mesh, sign, batch, dispose }
+  return { geometry, material, texture, palette, box, rod, mesh, sign, batch, dispose, onFontsReady }
 }
 export type Resources = ReturnType<typeof createResources>
