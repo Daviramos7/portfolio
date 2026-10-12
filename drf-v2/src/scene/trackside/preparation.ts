@@ -2,8 +2,8 @@ import type { CarPass, ExperienceState } from '../../contracts/index.ts'
 
 // Original route and envelopes, driven by the renderer's single monotonic clock.
 export const tracksideRoute = {
-  start: [-16.8, 1.55, -27.6] as const,
-  end: [11.2, 1.55, -14.6] as const,
+  start: [-16.8, -.007, -27.6] as const,
+  end: [11.2, -.007, -14.6] as const,
   bendZ: -11.2,
   depth: 9.9,
   approachSkew: 6.5,
