@@ -1,28 +1,26 @@
-import { Group, PlaneGeometry } from 'three'
+import { Group } from 'three'
 import type { Resources } from '../garage/resources.ts'
+import { tracksideRoute } from './preparation.ts'
 
 export function createTrackOpening(r: Resources) {
   const track = new Group()
   track.name = 'trackside-static-opening'
   const { carbon, red, white, metal, concrete: floor } = r.palette
-  r.box(track, [60, .1, 18], [0, -.1, -13], floor)
-  // Track terrace rests on a retaining foundation; access is a shallow lateral ramp.
-  const deck=r.box(track, [60, 1.545, 26], [0, .7725, -20.75], floor);deck.name='supported-service-lane'
-  r.box(track, [60, .07, 26], [0, 1.515, -20.75], carbon)
-  const rise=1.55, run=14
-  const apronShape=r.geometry(new PlaneGeometry(Math.hypot(rise,run),26));apronShape.rotateX(-Math.PI/2)
-  const apron=r.mesh(track,apronShape,floor,[-37,rise/2,-20.75])
-  apron.rotation.z=Math.atan(rise/run);apron.name='service-lane-access-ramp'
-  for (const z of [-7.75, -33.75]) r.box(track, [60, .015, .1], [0, 1.565, z], white)
-  for (let x = -24; x <= 24; x += 2) r.box(track, [2, .03, .4], [x, 1.565, -33.35], x % 4 === 0 ? red : white)
+  // Garage finish is y=-.007. A 5mm drainage fall to the apron is not a raised terrace.
+  const groundY=tracksideRoute.start[1]
+  const apron=r.box(track, [60, .14, 40], [0, -.082, -21.4], floor);apron.name='level-service-apron'
+  // Begin at the garage floor's rear edge z=-8.5, avoiding overlapping coplanar finishes.
+  const lane=r.box(track, [60, .07, 25.25], [0, groundY-.035, -21.125], carbon);lane.name='supported-service-lane'
+  for (const z of [-8.5, -33.75]) r.box(track, [60, .002, .1], [0, groundY+.001, z], white)
+  for (let x = -24; x <= 24; x += 2) r.box(track, [2, .03, .4], [x, groundY+.015, -33.35], x % 4 === 0 ? red : white)
   // A low separator behind the lane, with fencing at its flanks. No bars across the pit sightline.
-  const barrier=r.box(track, [60, .42, .35], [0, 1.76, -33.6], floor);barrier.name='low-paddock-separator'
+  const barrier=r.box(track, [60, .42, .35], [0, groundY+.21, -33.6], floor);barrier.name='low-paddock-separator'
   r.box(track, [46, .16, 7.8], [0, 4.2, -37], carbon)
   for (let x = -20; x <= 20; x += 4) {
     r.rod(track, [x, .2, -38], [x, 4.15, -38], .08, metal)
-    if(Math.abs(x)>=8)r.rod(track, [x, 1.97, -33.7], [x, 4.2, -33.7], .025, metal)
+    if(Math.abs(x)>=8)r.rod(track, [x, groundY+.42, -33.7], [x, 4.2, -33.7], .025, metal)
   }
-  for (const y of [1.1, 1.45, 1.8, 2.15])for(const side of [-1,1])r.rod(track, [side*8, y+1.55, -33.7], [side*24, y+1.55, -33.7], .012, metal)
+  for (const y of [1.1, 1.45, 1.8, 2.15])for(const side of [-1,1])r.rod(track, [side*8, y+groundY, -33.7], [side*24, y+groundY, -33.7], .012, metal)
   // Abstract local horizon; original low-poly industrial/coastal forms.
   for (let n = 0; n < 12; n++) {
     const height = 1 + (n * 7 % 5) * .45
