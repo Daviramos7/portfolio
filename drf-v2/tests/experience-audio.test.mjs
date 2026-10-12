@@ -1,10 +1,10 @@
 import test from 'node:test'
 import assert from 'node:assert/strict'
-import { createTrackAudio, audioRoomEligible, safeAudioVolume, passAudioWindow } from '../src/scene/trackside/audio.ts'
+import { createTrackAudio, audioRoomEligible, safeAudioVolume, passAudioWindow, recordingCalibration } from '../src/scene/trackside/audio.ts'
 
 const state = { mode:'immersive',renderStatus:'ready',documentVisible:true,panelOpen:false,ambientEnabled:true,reducedMotion:false,audio:'on',audioVolume:.25 }
 const event = {id:'first',startMs:0,durationMs:4000,direction:'left-to-right'}
-function param(){return {value:0,cancelScheduledValues(){},setValueAtTime(v){this.value=v},linearRampToValueAtTime(v){this.value=v},setTargetAtTime(v){this.value=v}}}
+function param(){return {value:0,cancelScheduledValues(){},setValueAtTime(v){this.value=v},linearRampToValueAtTime(v){this.value=v},setValueCurveAtTime(curve){this.value=curve.at(-1)},setTargetAtTime(v){this.value=v}}}
 function buffer(channels=2,length=48000,rate=48000){const data=Array.from({length:channels},()=>new Float32Array(length).fill(.2));return {numberOfChannels:channels,length,sampleRate:rate,duration:length/rate,getChannelData:c=>data[c],copyToChannel:(src,c)=>data[c].set(src)}}
 function fixture(overrides={}){
   const nodes=[],contexts=[];let requests=0
@@ -23,8 +23,8 @@ test('volume/state updates never create context or request samples before gestur
 })
 test('available requires real decode/resume; sources are distinct recorded buffers and bounded',async()=>{
   const f=fixture();assert.equal(await f.audio.requestAudioFromGesture(),'on');f.audio.update(state)
-  assert.equal(f.requests,3);assert.equal(f.audio.diagnostics.assets,3);assert.equal(f.audio.diagnostics.roomSources,2)
-  assert.equal(f.nodes.filter(n=>n.started).length,2);assert.ok(f.audio.diagnostics.masterGain>0)
+  assert.equal(f.requests,3);assert.equal(f.audio.diagnostics.assets,3);assert.equal(f.audio.diagnostics.roomSources,3)
+  assert.equal(f.nodes.filter(n=>n.started).length,3);assert.ok(f.audio.diagnostics.masterGain>0)
   f.audio.setAudioVolume(0);assert.equal(f.audio.diagnostics.masterGain,0)
   f.audio.muteAudio();assert.equal(f.ctx.state,'closed');assert.equal(f.audio.diagnostics.assets,0);assert.ok(f.nodes.filter(n=>n.started).every(n=>n.stopped&&n.disconnected));f.audio.muteAudio();f.audio.dispose()
 })
@@ -61,20 +61,20 @@ test('shorter passes select a central source window without changing original pi
 })
 
 // Fake AudioContext clock: policy/scheduling evidence, never an auditory benchmark.
-test('native one-shot room excerpts have deterministic pauses and no same-layer overlap',async()=>{
+test('continuous base crossfades deterministically while workshop remains sparse',async()=>{
   const f=fixture({context:{decodeAudioData:async()=>buffer(2,48_000*30)},options:{random:()=>.5}})
   f.audio.update(state);await f.audio.requestAudioFromGesture()
   const sources=()=>f.nodes.filter(n=>n.started)
-  const ventilation=sources()[0],workshop=sources()[1]
+  const ventilation=sources()[0],workshop=sources()[2]
   assert.equal(ventilation.loop,false);assert.equal(workshop.loop,false)
-  assert.deepEqual(ventilation.startArgs,[.1,3,10])
+  assert.deepEqual(ventilation.startArgs,[.03,0,30]);assert.deepEqual(sources()[1].startArgs,[26.03,0,30])
   assert.deepEqual(workshop.startArgs,[32,9.75,4.5])
   f.ctx.currentTime=36.5;workshop.onended()
   const next=sources().at(-1)
   assert.equal(next.startArgs[0],68.5)
   assert.equal(workshop.disconnected,true)
-  assert.equal(f.audio.diagnostics.roomSources,2)
-  assert.deepEqual(f.audio.diagnostics.roomCounts,[1,2])
+  assert.equal(f.audio.diagnostics.roomSources,3)
+  assert.deepEqual(f.audio.diagnostics.roomCounts,[2,2])
   f.audio.dispose();assert.ok(sources().every(n=>n.stopped&&n.disconnected))
 })
 
@@ -85,7 +85,7 @@ test('hide/recruiter/not-ready/zero cancel queued room events; stale ended callb
     f.audio.update({...state,...change})
     assert.equal(f.audio.diagnostics.roomSources,0);assert.equal(f.audio.diagnostics.masterGain,0)
     assert.ok(voices.every(n=>n.stopped&&n.disconnected&&n.onended===null))
-    callbacks.forEach(fn=>fn());assert.equal(f.nodes.filter(n=>n.started).length,2)
+    callbacks.forEach(fn=>fn());assert.equal(f.nodes.filter(n=>n.started).length,3)
     f.audio.dispose()
   }
 })
@@ -93,7 +93,7 @@ test('hide/recruiter/not-ready/zero cancel queued room events; stale ended callb
 test('a pass cancels workshop including queued events and leaves supplied spatial pose intact',async()=>{
   const f=fixture({context:{decodeAudioData:async()=>buffer(2,48_000*30)},options:{random:()=>.5}})
   f.audio.update(state);await f.audio.requestAudioFromGesture()
-  const workshop=f.nodes.filter(n=>n.started)[1]
+  const workshop=f.nodes.filter(n=>n.started)[2]
   f.ctx.currentTime=5
   f.audio.updatePass(event,.5,true,[3,1,-8],[0,2,8],[0,0,-1])
   assert.equal(workshop.stopped,true)
@@ -106,5 +106,41 @@ test('a pass cancels workshop including queued events and leaves supplied spatia
   assert.equal(pass.playbackRate.value,1)
   f.audio.setAudioVolume(0)
   assert.equal(pass.stopped,true);assert.equal(f.audio.diagnostics.passId,null)
+  f.audio.dispose()
+})
+
+test('PCM calibration is bounded by RMS target, gain cap and peak ceiling; silence stays silent',()=>{
+  const loud=recordingCalibration(buffer(),.0024,.24,.025)
+  assert.ok(Math.abs(loud.rms-.2)<1e-6);assert.ok(loud.gain<=.24)
+  assert.ok(loud.gain*loud.peak<=.025);assert.ok(loud.gain*loud.rms<=.0024)
+  const silent=buffer();silent.getChannelData(0).fill(0);silent.getChannelData(1).fill(0)
+  assert.equal(recordingCalibration(silent,.0024,.24,.025).gain,0)
+})
+
+test('DEV solo cannot grant consent and restores all layers without changing volume or context',async()=>{
+  const f=fixture();assert.equal(f.audio.debugSolo('ventilation'),false)
+  assert.equal(f.contexts.length,0);assert.equal(f.requests,0)
+  f.audio.update(state);await f.audio.requestAudioFromGesture()
+  assert.equal(f.audio.debugSolo('ventilation'),true)
+  assert.deepEqual(f.audio.diagnostics.layers.map(l=>l.mixGain),[1,0,0])
+  assert.equal(f.audio.diagnostics.volume,.25)
+  assert.equal(f.audio.debugSolo(null),true)
+  assert.deepEqual(f.audio.diagnostics.layers.map(l=>l.mixGain),[1,1,1])
+  f.audio.muteAudio();assert.equal(f.audio.debugSolo('pass'),false)
+  assert.equal(f.audio.diagnostics.solo,null);f.audio.dispose()
+})
+
+test('crossfade replenishes only one successor and recovery clears the old native timeline',async()=>{
+  const f=fixture({context:{decodeAudioData:async()=>buffer(2,48_000*80)},options:{random:()=>.5}})
+  f.audio.update(state);await f.audio.requestAudioFromGesture()
+  const first=f.nodes.filter(n=>n.started)[0]
+  assert.deepEqual(first.startArgs,[.03,16,48])
+  f.ctx.currentTime=48.03;first.onended()
+  const base=f.audio.diagnostics.roomSchedule.filter(v=>v.layer===0)
+  assert.equal(base.length,2);assert.ok(Math.abs(base[1].start-(base[0].end-4))<1e-8)
+  f.audio.update({...state,documentVisible:false});assert.equal(f.audio.diagnostics.roomSources,0)
+  f.ctx.currentTime=60;f.audio.update(state);await Promise.resolve()
+  const restored=f.audio.diagnostics.roomSchedule.filter(v=>v.layer===0)
+  assert.equal(restored.length,2);assert.equal(restored[0].start,60.03)
   f.audio.dispose()
 })
