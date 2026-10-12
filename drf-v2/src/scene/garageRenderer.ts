@@ -279,7 +279,9 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   }
 
   if (import.meta.env.DEV) {
-    (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { audio: () => audio.diagnostics, trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
+    (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { audio: () => audio.diagnostics,
+      solo: (layer: 'ventilation' | 'workshop' | 'pass' | null) => audio.debugSolo(layer),
+      trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
       if (!scheduler.requestSoon(trackTimeMs, direction, 2400)) return false
       requestFrame(); return true
