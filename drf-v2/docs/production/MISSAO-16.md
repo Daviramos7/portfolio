@@ -210,3 +210,69 @@ Aprovação do Davi: pendente.
   ~45 m/s ajustável; curva à direita; show car girando devagar; reduced motion com carros parados no grid/pit
   (saída do pit animada só com movimento ligado; volta ao pit sem animação); fatiada em **4a/4b/4c com gate**.
   Registro completo em `docs\design\M16-FASE4-DESENHO.md` §8.
+
+## Fase 4a — estrutura da sala elevada (branch `feat/m16-fase4a`, sem merge)
+
+**Limite exato da 4a.** Dentro: sala subida H = 4,5 m; boxes embaixo (3 vãos abertos no nível da M15, `y = −0,007`);
+fachada de vidro falso (montantes a cada 2,4 m, travessa a 2,6 m, peitoril de 0,25 m, guarda-corpo a 1,05 m, testa da
+laje); anel de piso do show car (sem giro, sem elevar o carro); trajetórias das 5 estações iguais em forma; alvo de
+telemetria/pit wall rebaixado **só no desktop**. Fora (4b/4c): corrida e spline, horizonte de Recife, muro/pórtico do
+pit, placas 100/50, zebras, giro do show car, carros no pit com reduced motion. A passagem da M15 continua como está.
+
+**Como.** Novo grupo `elevated-technical-room` (`y = 4,5`) com a garagem, as luzes internas, os volumes de clique e a
+**câmera como filha**. Os enquadramentos continuam nos mesmos números (coordenadas da sala), então os caminhos têm a
+mesma forma por construção. Só o `lookAt`, o ouvinte de áudio e a projeção dos rótulos HTML convertem para o mundo.
+Pista, passagem e boxes ficam no chão. `data-scene-room-elevation = 4.5`.
+
+**Alvo de telemetria/pit wall.** Desktop: `lookAt.y` 1,7/1,8 → **1,5** (o mais baixo que mantém a placa de zona
+inteira; com 1,2 a placa cortava). Mobile: **sem mudança** — a laje esconde o chão até z −31 dali, então rebaixar
+não revelaria a corrida e só pioraria a composição aprovada.
+
+**⚠ Achado de desenho (corrige o `M16-FASE4-DESENHO.md` §2): a laje esconde a pista.** A borda do piso (peitoril em
+y 4,75 no mundo, z −6,6) corta a linha de visão. Chão visível pelo vidro:
+
+| Câmera | Chão visível a partir de | Reta prevista (z −26)? |
+| --- | --- | --- |
+| hero desktop / mobile | z ≤ −47 | **não** |
+| telemetria / pit wall desktop | z ≤ −25 | no limite |
+| telemetria / pit wall mobile | z ≤ −31 | **não** |
+
+Consequências: (1) do hero, o vidro mostra só névoa/céu; (2) a passagem da M15 (z −10…−28) **não aparece mais no
+hero** — o teste `trackside-glb` "viewport/opening" foi atualizado para a geometria real, **falha** com ela e ficou
+com `skip` explícito até a 4b; (3) o pit lane e os boxes não aparecem de nenhuma estação. Na projeção do §2 eu conferi
+"cabe no quadro", mas não a oclusão pela laje: erro meu. Opções para a 4b (decisão do Davi): **reta mais longe**
+(z −50…−60, como a reta oposta vista de um Paddock Club; carro ≈ 7% da largura da tela, névoa empurrada), H menor
+(~2,5 m, vira mezanino), piso em degrau perto do vidro, ou câmeras mais perto do vidro (mexe em trajetória aprovada).
+Cálculo: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fase4a\oclusao-laje.py` / `.txt`.
+
+**Medidas (Chrome headless, ANGLE D3D11, RTX 3060, DPR 1)**
+
+| Enquadramento | Antes: calls / tri | Depois: calls / tri |
+| --- | --- | --- |
+| hero 1440 | 91 / 67.334 | 103 / 70.260 |
+| telemetria 1440 | 37 / 35.484 | 49 / 38.410 |
+| pit wall 1440 | 29 / 15.878 | 41 / 18.804 |
+| hero 390 e 320 | 75 / 63.550 | 87 / 66.476 |
+| telemetria 390 e 320 | 34 / 15.772 | 44 / 18.410 |
++12 calls em todo enquadramento, inclusive onde os boxes não aparecem: os lotes instanciados têm esfera envolvente
+grande e não são descartados pelo frustum. Dá para recuperar na 4b (mesclar o nível do pit, ou esconder quando fora de
+vista). Sem FPS medido.
+
+**Validação**
+- `npm run lint` OK; `npm run build` OK (alerta de chunk > 500 kB conhecido; SceneRoot 673,7 kB).
+- `node --test tests/*.test.mjs`: **93 pass, 0 fail, 1 skip** (o `trackside-glb` acima). Novo
+  `elevated-room.test.mjs` (5): posições aprovadas idênticas, só dois alvos desktop mudam e só em y, fachada aberta
+  (raios no meio de cada vão chegam primeiro ao vidro), boxes no nível da M15 até a laje, anel sem elevar o carro.
+- `browser-smoke.mjs` (preview 5175): exit 0, console e rede sem erros.
+- Capturas antes/depois, 1440×900 / 390×844 / 320×844: 5 estações em PT com movimento, hero em EN e hero com reduced
+  motion (21 por build), sem erros de console. Comparativos `cmp-*.png`.
+
+**Evidência**: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fase4a\`
+(`before-*`, `after-*`, `cmp-*`, `*-report.json`, `browser-smoke.txt`, `smoke\`, `oclusao-laje.*`,
+`trackside-glb.unskipped.test.mjs` = o teste sem `skip`, para reproduzir a falha). Build da base:
+`...\.agent-grid\m16-4a-before-dist\`.
+
+**Limites**: sem telefone físico, sem FPS. Vidro falso calibrado só no olho (opacidade 0,1). O topo das placas de
+telemetria/pit wall ficou sob a faixa do cabeçalho do HUD no desktop (texto legível; borda superior encostada).
+
+Aprovação do Davi: pendente.

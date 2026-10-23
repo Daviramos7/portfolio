@@ -196,3 +196,10 @@ o movimento ligado, anima.
 
 Fase 3 no mesmo dia: rota de IA 3D da A5 aprovada (FLUX.2 klein 4B → rembg/BiRefNet → TripoSG sem `diso` → Blender,
 no Windows); D8 com **uma IA só** (TripoSG) por enquanto.
+
+## 9. Errata (implementação da 4a, 23/10/2026)
+
+O §2 conferiu se a pista cai **dentro do quadro**, mas não a **oclusão pela laje**. Com H = 4,5 m, a borda do piso
+esconde o chão mais perto que z ≈ −47 a partir do hero (desktop e mobile), z ≈ −25 de telemetria/pit wall no desktop e
+z ≈ −31 no mobile. A reta em z −26 do §3 **não é vista do hero**. Opções e medidas: `docs\production\MISSAO-16.md`,
+seção "Fase 4a". A posição da reta precisa de nova decisão antes da 4b.
