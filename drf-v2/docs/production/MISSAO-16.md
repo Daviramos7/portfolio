@@ -157,3 +157,46 @@ Aprovação do Davi: pendente.
   D12 sim (nota "sem vínculo com F1/FIA/equipes").
 - Impacto registrado no próprio documento: a cota da M15 (`y=-0,007`) só deixa de valer depois do desenho da Fase 4
   aprovado; cada trajetória de câmera nova precisa de aprovação do Davi.
+
+## Fase 3 — passo 1: inventário da IA 3D (sem baixar nada, 23/10/2026)
+
+Fontes: API pública do Hugging Face (`/api/models/<repo>?blobs=true`, tamanho real de cada arquivo), README/LICENSE
+de cada repo no HF e no GitHub, lidos em 23/10/2026. **Nenhum peso foi baixado.** Máquina conferida só por leitura.
+
+| Modelo | Licença (texto conferido) | Pesos necessários | VRAM (fonte) | Windows sem admin |
+| --- | --- | --- | --- | --- |
+| **Hunyuan3D 2.1** — só forma | Tencent Hunyuan Community: **não vale na UE, Reino Unido e Coreia do Sul**; 5.c proíbe "use, reproduce, modify, distribute, **or display** … Output … outside the Territory"; teto 1 mi MAU; AUP item 12: conteúdo público precisa dizer que é gerado por máquina | DiT 7,37 + VAE 0,66 + DINOv2-large 1,22 (Apache) + rembg/u2net ~0,18 ≈ **9,4 GB** (repo inteiro 14,9 GB com textura) | 10 GB forma, 21 GB textura (README oficial) | Suportado (README: Windows, Python 3.10, torch 2.5.1+cu124). Só forma não exige compilar. `requirements` puxa `bpy==4.0`, `open3d`, `cupy` |
+| **TripoSG** | MIT | 7,95 GB + RMBG-1.4 0,18 ≈ **8,1 GB** | > 8 GB (model card) | Python 3.10 (pina `numpy==1.22.3`). Depende de `diso` (extensão CUDA): **precisa compilar** → CUDA Toolkit + MSVC C++, que **não estão instalados** |
+| **Pixal3D** (main, base TRELLIS.2) — low-VRAM | MIT | pipeline 1 imagem: 24,1 GB (só forma ~17,6) + DINOv3 ViT-L 1,21 + RMBG-2.0 0,88 ≈ **26,2 GB** (repo inteiro 46 GB) | **sem número oficial**; low-VRAM carrega sob demanda a 1024; TRELLIS.2 pede 24 GB | **Improvável nativo**: TRELLIS.2 é Linux-first, `natten` compilado, extensões CUDA. Rota realista: WSL2 (já habilitado: distro `docker-desktop`) — instalar Ubuntu por usuário, a confirmar |
+| **FLUX.2 klein 4B** (conceito) | Apache 2.0 | transformer 7,75 + text encoder 8,05 + VAE 0,17 ≈ **16,0 GB** (não baixar também o single-file de 7,75) | ~13 GB (model card) → na 3060 só com `enable_model_cpu_offload()` (mais lento) | `diffusers` via pip; sem compilação |
+
+**Alertas de licença (mudam decisões)**
+1. **Hunyuan3D 2.1 × site público:** exibir saída fora do Território é proibido, e o portfólio abre na UE/RU/Coreia.
+   Não há como cumprir isso num site aberto. Recomendo **não usar Hunyuan em nada que vá para o site**; para o
+   teste da D8, trocar por **TripoSG × Direct3D-S2** (ambos MIT) ou TripoSG × Pixal3D. Decisão do Davi.
+2. **FLUX.2 klein 9B não é Apache:** o HF marca `flux-non-commercial-license` (gated). Só o **4B** é Apache 2.0.
+   O `M16-REFERENCIAS.md` §6.2 diz "4B/9B (Apache 2.0)": vale só para o 4B.
+3. **Removedores de fundo padrão:** TripoSG usa RMBG-1.4 e Pixal3D usa RMBG-2.0 (Bria, licença própria; 1.4 é
+   "non-commercial use"). Contornar: gerar o conceito em fundo liso e recortar com `rembg`/u2net (Apache) ou
+   BiRefNet (MIT), passando PNG já transparente.
+4. **DINOv3** (Pixal3D): gated com aprovação manual da Meta e licença própria; texto **não lido** (exige aceite).
+
+**Máquina (leitura)**: RTX 3060 12 GB, driver 610.88; Python 3.10/3.11/3.12 via `uv` (sem admin); sem CUDA Toolkit,
+sem `nvcc`, VS 2022 Community sem `vcvars64` (workload C++ ausente); WSL2 ativo; `C:\Users\davir\drf-ia3d\` ainda não
+existe. **Disco C: com 134 GB livres (93% usado).**
+
+**Total estimado** (pesos; ambientes Python ~5–8 GB cada, estimativa, não medido):
+- Rota recomendada (FLUX.2 klein 4B + TripoSG + Direct3D-S2 a levantar) ou (FLUX 4B + TripoSG + Hunyuan forma):
+  ~24–34 GB de pesos + ~15–20 GB de ambientes ≈ **40–55 GB**.
+- Com Pixal3D: + ~26 GB de pesos + ambiente WSL ≈ **75–90 GB** → aperta os 134 GB livres.
+
+Instalação sem admin em `C:\Users\davir\drf-ia3d\` (caminho ASCII): `uv venv --python 3.10` por modelo, torch cu124
+via wheel (traz o runtime CUDA, sem toolkit), `HF_HOME` apontando para `drf-ia3d\hf-cache`. Bloqueios: TripoSG
+(`diso`) e Pixal3D precisam de compilador CUDA; Visual Studio Build Tools/CUDA Toolkit normalmente pedem admin.
+Primeiro passo seguro: verificar se `diso` tem wheel pronto para Windows antes de qualquer instalação.
+
+Direct3D-S2 (MIT) aparece no §6.1 mas não estava na lista desta missão: tamanho e instalação **não levantados**.
+
+Parado aqui, como pedido. Nada baixado, nada instalado.
+
+Aprovação do Davi: pendente.
