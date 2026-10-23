@@ -1,2 +1,5 @@
 # skills de terceiros instaladas so neste projeto: nao versionar
 .claude/skills/
+
+# fila de missoes local (nao versionar)
+_fila/

@@ -88,3 +88,60 @@ Experimento **não aplicado** (revertido, fora do commit): DPR `low` = 2. As tel
 - Qualidade técnica não é aprovação visual.
 
 Aprovação do Davi: pendente.
+
+### Fase 1b — D11: DPR 1,5 no modo `low` com degradação automática (23/10/2026)
+
+Decisão do Davi (D11, `M16-REFERENCIAS.md`): DPR 1,5 no `low`, cai para 1 quando o frame time sustentado piora,
+sem oscilar. Missão vinda da fila (`_fila\01-m16-fases-1-2-3.md`).
+
+**O que mudou**
+- `src\scene\dprGovernor.ts` (novo, puro e testável): `low` e `balanced` com teto 1,5 (sempre ≤ `devicePixelRatio`).
+  Só o `low` adapta. Sinal: intervalo entre RAFs consecutivos (só com o loop rodando direto), suavizado por EWMA
+  (α = 0,1); amostras > 250 ms (GC, troca de aba) são descartadas.
+- Limites documentados no código (`dprPolicy`): **cai** para 1 após 2 s com média > 25 ms (< 40 fps);
+  **volta** para 1,5 só após 10 s com média < 18 ms (> 55 fps). Entre 18 e 25 ms não muda nada (histerese).
+  **Segunda degradação trava DPR 1 na sessão** (estado `latched`): no máximo uma volta, nunca vai-e-volta.
+- Loop parado, aba oculta, resize ou troca de qualidade zeram a média (sem herdar tendência), sem desfazer a queda.
+- `garageRenderer.ts`: `resize()` usa o governador; `render()` amostra e chama `resize()` na troca.
+  Novo `data-scene-dpr-state` (`full` / `degraded` / `latched`) para diagnóstico.
+- `tests\browser-smoke.mjs`: a asserção antiga "DPR mobile ≤ 1" virou "1,5 ou 1 (D11)"; o registro de medida
+  agora lê o DPR real em vez de escrever `1` fixo.
+
+**Antes/depois** (Chrome headless, ANGLE D3D11 na RTX 3060; `prefers-reduced-motion: no-preference`)
+
+| Enquadramento | Antes: DPR / canvas | Depois: DPR / canvas |
+| --- | --- | --- |
+| 1440×900 @1x (balanced) | 1 / 1440×900 | 1 / 1440×900 (igual) |
+| 1440×900 @2x (balanced) | 1,5 / 2160×1350 | 1,5 / 2160×1350 (igual) |
+| 390×844 @3x (low) | 1 / 390×844 | **1,5 / 585×1266** |
+| 320×844 @3x (low) | 1 / 320×844 | **1,5 / 480×1266** |
+
+Custo no mobile: 2,25× pixels por quadro (329 mil → 741 mil a 390). Visualmente as placas (REC / PE,
+GARAGEM / PROJETOS, telas) ficam mais nítidas (recorte lado a lado `compare-390-top.png`).
+
+**Degradação medida no navegador real** (390 @3x, 20 s por linha, amostra de 1 em 1 s, throttle de CPU do CDP):
+
+| CPU | Quadros renderizados em 20 s | Estado |
+| --- | --- | --- |
+| 1× | 575 (~29 fps, teto de 30 fps do ambiente) | `full` 1,5 o tempo todo |
+| 6× | 579 | `full` 1,5 o tempo todo |
+| 30× | 87 (~4 fps) | `full` até 3 s → `degraded` 1 aos 4 s, ficou em 1 até o fim (sem oscilar) |
+
+Metodologia: throttle de CPU emulado em desktop, **não é telefone físico**; fps = quadros renderizados ÷ tempo,
+não FPS de GPU. FPS em celular real continua **não medido**.
+
+**Validação**
+- `npm run lint` OK; `npm run build` OK (alerta de chunk > 500 kB conhecido).
+- `node --test tests/*.test.mjs`: **89/89** (novo `dpr-governor.test.mjs`, 7 testes: teto, pico curto não
+  derruba, queda sustentada derruba, histerese, trava na 2ª queda, `balanced` não adapta, `interrupt`).
+  Testes de navegador contra `vite preview` em 5175 (sem o preview, os 5 de UI falham por conexão, já na base).
+- `browser-smoke.mjs` (preview 5175): exit 0, console/rede sem erros; mobile 390/320 registrado com DPR 1,5.
+
+**Evidência**: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fase1-dpr\`
+(`before-*.png`, `after-*.png`, `compare-390-top.png`, `before-report.json`, `after-report.json` com a linha do
+tempo, `browser-smoke.txt`, `smoke\`). Build da base em `.agent-grid\m16-dpr-before-dist\`.
+
+**Limites**: sem telefone físico; o limiar de 25 ms foi escolhido por raciocínio (abaixo de 40 fps), não calibrado
+em aparelho. Tela de 30 Hz cairia para 1 (raro; documentado). Câmera, trajetórias e cota da M15 intocadas.
+
+Aprovação do Davi: pendente.

@@ -12,6 +12,7 @@ import { createTrackAudio } from './trackside/audio.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
+import { createDprGovernor } from './dprGovernor.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -50,6 +51,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let lastTimestamp: number | null = null, lastRenderedAt = 0, ambientTimeMs = 0
   let mobileFrame = false, invalidated = true
   let renderedFrames = 0
+  const dprGovernor = createDprGovernor(() => window.devicePixelRatio)
   const scheduler = createPassScheduler({ initialIntervalMs: [5000, 8000], ...config })
   const audio = createTrackAudio({ onUnavailable: () => onEvent({ type: 'AUDIO_STATUS', status: 'unavailable' }) })
   const audioForward = new Vector3()
@@ -145,7 +147,9 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     invalidated = true
     const width = canvas.clientWidth, height = canvas.clientHeight
     if (width < 1 || height < 1) return
-    const dpr = Math.min(window.devicePixelRatio || 1, state.quality === 'low' ? 1 : 1.5)
+    dprGovernor.setQuality(state.quality)
+    dprGovernor.interrupt()
+    const dpr = dprGovernor.dpr
     renderer.setPixelRatio(dpr)
     renderer.setSize(width, height, false)
     camera.aspect = width / height
@@ -157,6 +161,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     }
     camera.updateProjectionMatrix()
     canvas.dataset.sceneDpr = String(dpr)
+    canvas.dataset.sceneDprState = dprGovernor.state
     requestFrame()
   }
   function render(nowMs: number) {
@@ -165,6 +170,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     try {
       // This RAF timestamp is the only future Trackside monotonic clock as well.
       const delta = lastTimestamp === null ? 0 : Math.max(0, Math.min(100, nowMs - lastTimestamp))
+      // Only back-to-back frames measure sustained pacing; a restarted loop has no interval yet.
+      if (lastTimestamp !== null && dprGovernor.sample(nowMs - lastTimestamp)) resize()
       lastTimestamp = nowMs
       trackTimeMs += delta
       const current = transition
@@ -260,7 +267,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         onEvent({ type: 'CAMERA_SETTLED', navigationSeq: settledSequence })
       }
       if (transition || animate || eligible) requestFrame()
-      else lastTimestamp = null
+      else { lastTimestamp = null; dprGovernor.interrupt() }
     } catch { fail('error') }
   }
   function requestFrame() {
@@ -291,7 +298,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   try {
     // Check actual WebGL2 availability without letting Three log a thrown creation error.
     // Native multisampling also smooths the thin workshop structure at DPR 1.
-    // The quality policy still caps low at 1 and balanced at 1.5.
+    // The quality policy (dprGovernor) caps both at 1.5; low falls back to 1 under sustained load.
     const msaa = true
     const context = canvas.getContext('webgl2', { alpha: false, antialias: msaa, powerPreference: 'low-power' })
     if (!context) {
@@ -400,7 +407,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         canvas.dataset.scenePass = 'idle'; canvas.dataset.scenePassVisual = 'false'
         canvas.dataset.scenePassProgress = '0'; canvas.dataset.scenePassNextMs = ''
       }
-      if (!active()) { cancelFrame(); lastTimestamp = null; opening?.restore(); return }
+      if (!active()) { cancelFrame(); lastTimestamp = null; dprGovernor.interrupt(); opening?.restore(); return }
       if (!previous?.documentVisible) resize()
       requestFrame()
     },

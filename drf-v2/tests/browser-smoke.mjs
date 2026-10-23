@@ -361,7 +361,9 @@ async function runBrowser(disableWebGL) {
         await ready()
         assert.equal(await fullStage(), true)
         assert.equal(await noOverflow(), true)
-        assert.ok(await evaluate('Number(document.querySelector("canvas").dataset.sceneDpr) <= 1'))
+        // D11 (M16): low renders at DPR 1.5 on a 3x device and may only fall back to 1 under sustained load.
+        const lowDpr = await evaluate('Number(document.querySelector("canvas").dataset.sceneDpr)')
+        assert.ok(lowDpr === 1.5 || lowDpr === 1)
         assert.ok(await evaluate('document.querySelector(".drf-program-title").scrollWidth <= document.querySelector(".drf-program-title").clientWidth + 1'))
         await snapshot('mobile-' + width)
         await nav('strategy-room')
@@ -389,7 +391,7 @@ async function runBrowser(disableWebGL) {
         await pause(200)
         assert.ok(await evaluate('(() => { const r = document.querySelector("#drf-return-garage").getBoundingClientRect(); return r.top >= 0 && r.bottom <= innerHeight; })()'))
         await snapshot('recruiter-end-' + width, false, true)
-        sceneMeasures.push({ viewport: width + 'x844', quality: 'low', dpr: 1 })
+        sceneMeasures.push({ viewport: width + 'x844', quality: 'low', dpr: lowDpr })
       }
       checks.push('Mobile 390/320: full viewport, touch, low DPR, blocked storage, readable panels, both modes')
       await load('/?lang=en&mode=immersive#driver-profile/atleta-hibrido')
