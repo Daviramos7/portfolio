@@ -1,10 +1,11 @@
-import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
+import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, RingGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
 import type { Camera } from 'three'
 import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { createProgrammeScreen } from './programmeScreen.ts'
 import { createPersonalDetails } from './personalDetails.ts'
+import { createFacade } from './facade.ts'
 
 export function createGarage(r: Resources) {
   const garage = new Group(); garage.name = 'DRF-interior-workshop'
@@ -30,17 +31,13 @@ export function createGarage(r: Resources) {
       r.box(garage, [.15, 4.5, .12], [side * 8.18, 2.25, z], metal)
       r.box(garage, [.1, .08, 1.6], [side * 8.05, 3.82, z + .7], light)
     }
-    r.box(garage, [side < 0 ? 1.01 : 3.85, 4.6, .24], [side < 0 ? -7.89 : 6.47, 2.3, -6.6], panel)
-    r.box(garage, [.19, 4.35, .3], [side < 0 ? -7.32 : 4.48, 2.2, -6.4], metal)
-    r.box(garage, [.055, 3.95, .055], [side < 0 ? -7.18 : 4.34, 2.2, -6.21], light)
   }
-  // The asymmetric service opening clears the approved mobile sightline.
-  // Existing REC/PE sign retains its location on a header-mounted bracket.
+  // M16 4a: the rear service opening became the glass facade over the pit (see facade.ts).
+  // Existing REC/PE sign retains its location on a bracket from the facade head beam.
   r.rod(garage, [-4.48, 4.2, -6.4], [-4.48, 3.19, -6.2], .04, metal)
   r.box(garage, [17, .18, .5], [0, 4.43, -6.4], metal)
-  r.box(garage, [11.6, .26, .24], [-1.42, 4.2, -6.39], black)
-  // Roller shutter overhead, roof trusses and suspended lighting form repeated depth cues.
-  for (let n = 0; n < 7; n++) r.box(garage, [11.6, .075, .23], [-1.42, 3.9 + n * .08, -6.42], metal)
+  createFacade(r, garage)
+  // Roof trusses and suspended lighting form repeated depth cues.
   for (const z of [-5.5, -2.6, .3, 3.2, 6.1]) {
     r.box(garage, [16.7, .15, .15], [0, 4.32, z], structure)
     r.box(garage, [16.5, .1, .12], [0, 4.04, z], structure)
@@ -62,6 +59,12 @@ export function createGarage(r: Resources) {
   r.box(garage, [15, .04, .35], [0, -.01, -5.85], black)
   for (let x = -7; x <= 7; x += .18) r.box(garage, [.05, .02, .3], [x, .02, -5.85], metal)
   garage.add(createDRF01(r))
+  // M16 4a show-car plinth: an elliptical floor ring and light line around DRF-01. The car is not raised, so the
+  // approved hero framing stays identical; the slow turn is 4b.
+  for (const [inner, outer, mat, y, name] of [[3.15, 3.55, carbon, .004, 'show-car-plinth'], [3.55, 3.6, light, .005, 'show-car-plinth-light']] as const) {
+    const ring = r.mesh(garage, r.geometry(new RingGeometry(inner, outer, 72)), mat, [0, y, .05])
+    ring.rotation.x = -Math.PI / 2; ring.scale.x = .62; ring.castShadow = false; ring.name = name
+  }
 
   // Cheap static contact patch; no live mirror, ray tracing or postprocess.
   const patchCanvas = document.createElement('canvas'); patchCanvas.width = patchCanvas.height = 128
@@ -201,10 +204,11 @@ export function createGarage(r: Resources) {
   const personal=createPersonalDetails(r);garage.add(personal.root)
   const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .05, 8, 32)), metal, [-8, 3.72, -.15])
   fanRing.rotation.y = Math.PI / 2; fanRing.castShadow = false
-  const projected = new Vector3()
+  const projected = new Vector3(), fanWorld = new Vector3()
   function updateAmbient(timeMs: number, camera: Camera) {
     const inView = (point: Vector3) => { projected.copy(point).project(camera);return projected.z>-1&&projected.z<1&&Math.abs(projected.x)<1.15&&Math.abs(projected.y)<1.15 }
-    if(inView(fanAssembly.position))fan.rotation.z = -timeMs * .00028
+    // World position: the garage is parented to the elevated room.
+    if(inView(fanAssembly.getWorldPosition(fanWorld)))fan.rotation.z = -timeMs * .00028
     screens.forEach(display=>display.updateAmbient(timeMs,camera))
   }
   function updateLabels(index: SceneProps['contentIndex'], locale: Locale, selectedProject: string | null) {
