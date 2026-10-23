@@ -32,7 +32,8 @@ O que muda é o que aparece pelo vidro.
 | **4,5 m (proposta)** | box de F1 real tem 4–5 m de pé-direito; a laje fica crível | ≈ −0,07 a −0,30 (interpolado) |
 | 5,0 m | Paddock Club "de verdade" | −0,05 a −0,35 |
 Cálculo: projeção das posições/alvos atuais de `framing.ts` + H, FOV 43° (desktop) e 63° (390×844), pista no eixo do
-olhar entre z −14 e −32. Script em `.agent-grid` não; números reproduzíveis com os enquadramentos do arquivo.
+olhar entre z −14 e −32. Script e saída (fora do Git):
+`C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fase4-desenho\projecao-estacoes.py` / `.txt`.
 
 ### 1.2 Fachada, caixilho e guarda-corpo (o que torna a altura *intencional*)
 - A parede do fundo (z −6,6) vira **fachada de vidro** de ponta a ponta (x −8,4 a +8,4).
