@@ -145,3 +145,15 @@ tempo, `browser-smoke.txt`, `smoke\`). Build da base em `.agent-grid\m16-dpr-bef
 em aparelho. Tela de 30 Hz cairia para 1 (raro; documentado). Câmera, trajetórias e cota da M15 intocadas.
 
 Aprovação do Davi: pendente.
+
+## Fase 2 — referências: **decidida** (Davi, 23/10/2026, 12h57)
+
+- `docs\design\M16-REFERENCIAS.md` (pesquisa + decisões D1–D12 na seção "Decisões registradas") e
+  `docs\design\M16-PROMPTS-CONCEITO.md` versionados como o Davi entregou, sem edição.
+- Direções escolhidas: D1 B (sala de vidro sobre o pit), D2 B (horizonte de Recife fictício), D3 A→B (3–5 carros,
+  8–12 se o desempenho medido permitir), D4 B (preto fosco + faixa vermelha e branca), D5 B (silhueta limpa),
+  D6 sim (flaps na Telemetry ≤ 400 ms), D7 (conceito gerado localmente, foto da internet só como estudo),
+  D8 sim (inventário antes de baixar), D9 sim (crédito de IA), D10 A (luz assada + HDRI CC0), D11 (Fase 1b acima),
+  D12 sim (nota "sem vínculo com F1/FIA/equipes").
+- Impacto registrado no próprio documento: a cota da M15 (`y=-0,007`) só deixa de valer depois do desenho da Fase 4
+  aprovado; cada trajetória de câmera nova precisa de aprovação do Davi.
