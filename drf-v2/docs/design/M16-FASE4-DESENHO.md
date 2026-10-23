@@ -175,3 +175,24 @@ Medir de verdade na implementação (`data-scene-draw-calls`), não confiar nest
 8. Topa fatiar a Fase 4 em 4a/4b/4c com gate em cada uma?
 
 Aprovação do Davi: pendente.
+
+## 8. Decisões do Davi (23/10/2026, 19h43)
+
+| Pergunta (§7) | Decisão |
+| --- | --- |
+| 1. Altura H | **4,5 m** |
+| 2. Telemetria e pit wall | **pode mudar só o alvo** da câmera (mesma trajetória) |
+| 3. Vidro | **vidro falso com reflexo leve** (env map, sem `transmission`) |
+| 4. Velocidade de cena | **meio-termo, ~45 m/s, ajustável** |
+| 5. Curva | **à direita** |
+| 6. Show car | **girando devagar** |
+| 7. Reduced motion | carros **parados no grid/pit** |
+| 8. Fatiamento | **4a / 4b / 4c com gate** em cada uma |
+
+Ideia do Davi para a 4c (planejar, não implementar antes): com o movimento desligado, os carros ficam estacionados no
+pit; ao ligar o modo Cinemático, **saem do pit e voltam à corrida**; ao desligar, voltam ao pit. Regra: a volta ao pit
+quando o usuário **desliga** o movimento **não pode ser animada** (corte direto ou fade curto); só a saída do pit, com
+o movimento ligado, anima.
+
+Fase 3 no mesmo dia: rota de IA 3D da A5 aprovada (FLUX.2 klein 4B → rembg/BiRefNet → TripoSG sem `diso` → Blender,
+no Windows); D8 com **uma IA só** (TripoSG) por enquanto.

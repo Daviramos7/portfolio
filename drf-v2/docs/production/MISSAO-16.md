@@ -200,3 +200,13 @@ Direct3D-S2 (MIT) aparece no §6.1 mas não estava na lista desta missão: taman
 Parado aqui, como pedido. Nada baixado, nada instalado.
 
 Aprovação do Davi: pendente.
+
+## Decisões do Davi (23/10/2026, 19h43)
+
+- **Fase 3**: rota de IA 3D aprovada — FLUX.2 klein 4B (Apache) → `rembg` + BiRefNet (MIT) → TripoSG (MIT) sem `diso`
+  → Blender, tudo no Windows. D8 com **uma IA só** (TripoSG) por enquanto. Lista de downloads em
+  `M16-FASE3-DOWNLOADS.md`, aguardando o ok antes de baixar.
+- **Fase 4**: H = 4,5 m; telemetria e pit wall podem mudar **só o alvo**; vidro falso com reflexo leve; velocidade
+  ~45 m/s ajustável; curva à direita; show car girando devagar; reduced motion com carros parados no grid/pit
+  (saída do pit animada só com movimento ligado; volta ao pit sem animação); fatiada em **4a/4b/4c com gate**.
+  Registro completo em `docs\design\M16-FASE4-DESENHO.md` §8.
