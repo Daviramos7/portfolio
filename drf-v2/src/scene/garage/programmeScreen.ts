@@ -24,7 +24,7 @@ export function screenActivity(zone: ZoneId, timeMs: number, publicNodes = 1): r
 // Original canvas diagrams; source text is supplied solely by the Lead's scene projection.
 export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId, size: readonly [number, number], position: Vec3) {
   const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 512
-  const ctx = canvas.getContext('2d'), map = r.texture(new CanvasTexture(canvas)); map.colorSpace = SRGBColorSpace
+  const ctx = canvas.getContext('2d'), map = r.textTexture(new CanvasTexture(canvas)); map.colorSpace = SRGBColorSpace
   const material = r.material(new MeshBasicMaterial({ map, toneMapped: false }))
   const object = r.mesh(parent, r.geometry(new PlaneGeometry(...size)), material, position)
   object.name = 'programme-screen-' + zone; object.castShadow = false

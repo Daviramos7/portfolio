@@ -326,6 +326,9 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     benchLight.position.set(-6.2, 2.5, -2.8)
     rimLight.position.set(2.6, 2.6, -3.5)
     scene.add(workshopLight, benchLight, rimLight)
+    // Applied before the garage builds its canvas text, so first upload already uses it.
+    const textAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
+    resources.setTextAnisotropy(textAnisotropy); canvas.dataset.sceneTextAnisotropy = String(textAnisotropy)
     garage = createGarage(resources)
     opening = createTrackOpening(resources)
     pass = createTrackPass(resources, opening)

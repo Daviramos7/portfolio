@@ -51,7 +51,7 @@ test('five screen functions use only supplied localized source, with project sel
 test('canvas uploads occur only for changed presentation, never from repeated ambient frames',()=>{
   const calls=[],ctx=new Proxy({measureText:text=>({width:text.length*12}),fillText:text=>calls.push(text)},{get:(obj,key)=>obj[key]??(()=>{})})
   globalThis.document={createElement:()=>({getContext:()=>ctx})}
-  const textures=[],r={texture:t=>(textures.push(t),t),material:t=>t,geometry:t=>t,mesh:(p,g,m,pos)=>{const mesh=new Mesh(g,m);mesh.position.set(...pos);p.add(mesh);return mesh}}
+  const textures=[],r={texture:t=>(textures.push(t),t),textTexture:t=>(textures.push(t),t),material:t=>t,geometry:t=>t,mesh:(p,g,m,pos)=>{const mesh=new Mesh(g,m);mesh.position.set(...pos);p.add(mesh);return mesh}}
   const display=createProgrammeScreen(r,new Group(),'telemetry',[2.8,1.4],[0,0,0])
   const index=[{zoneId:'telemetry',projectId:null,label:{pt:'Auditoria local',en:'Local audit'},screenLines:[{pt:'Condições na leitura',en:'Conditions in reading'}],media:[]}]
   display.update(index,'pt',null);const version=display.uploadVersion

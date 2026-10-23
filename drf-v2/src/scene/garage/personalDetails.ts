@@ -25,7 +25,7 @@ export function createPersonalDetails(r: Resources) {
   const root=new Group();root.name='five-personal-details'
   const canvas=document.createElement('canvas');canvas.width=canvas.height=512
   const ctx=canvas.getContext('2d')
-  const atlas=r.texture(new CanvasTexture(canvas));atlas.colorSpace=SRGBColorSpace
+  const atlas=r.textTexture(new CanvasTexture(canvas));atlas.colorSpace=SRGBColorSpace
   const ink=r.material(new MeshBasicMaterial({map:atlas,toneMapped:false}))
   const {black,white,paint,metal,tire}=r.palette
   const coil=r.geometry(new TorusGeometry(.07,.016,6,20))

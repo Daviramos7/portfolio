@@ -23,6 +23,13 @@ export type Vec3 = readonly [number, number, number]
   function geometry<T extends BufferGeometry>(resource: T): T { geometries.add(resource); return resource }
   function material<T extends Material>(resource: T): T { materials.add(resource); return resource }
   function texture(resource: Texture) { textures.add(resource); return resource }
+  // Text surfaces are minified (1.5-4 texels/px) and often oblique; anisotropy keeps glyphs from mip blur.
+  const textTextures = new Set<Texture>(); let textAnisotropy = 1
+  function textTexture(resource: Texture) { texture(resource); textTextures.add(resource); resource.anisotropy = textAnisotropy; return resource }
+  function setTextAnisotropy(level: number) {
+    textAnisotropy = Math.max(1, level)
+    for (const map of textTextures) if (map.anisotropy !== textAnisotropy) { map.anisotropy = textAnisotropy; map.needsUpdate = true }
+  }
   function surface(kind: 'carbon' | 'metal' | 'rubber' | 'painted') {
     const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256
     const ctx = canvas.getContext('2d')
@@ -113,7 +120,7 @@ export type Vec3 = readonly [number, number, number]
   }
   function sign(parent: Group, text: string, size: readonly [number, number], position: Vec3) {
     const canvas = document.createElement('canvas'); canvas.width = 1024; canvas.height = 256
-    const ctx = canvas.getContext('2d'), map = texture(new CanvasTexture(canvas)); map.colorSpace = SRGBColorSpace
+    const ctx = canvas.getContext('2d'), map = textTexture(new CanvasTexture(canvas)); map.colorSpace = SRGBColorSpace
     const mat = material(new MeshBasicMaterial({ map, toneMapped: false }))
     const object = mesh(parent, geometry(new PlaneGeometry(...size)), mat, position); object.castShadow = false
     let currentLabel=text, currentDetail='DRF / ENGINEERING'
@@ -159,6 +166,6 @@ export type Vec3 = readonly [number, number, number]
     for (const item of materials) item.dispose()
     instances.clear(); textures.clear(); geometries.clear(); materials.clear()
   }
-  return { geometry, material, texture, palette, box, rod, mesh, sign, batch, dispose, onFontsReady }
+  return { geometry, material, texture, textTexture, setTextAnisotropy, palette, box, rod, mesh, sign, batch, dispose, onFontsReady }
 }
 export type Resources = ReturnType<typeof createResources>

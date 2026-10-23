@@ -43,7 +43,7 @@ test('pit lane stays outside the garage with a low separator behind its route',(
 test('five distinct ambient indicators move without uploading canvas or changing source facts',()=>{
   const ctx=new Proxy({measureText:t=>({width:t.length*12})},{get:(o,k)=>o[k]??(()=>{})})
   globalThis.document={createElement:()=>({getContext:()=>ctx})}
-  const owned=[],r={texture:t=>(owned.push(t),t),material:t=>(owned.push(t),t),geometry:t=>(owned.push(t),t),mesh:(p,g,m,pos)=>{const mesh=new Mesh(g,m);mesh.position.set(...pos);p.add(mesh);return mesh}}
+  const owned=[],r={texture:t=>(owned.push(t),t),textTexture:t=>(owned.push(t),t),material:t=>(owned.push(t),t),geometry:t=>(owned.push(t),t),mesh:(p,g,m,pos)=>{const mesh=new Mesh(g,m);mesh.position.set(...pos);p.add(mesh);return mesh}}
   const camera=new PerspectiveCamera(60,2,.1,30);camera.position.set(0,0,5);camera.lookAt(0,0,0);camera.updateMatrixWorld()
   for(const zone of ['garage','telemetry','pit-wall','driver-profile','strategy-room']){
     const display=createProgrammeScreen(r,new Group(),zone,[2.8,1.4],[0,0,0])
