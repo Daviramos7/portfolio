@@ -79,7 +79,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const room = new Group(); room.name = 'elevated-technical-room'; room.position.y = roomElevation
   room.updateMatrixWorld(true); scene.add(room)
   const worldLookAt = new Vector3(), listener = new Vector3()
-  const camera = new PerspectiveCamera(46, 1, .1, 85)
+  // Far plane past the fog's end: the race's entry and exit dissolve into fog instead of being clipped.
+  const camera = new PerspectiveCamera(46, 1, .1, 130)
   const lookAt = new Vector3(...framings.garage.lookAt)
   const destination = new Vector3(), target = new Vector3()
   const sun = new DirectionalLight('#d8edff', 2)
@@ -296,7 +297,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       solo: (layer: 'ventilation' | 'workshop' | 'pass' | null) => audio.debugSolo(layer),
       trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
-      if (!scheduler.requestSoon(trackTimeMs, direction, 2400)) return false
+      if (!scheduler.requestSoon(trackTimeMs, direction)) return false
       requestFrame(); return true
     } }
   }
@@ -321,7 +322,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     renderer.toneMappingExposure = 1.05
     renderer.shadowMap.type = PCFShadowMap
     scene.background = new Color('#a6bdc9')
-    scene.fog = new Fog('#a6bdc9', 32, 65)
+    // M16 4a: pushed back so the straight at z -52 (≈ 60 m from the room) reads through light haze.
+    scene.fog = new Fog('#a6bdc9', 50, 125)
     environmentTarget = createWorkshopEnvironment(renderer)
     scene.environment = environmentTarget.texture
     scene.environmentIntensity = .55

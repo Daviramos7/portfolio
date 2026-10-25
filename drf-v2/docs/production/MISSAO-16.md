@@ -276,3 +276,36 @@ vista). Sem FPS medido.
 telemetria/pit wall ficou sob a faixa do cabeçalho do HUD no desktop (texto legível; borda superior encostada).
 
 Aprovação do Davi: pendente.
+
+### Fase 4a · reta afastada (decisão do Davi, 25/10/2026)
+
+**O que mudou.** A passagem saiu da parábola da M15 (z −10…−28) para uma reta em **z −52** (x −90 → +16), curva no
+lado direito do quadro (raio 8 m, até x 24, z −60) e saída para o fundo até z −125. Velocidade de cena constante,
+**45 m/s** (±8 % entre passagens: 3.777–4.434 ms), parametrizada por comprimento de arco (rodas seguem a distância
+exata). Cenário do paddock (separador, zebra, arquibancada, horizonte) foi para trás da reta (z −66,6), com o lado
+direito aberto para a estrada de saída. Névoa 32–65 → **50–125** e `far` da câmera 85 → **130**, para entrada e saída
+sumirem na névoa em vez de cortar. Reflexo leve no piso e o tremor do objeto da mesa agora seguem o carro só na reta
+em frente ao vidro (|x| < 40 m) e somem na curva; amplitude do tremor pela metade (o carro está a ~60 m). O hook DEV
+`trigger` usa a duração natural (os 2400 ms fixos ficariam fora da faixa nova).
+
+**Testes.** `npm run lint` OK, `npm run build` OK (SceneRoot 674 kB, alerta conhecido). `node --test tests/*.test.mjs`
+(preview 5175 com o build da 4a): **94 pass, 0 fail, 0 skip**: o teste de janela do `trackside-glb` voltou sem `skip`
+(carro inteiro dentro do vidro e da tela por ≥ 200 ms no hero 1440/390/320, nos dois sentidos). Testes de rota
+reescritos para a geometria nova (separador por interseção de caixa, tangente com 1000 amostras, 45 m/s).
+`browser-smoke.mjs`: exit 0, sem erro de console ou rede.
+
+**O carro aparece na janela? (prints com o carro forçado na reta, x −30/−15/0/+15)**
+| Estação | 1440 balanced | 1440 low | 390 low |
+| --- | --- | --- | --- |
+| Hero (garagem) | sim, à direita, pequeno | sim | **não**: a reta cai atrás da ficha "Programas" |
+| Telemetria | sim, à direita da mesa | sim | só a ponta, na borda da mesa |
+| Pit wall | sim, à esquerda do monitor, breve | sim | **não**: monitor/mesa tapam |
+
+O teste de janela cobre só o hero (enquadramento sem a UI por cima); a ficha do mobile não entra na conta.
+
+**Evidência**: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila05-reta\`
+(`*-sem-carro.png`, `*-carro-x*.png`, `tira-*.png`, `crop-*.png`, `capture.json`, `smoke\`, `smoke.txt`).
+Sem FPS medido. Sem telefone físico. Áudio da passagem não recalibrado (o panner já usa a posição nova; o carro mais
+longe soa mais baixo).
+
+Aprovação do Davi: pendente.

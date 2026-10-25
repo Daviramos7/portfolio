@@ -33,16 +33,15 @@ test('actual front attachment roots reach solid tub on both sides and carbon arm
   for(const point of vertices.filter(v=>v.z>1.18&&v.z<1.86&&v.y>.2&&v.y<.68))assert.ok(Math.abs(point.x)<.825,'front carbon arm remains inboard of tyre')
 })
 // M16 4a: the camera rides the elevated room and the opening is now the glass facade (sill to head beam).
-// Seen from the hero, the slab edge hides all ground nearer than z ≈ -47, so the M15 pass (z -10…-28) is no
-// longer visible there. The race is repositioned in 4b (Davi's call); until then this guarantee is suspended.
-test('whole GLB has a continuous useful viewport/opening interval in both directions at all approved garage framings',{skip:'M16 4a: slab hides the M15 pass from the elevated hero; race moves in 4b (see MISSAO-16.md)'},async()=>{
+// Seen from the hero, the slab edge hides all ground nearer than z ≈ -47, so the straight runs at z -52 (Davi, 25/10).
+test('whole GLB has a continuous useful viewport/opening interval in both directions at all approved garage framings',async()=>{
   const root=await model(),event={direction:'left-to-right',durationMs:tracksideRoute.durationMs[0]};let minimum=1
   globalThis.document={createElement:()=>({getContext:()=>null})}
-  const resources=createResources(),separator=createTrackOpening(resources).track.getObjectByName('low-paddock-separator')
+  const resources=createResources(),separator=new Box3().setFromObject(createTrackOpening(resources).track.getObjectByName('low-paddock-separator'))
   for(const width of [1440,390,320])for(const direction of ['left-to-right','right-to-left']){
-    const height=width===1440?900:844,aspect=width/height,view=(aspect<1?mobileFramings:framings).garage,camera=new PerspectiveCamera(aspect<.42?74:aspect<1?63:43,aspect,.1,85);camera.position.set(view.position[0],view.position[1]+roomElevation,view.position[2]);camera.lookAt(new Vector3(view.lookAt[0],view.lookAt[1]+roomElevation,view.lookAt[2]));camera.updateMatrixWorld()
+    const height=width===1440?900:844,aspect=width/height,view=(aspect<1?mobileFramings:framings).garage,camera=new PerspectiveCamera(aspect<.42?74:aspect<1?63:43,aspect,.1,130);camera.position.set(view.position[0],view.position[1]+roomElevation,view.position[2]);camera.lookAt(new Vector3(view.lookAt[0],view.lookAt[1]+roomElevation,view.lookAt[2]));camera.updateMatrixWorld()
     let consecutive=0,best=0
-    for(let i=0;i<=400;i++){const pose=tracksidePose({...event,direction},i/400);root.scale.setScalar(tracksideRoute.vehicleScale);root.position.set(...pose.position);root.rotation.y=pose.yaw;root.updateMatrixWorld(true);const box=new Box3().setFromObject(root);assert.ok(box.max.z<-6.8&&box.min.z>separator.position.z+.175,'external lane clearance')
+    for(let i=0;i<=400;i++){const pose=tracksidePose({...event,direction},i/400);root.scale.setScalar(tracksideRoute.vehicleScale);root.position.set(...pose.position);root.rotation.y=pose.yaw;root.updateMatrixWorld(true);const box=new Box3().setFromObject(root);assert.ok(box.max.z<-6.8&&!box.intersectsBox(separator),'external lane clearance')
       let inside=true
       // Curved yaw inflates world AABB corners that are not on the model. Use real vertices.
       for(const mesh of meshes(root))for(let v=0;v<mesh.geometry.attributes.position.count&&inside;v++){

@@ -28,10 +28,13 @@ export function createTrackPass(r: Resources, opening: { reflection: Group; ligh
     vehicle.visible = true; vehicle.position.set(...pose.position)
     vehicle.rotation.y = pose.yaw
     rolling?.update(pose.distance)
-    const envelope = carPassEnvelope(progress)
-    reflection.visible = true; reflection.position.x = Math.max(-3, Math.min(3, x * .18)); mat.opacity = envelope * .055
-    opening.lightweight.position.y += Math.sin(progress * Math.PI * 24) * envelope * .0015
-    opening.lightweight.rotation.z = rest + Math.sin(progress * Math.PI * 20) * envelope * .004
+    // M16 4a: the straight is ~60 m out, so the light floor reflection follows the car only while it is on the
+    // straight in front of the glass (x within +-40 m) and fades through the curve; the desk object barely stirs.
+    const onStraight = Math.max(0, 1 - Math.abs(pose.position[2] - tracksideRoute.straightZ) / 4)
+    const front = Math.max(0, 1 - Math.abs(x) / 40) ** 2 * onStraight * carPassEnvelope(progress) ** .25
+    reflection.visible = true; reflection.position.x = Math.max(-3, Math.min(3, x * .23)); mat.opacity = front * .055
+    opening.lightweight.position.y += Math.sin(progress * Math.PI * 24) * front * .0008
+    opening.lightweight.rotation.z = rest + Math.sin(progress * Math.PI * 20) * front * .002
   }
   return { vehicle, get modelStatus(){return lease.status}, load:()=>lease.load(new URL('scene/models/drf-sprint-03.glb',document.baseURI).href), dispose:()=>{restore();lease.dispose()}, update: (event: CarPass | null, progress: number, visual: boolean) => { opening.restore(); update(event, progress, visual) }, restore }
 }

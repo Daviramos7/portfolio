@@ -20,15 +20,18 @@ test('original external monoposto has four closed wheels, finite normals, X axle
   assert.ok(triangles<10000,'small passing model has a bounded topology budget');assert.ok(car.getObjectByName('open-cockpit-seat'));assert.ok(car.getObjectByName('tapered-nose'));r.dispose()
 })
 test('track bend stays outside workshop and separator, turns continuously, and reverses symmetrically',()=>{
-  const {r,car}=fixture(),separator=createTrackOpening(r).track.getObjectByName('low-paddock-separator');let previous=null
-  for(let i=0;i<=100;i++){
-    const p=i/100,pose=tracksidePose(event,p);car.scale.setScalar(tracksideRoute.vehicleScale);car.position.set(...pose.position);car.rotation.y=pose.yaw;car.updateMatrixWorld(true)
-    const bounds=new Box3().setFromObject(car);assert.ok(bounds.max.z<-6.8,'car never crosses workshop wall');assert.ok(bounds.min.z>separator.position.z+.175,'car stays ahead of separator')
-    if(previous){assert.ok(Math.abs(pose.yaw-previous.yaw)<.12,'continuous tangent without abrupt turns');assert.ok(pose.position[0]>previous.position[0])}previous=pose
+  const {r,car}=fixture(),separator=new Box3().setFromObject(createTrackOpening(r).track.getObjectByName('low-paddock-separator'));let previous=null
+  // 1000 samples, about 18 cm apart: a tangent jump would show as a large yaw step even on the 8 m curve.
+  for(let i=0;i<=1000;i++){
+    const p=i/1000,pose=tracksidePose(event,p);car.scale.setScalar(tracksideRoute.vehicleScale);car.position.set(...pose.position);car.rotation.y=pose.yaw;car.updateMatrixWorld(true)
+    const bounds=new Box3().setFromObject(car);assert.ok(bounds.max.z<-6.8,'car never crosses workshop wall');assert.ok(!bounds.intersectsBox(separator),'car never touches the separator')
+    if(previous){assert.ok(Math.abs(pose.yaw-previous.yaw)<.03,'continuous tangent without abrupt turns');assert.ok(pose.position[0]>=previous.position[0]-1e-9,'left-to-right never backs up')}previous=pose
     const reverse=tracksidePose({...event,direction:'right-to-left'},1-p);assert.ok(new Vector3(...reverse.position).distanceTo(new Vector3(...pose.position))<1e-8)
     assert.ok(Math.abs(Math.sin(reverse.yaw-pose.yaw))<1e-8)
   }
-  assert.ok(tracksidePose(event,.5).position[2]>tracksidePose(event,0).position[2]);r.dispose()
+  // Straight at z -52 first, then the right-end curve turns the car away into the background.
+  assert.equal(tracksidePose(event,.5).position[2],tracksideRoute.straightZ);assert.ok(tracksidePose(event,1).position[2]<tracksideRoute.straightZ-40)
+  assert.ok(Math.abs(Math.sin(tracksidePose(event,1).yaw))<1e-9&&Math.cos(tracksidePose(event,1).yaw)<0,'leaves heading away from the room');r.dispose()
 })
 test('cancel/end restore vehicle and lightweight anchors without retaining visual effects',()=>{
   const {r}=fixture(),reflection=new Group(),lightweight=r.box(new Group(),[.1,.2,.1],[1,2,3],r.palette.white)
