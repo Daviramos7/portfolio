@@ -12,7 +12,7 @@ import { createTrackAudio } from './trackside/audio.ts'
 import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
-import { createDprGovernor } from './dprGovernor.ts'
+import { cappedFrameMs, createDprGovernor, type FrameCadence } from './dprGovernor.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -48,7 +48,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let previousLocale: ExperienceState['locale'] | null = null
   let previousProject: string | null = null
   let environmentTarget: WebGLRenderTarget | null = null
-  let lastTimestamp: number | null = null, lastRenderedAt = 0, ambientTimeMs = 0
+  let lastTimestamp: number | null = null, lastRenderedAt = 0, loopRenderedAt: number | null = null, ambientTimeMs = 0
   let mobileFrame = false, invalidated = true
   let renderedFrames = 0
   const dprGovernor = createDprGovernor(() => window.devicePixelRatio)
@@ -95,7 +95,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     disposed = true
     cancelFrame()
     transition = null
-    lastTimestamp = null
+    lastTimestamp = null; loopRenderedAt = null
     resizeObserver?.disconnect()
     canvas.removeEventListener('webglcontextlost', contextLost)
     canvas.removeEventListener('click', selectHotspot)
@@ -170,8 +170,6 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     try {
       // This RAF timestamp is the only future Trackside monotonic clock as well.
       const delta = lastTimestamp === null ? 0 : Math.max(0, Math.min(100, nowMs - lastTimestamp))
-      // Only back-to-back frames measure sustained pacing; a restarted loop has no interval yet.
-      if (lastTimestamp !== null && dprGovernor.sample(nowMs - lastTimestamp)) resize()
       lastTimestamp = nowMs
       trackTimeMs += delta
       const current = transition
@@ -204,9 +202,14 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneTrackModel = pass?.modelStatus ?? 'fallback'
       const animate = ambientActive()
       if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
-      if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { requestFrame(); return }
+      if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { loopRenderedAt = null; requestFrame(); return }
       // Idle ambience is capped at 30 rendered fps; camera travel retains native pacing.
-      if (!current && ready && (animate || eligible) && nowMs - lastRenderedAt < 1000 / 30) { requestFrame(); return }
+      const cadence: FrameCadence = !current && ready && (animate || eligible) ? 'capped' : 'native'
+      if (cadence === 'capped' && nowMs - lastRenderedAt < cappedFrameMs) { requestFrame(); return }
+      // Only rendered frames of one continuous loop measure pacing; a restarted loop has no interval yet.
+      if (loopRenderedAt !== null && dprGovernor.sample(nowMs - loopRenderedAt, cadence)) resize()
+      canvas.dataset.sceneDprState = dprGovernor.state
+      loopRenderedAt = nowMs
       camera.lookAt(lookAt)
       renderer.render(scene, camera)
       canvas.dataset.sceneRenderedFrames = String(++renderedFrames)
@@ -267,7 +270,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         onEvent({ type: 'CAMERA_SETTLED', navigationSeq: settledSequence })
       }
       if (transition || animate || eligible) requestFrame()
-      else { lastTimestamp = null; dprGovernor.interrupt() }
+      else { lastTimestamp = null; loopRenderedAt = null; dprGovernor.interrupt() }
     } catch { fail('error') }
   }
   function requestFrame() {
@@ -407,7 +410,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         canvas.dataset.scenePass = 'idle'; canvas.dataset.scenePassVisual = 'false'
         canvas.dataset.scenePassProgress = '0'; canvas.dataset.scenePassNextMs = ''
       }
-      if (!active()) { cancelFrame(); lastTimestamp = null; dprGovernor.interrupt(); opening?.restore(); return }
+      if (!active()) { cancelFrame(); lastTimestamp = null; loopRenderedAt = null; dprGovernor.interrupt(); opening?.restore(); return }
       if (!previous?.documentVisible) resize()
       requestFrame()
     },
