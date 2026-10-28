@@ -36,11 +36,21 @@ Claude Code precisa a mais: o estado real, o que está aprovado e onde estão os
 Modelos genéricos (controle, handgrip), texto das telas com baixa nitidez, DRF-01 que não lembra um F1 atual e o
 carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova: garagem elevada com corrida ao fundo.
 
-## Estado atual
-- Base: Missão 15 integrada (`fc8afd3`). Em andamento: **Missão 16 — Art Direction Reboot**,
-  `drf-v2\docs\production\MISSAO-16-BRIEFING.md`. Uma fase por vez; no fim de cada fase, parar e esperar o ok.
-- Pendente conhecida: passagem do carro ocluída pela ficha (mobile 320/390) e pelo hero (desktop).
-- Alerta de chunk > 500 kB no build (SceneRoot ~668 kB) é conhecido.
+## Estado atual (28/10/2026)
+- Base: Missão 15 integrada (`fc8afd3`). Em andamento: **Missão 16 — Art Direction Reboot**
+  (`drf-v2\docs\production\MISSAO-16-BRIEFING.md`). Uma fase por vez; no fim de cada fase, parar e esperar o ok.
+- **Fase 1:** anisotropia `083fdc0`, DPR 1,5 `04bda80` e **bug do dprGovernor corrigido** `40a38c0`, tudo na
+  `feat/drf-engineering`.
+- **Fase 4a:** branch `feat/m16-fase4a` (worktree `.agent-grid\worktrees\m16-fase4a`), sala elevada 4,5 m e
+  **reta em z −52** (`d3eebd9`), 94/94 testes. **Sem merge: falta o gate visual do Davi.** Curva na ponta direita do
+  quadro (aprovada pelo Davi). Pendente: o carro some no mobile 390 atrás da ficha "Programas" e do monitor.
+- **Fase 3 (IA 3D):** cadeia local pronta em `C:\Users\davir\drf-ia3d\` (FLUX.2 klein 4B → BiRefNet → TripoSG
+  sem diso). Teste P1 (handgrip) ok, ~2,5 min. Falta Blender: limpar e decimar de 535 k faces, UV e escala.
+  Nada no site ainda. Duplicata de 0,97 GB em `rembg-models\` (pode sair com o ok do Davi).
+- Alerta de chunk > 500 kB no build (SceneRoot ~674 kB) é conhecido.
+- **Cota (o Davi usa o Claude no estágio):** medir sessão e semana no começo e no fim de cada missão; **pausar a fila
+  com a sessão acima de 70%**. O DRF tem prioridade menor que o Plenofone e o Dados com Davi: com a semana acima de
+  60%, não pegar missão do DRF.
 
 ## Honestidade e evidência
 - Qualidade técnica ≠ aprovação visual. Não escrever "premium", "cinematográfico" nem "aprovado": quem aprova é o
