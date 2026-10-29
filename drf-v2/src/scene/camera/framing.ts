@@ -2,10 +2,16 @@ import { CatmullRomCurve3, Vector3 } from 'three'
 import type { ZoneId } from '../../contracts/index.ts'
 type Point = readonly [number, number, number]
 export type Framing = Readonly<{ position: Point; lookAt: Point }>
+// M16 4a: the technical room sits on the slab above the pit boxes. Every value below is room-local; the renderer
+// parents the camera to the elevated room, so approved paths keep their exact shape and only their height changes.
+export const roomElevation = 4.5
 export const framings: Readonly<Record<ZoneId, Framing>> = {
   garage: { position: [4.8, 1.85, 7.05], lookAt: [0, .8, .15] },
-  telemetry: { position: [-3.4, 1.9, -.25], lookAt: [-5.7, 1.7, -4.75] },
-  'pit-wall': { position: [3.45, 1.9, -.25], lookAt: [5.75, 1.8, -4.75] },
+  // Davi (23/10/2026): Telemetry and Pit Wall may lower only their target. 1.5 is the lowest that keeps the zone
+  // sign whole (top at 0.93 of the frame); below it the sign is cut. Mobile keeps its approved target: the slab
+  // hides the ground nearer than z -31 from there, so a lower target would not reveal the race.
+  telemetry: { position: [-3.4, 1.9, -.25], lookAt: [-5.7, 1.5, -4.75] },
+  'pit-wall': { position: [3.45, 1.9, -.25], lookAt: [5.75, 1.5, -4.75] },
   'driver-profile': { position: [-3.25, 1.85, 3.7], lookAt: [-7.65, 1.75, 2.1] },
   'strategy-room': { position: [3.3, 1.85, 4.4], lookAt: [7.65, 1.95, 1.9] },
 }

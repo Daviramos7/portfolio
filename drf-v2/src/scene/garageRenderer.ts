@@ -1,9 +1,9 @@
-import { ACESFilmicToneMapping, BoxGeometry, Color, DirectionalLight, Fog, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
+import { ACESFilmicToneMapping, BoxGeometry, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
 import type { CatmullRomCurve3, WebGLRenderTarget } from 'three'
 import type { ExperienceState, SceneEvent, SceneProps, SceneHandle, ZoneId } from '../contracts/index.ts'
 import { createResources } from './garage/resources.ts'
 import { createGarage } from './garage/Garage.ts'
-import { buildCameraPath, cameraEase, framings, hotspotVolumes, mobileFramings, programmeFramings } from './camera/framing.ts'
+import { buildCameraPath, cameraEase, framings, hotspotVolumes, mobileFramings, programmeFramings, roomElevation } from './camera/framing.ts'
 import { createTrackOpening } from './trackside/TrackOpening.ts'
 import { createPassScheduler, canSchedulePass } from './trackside/scheduler.ts'
 import type { TracksideConfig } from './trackside/scheduler.ts'
@@ -13,6 +13,7 @@ import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
 import { cappedFrameMs, createDprGovernor, type FrameCadence } from './dprGovernor.ts'
+import { createPitLevel } from './garage/pitLevel.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -73,7 +74,13 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   let pass: ReturnType<typeof createTrackPass> | null = null
   const resources = createResources(() => { if (!disposed) { invalidated = true; canvas.dataset.sceneScreenLayouts = JSON.stringify(garage?.screenLayouts ?? []); requestFrame() } })
   const scene = new Scene()
-  const camera = new PerspectiveCamera(46, 1, .1, 85)
+  // M16 4a: the technical room (garage, its lights, pick volumes and the camera) sits on the slab above the pit.
+  // Framings stay room-local; only lookAt targets, audio and DOM anchors convert to world space.
+  const room = new Group(); room.name = 'elevated-technical-room'; room.position.y = roomElevation
+  room.updateMatrixWorld(true); scene.add(room)
+  const worldLookAt = new Vector3(), listener = new Vector3()
+  // Far plane past the fog's end: the race's entry and exit dissolve into fog instead of being clipped.
+  const camera = new PerspectiveCamera(46, 1, .1, 130)
   const lookAt = new Vector3(...framings.garage.lookAt)
   const destination = new Vector3(), target = new Vector3()
   const sun = new DirectionalLight('#d8edff', 2)
@@ -188,7 +195,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       const audioPosition = snapshot.event ? tracksidePose(snapshot.event, snapshot.progress).position : [0, 0, 0]
       audio.updatePass(snapshot.event, snapshot.progress, snapshot.started,
         audioPosition,
-        camera.position.toArray(), audioForward.toArray())
+        camera.getWorldPosition(listener).toArray(), audioForward.toArray())
       publishAudio()
       canvas.dataset.sceneReducedMotion = String(state.reducedMotion)
       canvas.dataset.sceneAmbientEnabled = String(state.ambientEnabled)
@@ -210,7 +217,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       if (loopRenderedAt !== null && dprGovernor.sample(nowMs - loopRenderedAt, cadence)) resize()
       canvas.dataset.sceneDprState = dprGovernor.state
       loopRenderedAt = nowMs
-      camera.lookAt(lookAt)
+      camera.lookAt(room.localToWorld(worldLookAt.copy(lookAt)))
       renderer.render(scene, camera)
       canvas.dataset.sceneRenderedFrames = String(++renderedFrames)
       canvas.dataset.sceneFrameTimestamp = nowMs.toFixed(3)
@@ -235,7 +242,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         const rec=heroGarage?personalDetailLayout.find(detail=>detail.id==='rec-pe'):undefined
         projected.set(...(rec?.position??volume.anchor))
         if(rec)projected.x+=1.15 // beside the authored plaque, not over its lettering
-        projected.project(camera)
+        room.localToWorld(projected).project(camera)
         const inside = projected.z > -1 && projected.z < 1 && Math.abs(projected.x) < .88 && Math.abs(projected.y) < .76
         button.style.visibility = inside ? '' : 'hidden'
         button.style.left = ((projected.x + 1) * 50) + '%'
@@ -293,7 +300,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       solo: (layer: 'ventilation' | 'workshop' | 'pass' | null) => audio.debugSolo(layer),
       trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
-      if (!scheduler.requestSoon(trackTimeMs, direction, 2400)) return false
+      if (!scheduler.requestSoon(trackTimeMs, direction)) return false
       requestFrame(); return true
     } }
   }
@@ -318,24 +325,25 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     renderer.toneMappingExposure = 1.05
     renderer.shadowMap.type = PCFShadowMap
     scene.background = new Color('#a6bdc9')
-    scene.fog = new Fog('#a6bdc9', 32, 65)
+    // M16 4a: pushed back so the straight at z -52 (≈ 60 m from the room) reads through light haze.
+    scene.fog = new Fog('#a6bdc9', 50, 125)
     environmentTarget = createWorkshopEnvironment(renderer)
     scene.environment = environmentTarget.texture
     scene.environmentIntensity = .55
     scene.add(new HemisphereLight('#b4c5de', '#28202a', .4))
     sun.position.set(1.5, 6, -12)
-    sun.target.position.set(0, .5, 0); scene.add(sun.target)
+    sun.target.position.set(0, .5, 0); room.add(sun.target)
     sun.shadow.intensity = .45
     sun.castShadow = true
     sun.shadow.mapSize.set(1024, 1024)
     Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10, near: 1, far: 30 })
     sun.shadow.bias = -.0005
     sun.shadow.normalBias = .04
-    scene.add(sun)
+    room.add(sun)
     workshopLight.position.set(-3.25, 1.6, 1.5)
     benchLight.position.set(-6.2, 2.5, -2.8)
     rimLight.position.set(2.6, 2.6, -3.5)
-    scene.add(workshopLight, benchLight, rimLight)
+    room.add(workshopLight, benchLight, rimLight)
     // Applied before the garage builds its canvas text, so first upload already uses it.
     const textAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
     resources.setTextAnisotropy(textAnisotropy); canvas.dataset.sceneTextAnisotropy = String(textAnisotropy)
@@ -346,7 +354,11 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
     resources.batch(opening.track)
-    scene.add(garage.garage, opening.track, opening.anchors)
+    const pitLevel = createPitLevel(resources)
+    resources.batch(pitLevel)
+    room.add(garage.garage, opening.anchors)
+    scene.add(opening.track, pitLevel)
+    canvas.dataset.sceneRoomElevation = String(roomElevation)
     const pickShape = resources.geometry(new BoxGeometry(1, 1, 1))
     const pickMaterial = resources.material(new MeshBasicMaterial({ visible: false }))
     for (const [zoneId, volume] of Object.entries(hotspotVolumes)) {
@@ -355,11 +367,12 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       mesh.scale.set(...volume.size)
       mesh.userData.zoneId = zoneId
       mesh.name = `hotspot-${zoneId}`
-      scene.add(mesh)
+      room.add(mesh)
       pickVolumes.push(mesh)
     }
     camera.position.set(...framings.garage.position)
-    camera.lookAt(lookAt)
+    room.add(camera)
+    camera.lookAt(room.localToWorld(worldLookAt.copy(lookAt)))
     resizeObserver = new ResizeObserver(resize)
     resizeObserver.observe(canvas)
   } catch { fail('error') }

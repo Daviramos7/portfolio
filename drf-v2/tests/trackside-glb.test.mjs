@@ -4,7 +4,8 @@ import { readFile } from 'node:fs/promises'
 import { Box3, DoubleSide, Group, Mesh, PerspectiveCamera, Raycaster, Vector3 } from 'three'
 import { createModelByteCache, createTrackModelLease, parseTrackModel } from '../src/scene/trackside/TrackModel.ts'
 import { tracksidePose, tracksideRoute } from '../src/scene/trackside/preparation.ts'
-import { framings, mobileFramings } from '../src/scene/camera/framing.ts'
+import { framings, mobileFramings, roomElevation } from '../src/scene/camera/framing.ts'
+import { facade } from '../src/scene/garage/facade.ts'
 import { createResources } from '../src/scene/garage/resources.ts'
 import { createTrackOpening } from '../src/scene/trackside/TrackOpening.ts'
 
@@ -31,22 +32,24 @@ test('actual front attachment roots reach solid tub on both sides and carbon arm
   for(const tuple of carbon.userData.frontRoots){const point=new Vector3(...tuple);assert.ok(vertices.some(v=>v.distanceTo(point)<.04),'metadata root coincides with actual rod geometry');for(const sign of [-1,1]){const hits=new Raycaster(point,new Vector3(sign,0,0),.001,.6).intersectObject(body,true);assert.ok(hits.length,'root lies inside real tub, not beside the nose')}}
   for(const point of vertices.filter(v=>v.z>1.18&&v.z<1.86&&v.y>.2&&v.y<.68))assert.ok(Math.abs(point.x)<.825,'front carbon arm remains inboard of tyre')
 })
+// M16 4a: the camera rides the elevated room and the opening is now the glass facade (sill to head beam).
+// Seen from the hero, the slab edge hides all ground nearer than z ≈ -47, so the straight runs at z -52 (Davi, 25/10).
 test('whole GLB has a continuous useful viewport/opening interval in both directions at all approved garage framings',async()=>{
   const root=await model(),event={direction:'left-to-right',durationMs:tracksideRoute.durationMs[0]};let minimum=1
   globalThis.document={createElement:()=>({getContext:()=>null})}
-  const resources=createResources(),separator=createTrackOpening(resources).track.getObjectByName('low-paddock-separator')
+  const resources=createResources(),separator=new Box3().setFromObject(createTrackOpening(resources).track.getObjectByName('low-paddock-separator'))
   for(const width of [1440,390,320])for(const direction of ['left-to-right','right-to-left']){
-    const height=width===1440?900:844,aspect=width/height,view=(aspect<1?mobileFramings:framings).garage,camera=new PerspectiveCamera(aspect<.42?74:aspect<1?63:43,aspect,.1,85);camera.position.set(...view.position);camera.lookAt(new Vector3(...view.lookAt));camera.updateMatrixWorld()
+    const height=width===1440?900:844,aspect=width/height,view=(aspect<1?mobileFramings:framings).garage,camera=new PerspectiveCamera(aspect<.42?74:aspect<1?63:43,aspect,.1,130);camera.position.set(view.position[0],view.position[1]+roomElevation,view.position[2]);camera.lookAt(new Vector3(view.lookAt[0],view.lookAt[1]+roomElevation,view.lookAt[2]));camera.updateMatrixWorld()
     let consecutive=0,best=0
-    for(let i=0;i<=400;i++){const pose=tracksidePose({...event,direction},i/400);root.scale.setScalar(tracksideRoute.vehicleScale);root.position.set(...pose.position);root.rotation.y=pose.yaw;root.updateMatrixWorld(true);const box=new Box3().setFromObject(root);assert.ok(box.max.z<-6.8&&box.min.z>separator.position.z+.175,'external lane clearance')
+    for(let i=0;i<=400;i++){const pose=tracksidePose({...event,direction},i/400);root.scale.setScalar(tracksideRoute.vehicleScale);root.position.set(...pose.position);root.rotation.y=pose.yaw;root.updateMatrixWorld(true);const box=new Box3().setFromObject(root);assert.ok(box.max.z<-6.8&&!box.intersectsBox(separator),'external lane clearance')
       let inside=true
       // Curved yaw inflates world AABB corners that are not on the model. Use real vertices.
       for(const mesh of meshes(root))for(let v=0;v<mesh.geometry.attributes.position.count&&inside;v++){
         const point=new Vector3().fromBufferAttribute(mesh.geometry.attributes.position,v).applyMatrix4(mesh.matrixWorld),{x,y,z}=point
-        const fraction=(-6.4-camera.position.z)/(z-camera.position.z)
+        const fraction=(facade.z-camera.position.z)/(z-camera.position.z)
         const wallX=camera.position.x+(x-camera.position.x)*fraction,wallY=camera.position.y+(y-camera.position.y)*fraction
         const p=point.project(camera)
-        inside&&=wallX>-7.18&&wallX<4.34&&wallY>.1&&wallY<3.9&&Math.abs(p.x)<.99&&Math.abs(p.y)<.99&&p.z>-1&&p.z<1
+        inside&&=Math.abs(wallX)<facade.halfWidth&&wallY>roomElevation+facade.sill&&wallY<roomElevation+facade.head&&Math.abs(p.x)<.99&&Math.abs(p.y)<.99&&p.z>-1&&p.z<1
       }
       consecutive=inside?consecutive+1:0;best=Math.max(best,consecutive)
     }

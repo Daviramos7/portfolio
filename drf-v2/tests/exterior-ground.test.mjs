@@ -33,7 +33,7 @@ test('all four real GLB tyres remain supported through rolling and reversed rout
   const {r,opening}=fixture(),bytes=await readFile(new URL('../public/scene/models/drf-sprint-03.glb',import.meta.url)),root=await parseTrackModel(bytes.buffer.slice(bytes.byteOffset,bytes.byteOffset+bytes.byteLength))
   const wheels=[];root.traverse(o=>{if(o.name.startsWith('wheel-'))wheels.push(o)});assert.equal(wheels.length,4)
   const rolling=prepareRollingWheels(root,()=>{},tracksideRoute.vehicleScale),lease=createTrackModelLease(()=>{},{bytes:async()=>bytes,parse:async()=>root});await lease.load('/fixture')
-  const ground=[opening.track.getObjectByName('supported-service-lane'),opening.track.getObjectByName('level-service-apron')]
+  const ground=['supported-service-lane','level-service-apron','curve-exit-road'].map(name=>opening.track.getObjectByName(name))
   let greatestGap=0
   for(const direction of ['left-to-right','right-to-left'])for(let i=0;i<=100;i++){
     const pose=tracksidePose({direction},i/100);root.position.set(...pose.position);root.rotation.y=pose.yaw;root.scale.setScalar(tracksideRoute.vehicleScale);rolling.update(pose.distance);root.updateMatrixWorld(true)
