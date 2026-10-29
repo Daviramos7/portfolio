@@ -211,7 +211,7 @@ Aprovação do Davi: pendente.
   (saída do pit animada só com movimento ligado; volta ao pit sem animação); fatiada em **4a/4b/4c com gate**.
   Registro completo em `docs\design\M16-FASE4-DESENHO.md` §8.
 
-## Fase 4a — estrutura da sala elevada (branch `feat/m16-fase4a`, sem merge)
+## Fase 4a — estrutura da sala elevada (branch `feat/m16-fase4a`, integrada em `dc9c50b`)
 
 **Limite exato da 4a.** Dentro: sala subida H = 4,5 m; boxes embaixo (3 vãos abertos no nível da M15, `y = −0,007`);
 fachada de vidro falso (montantes a cada 2,4 m, travessa a 2,6 m, peitoril de 0,25 m, guarda-corpo a 1,05 m, testa da
@@ -309,3 +309,26 @@ Sem FPS medido. Sem telefone físico. Áudio da passagem não recalibrado (o pan
 longe soa mais baixo).
 
 Aprovação do Davi: pendente.
+
+### Fase 4a · integração (fila 06, 29/10/2026)
+
+Gate visual: o Davi aprovou o enquadramento da 4a (sala elevada 4,5 m + reta em z −52, `d3eebd9`) em 28/10/2026,
+17h43. O carro é provisório: sai pelos modelos da IA 3D na 4b/4c.
+
+- Merge `--no-ff` da `feat/m16-fase4a` na `feat/drf-engineering`: **`dc9c50b`**. Branch e worktree da 4a mantidos.
+- Um conflito, em `src/scene/garageRenderer.ts`, trivial: import e loop do governor da Fase 1 (`40a38c0`) ao lado do
+  `createPitLevel` e do `camera.lookAt(room.localToWorld(...))` da 4a. Ficou o governor da Fase 1 inteiro (amostra
+  depois do teto, `cappedFrameMs`, `loopRenderedAt`) com o `lookAt` da sala elevada. O teto antigo `1000 / 30` da 4a
+  saiu (é o que a Fase 1 substituiu). `CLAUDE.md` (`7f61ba7`) sem conflito.
+- Validação: lint OK; build OK (alerta de chunk conhecido); `node --test tests/*.test.mjs` **97/97** (preview 5175 de
+  pé); `browser-smoke.mjs` exit 0, console e rede sem erros.
+- Prints de conferência, 1440 balanced, sem carro (dev 5176, harness da fila 05 reduzido): garage, telemetry e pit
+  wall. Diff de pixels contra os mesmos quadros da fila 05 (1 a cada 4 px, limiar 30 RGB): **0,00 %** nos três.
+  Pasta: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila06-merge\`
+  (`balanced-1440-{garage,telemetry,pit-wall}-sem-carro.png`, `capture.json`, `smoke\`, `smoke.txt`).
+  Harness: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\harness\capture-fila06-merge.mjs`.
+
+**Pendente:** o carro some no mobile 390 atrás da ficha "Programas" (hero) e do monitor/mesa (pit wall). Precisa de
+decisão de desenho; câmera e UI não foram tocadas. Sem FPS medido, sem telefone físico.
+
+Aprovação do Davi: pendente (merge e pendência do 390).

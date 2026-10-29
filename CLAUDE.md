@@ -41,9 +41,9 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
   (`drf-v2\docs\production\MISSAO-16-BRIEFING.md`). Uma fase por vez; no fim de cada fase, parar e esperar o ok.
 - **Fase 1:** anisotropia `083fdc0`, DPR 1,5 `04bda80` e **bug do dprGovernor corrigido** `40a38c0`, tudo na
   `feat/drf-engineering`.
-- **Fase 4a:** branch `feat/m16-fase4a` (worktree `.agent-grid\worktrees\m16-fase4a`), sala elevada 4,5 m e
-  **reta em z −52** (`d3eebd9`), 94/94 testes. **Sem merge: falta o gate visual do Davi.** Curva na ponta direita do
-  quadro (aprovada pelo Davi). Pendente: o carro some no mobile 390 atrás da ficha "Programas" e do monitor.
+- **Fase 4a: aprovada pelo Davi (28/10 17:43) e integrada** na `feat/drf-engineering` (merge `dc9c50b`): sala
+  elevada 4,5 m e **reta em z −52** (`d3eebd9`), 97/97 testes. Branch e worktree da 4a mantidos. Carro provisório
+  (troca na 4b/4c). Pendente: o carro some no mobile 390 atrás da ficha "Programas" e do monitor.
 - **Fase 3 (IA 3D):** cadeia local pronta em `C:\Users\davir\drf-ia3d\` (FLUX.2 klein 4B → BiRefNet → TripoSG
   sem diso). Teste P1 (handgrip) ok, ~2,5 min. Falta Blender: limpar e decimar de 535 k faces, UV e escala.
   Nada no site ainda. Duplicata de 0,97 GB em `rembg-models\` (pode sair com o ok do Davi).
