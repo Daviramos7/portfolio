@@ -17,7 +17,10 @@ Claude Code precisa a mais: o estado real, o que está aprovado e onde estão os
 - React 19 + TypeScript + Vite + Tailwind 4. A cena é **Three.js imperativo** (`three` 0.186), em `src\scene\`
   (`garageRenderer.ts`, `Garage.ts`, `src\scene\garage\...`).
 - `@react-three/fiber`, `drei`, `gsap` e `framer-motion` estão no `package.json`, mas **nenhum arquivo do `src`
-  importa**. Não migrar para R3F. Antes de usar GSAP/Framer, decidir com o Davi (e considerar remover o que sobrar).
+  importa**. Não migrar para R3F. Decisão de 11/11: R3F e drei **saem**, `gsap` fica, `framer-motion` fica para depois.
+- **R3F/drei ainda não saíram:** o `@types/three` (0.186.0) só existe no projeto como dependência transitiva do drei
+  (`maath`, `stats-gl`). Sem ele o `tsc -b` quebra (TS7016 em todo `src\scene\`). Para remover, primeiro
+  `npm i -D @types/three@0.186.0` (precisa de `npm install`, com ok do Davi) e só depois o `npm uninstall`.
 - Telas da garagem: `src\scene\garage\programmeScreen.ts` (`CanvasTexture`).
 
 ## Comandos (em `drf-v2\`)
@@ -36,7 +39,7 @@ Claude Code precisa a mais: o estado real, o que está aprovado e onde estão os
 Modelos genéricos (controle, handgrip), texto das telas com baixa nitidez, DRF-01 que não lembra um F1 atual e o
 carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova: garagem elevada com corrida ao fundo.
 
-## Estado atual (28/10/2026)
+## Estado atual (11/11/2026)
 - Base: Missão 15 integrada (`fc8afd3`). Em andamento: **Missão 16 — Art Direction Reboot**
   (`drf-v2\docs\production\MISSAO-16-BRIEFING.md`). Uma fase por vez; no fim de cada fase, parar e esperar o ok.
 - **Fase 1:** anisotropia `083fdc0`, DPR 1,5 `04bda80` e **bug do dprGovernor corrigido** `40a38c0`, tudo na
@@ -46,7 +49,15 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
   (troca na 4b/4c). Pendente: o carro some no mobile 390 atrás da ficha "Programas" e do monitor.
 - **Fase 3 (IA 3D):** cadeia local pronta em `C:\Users\davir\drf-ia3d\` (FLUX.2 klein 4B → BiRefNet → TripoSG
   sem diso). Teste P1 (handgrip) ok, ~2,5 min. Falta Blender: limpar e decimar de 535 k faces, UV e escala.
-  Nada no site ainda. Duplicata de 0,97 GB em `rembg-models\` (pode sair com o ok do Davi).
+  Nada no site ainda.
+- **Duplicata do rembg (11/11): conferida, não movida.** `rembg-models\BiRefNet-general-epoch_244.onnx` e
+  `rembg-models\models\birefnet-general\birefnet-general.onnx` são idênticos (972.666.916 bytes, mesmo sha256
+  `58f621f0…1ebd3c`). O rembg 2.0.86 lê o segundo. O primeiro só é citado em `scripts\setup-flux.sh` (linhas 13–14):
+  se sumir, rodar o setup de novo baixa 0,97 GB. Tirar essas linhas antes de mover ou apagar.
+- **Deps (11/11): remoção de R3F/drei tentada e desfeita** (ver "Stack real"). `package.json` e lock iguais ao Git,
+  mas o **`node_modules` local ficou sem 53 pacotes** (entre eles `@types/three`): `npm run build` falha até rodar
+  `npm install` em `drf-v2\`.
+- Easter eggs e decisões de 11/11: `_fila\NOITE-11-11-DECISOES.md` (fora do Git).
 - Alerta de chunk > 500 kB no build (SceneRoot ~674 kB) é conhecido.
 - **Cota (o Davi usa o Claude no estágio):** medir sessão e semana no começo e no fim de cada missão; **pausar a fila
   com a sessão acima de 70%**. O DRF tem prioridade menor que o Plenofone e o Dados com Davi: com a semana acima de
@@ -59,7 +70,10 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
 - Capturas e vídeos em `.agent-grid\screenshots\mission-NN\` (fora do Git), caminhos absolutos no relatório.
 
 ## Assets
-- Só licença que permita uso público. Nada de logo ou marca real (Xbox, Ferrari, F1, equipes): alusões originais.
+- Só licença que permita uso público.
+- **Regra de marcas (11/11):** nomes reais (bandas, músicas, títulos de anime/filme) em **texto simples**, como
+  referência: ok. Logo, capa, arte, personagem, letra de música e forma reconhecível de terceiros (símbolos, objetos
+  icônicos de franquia): **não**. Nada de logo de F1, FIA, equipes ou montadoras.
 - Registrar origem, licença, prompt e hash de cada asset em `drf-v2\docs\production\ASSETS.md`.
 
 ## Documentos (ler só o que a tarefa pedir)
