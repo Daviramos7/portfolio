@@ -63,6 +63,9 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
 - Registrar origem, licença, prompt e hash de cada asset em `drf-v2\docs\production\ASSETS.md`.
 
 ## Documentos (ler só o que a tarefa pedir)
+- **Projeto novo a entrar no portfólio:** Orçamento Público do Recife (pipeline PySpark/dbt + API + agente com evals).
+  Dossiê com textos PT/EN prontos para card e página em `_contexto-projeto-claude\projetos\orcamento-publico-recife.md`
+  (fora do Git). Os números já foram medidos: não arredondar nem "melhorar".
 - Missão atual: `docs\production\MISSAO-16-BRIEFING.md`; relatório por fase em `MISSAO-16.md`.
 - Última cena/áudio: `MISSAO-15.md`, `MISSAO-15-SCENE.md`, `MISSAO-15-AUDIO.md`; câmera/estações: `MISSAO-14-SCENE.md`.
 - Contratos e plano: `docs\CONTRATOS.md`, `docs\PLANO.md`; design: `docs\design\`.
