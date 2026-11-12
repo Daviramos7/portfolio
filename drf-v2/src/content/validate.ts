@@ -35,7 +35,7 @@ export function validatePortfolioContent(content: PortfolioContent): void {
   for (const link of content.profile.contactLinks) { localized(link.label, link.id); url(link.url, link.id) }
   for (const zone of content.zones) { localized(zone.label, zone.id); localized(zone.summary, zone.id) }
   for (const entry of content.projects) {
-    for (const value of [entry.title, entry.summary, entry.problem, entry.contribution, entry.productStatus, ...entry.decisions, ...entry.limitations]) localized(value, entry.id)
+    for (const value of [entry.title, entry.summary, entry.problem, entry.contribution, entry.productStatus, ...entry.decisions, ...entry.results, ...entry.limitations]) localized(value, entry.id)
     refs(entry.evidenceIds, evidence, entry.id)
     refs(entry.relatedZones, zones, entry.id)
     refs(entry.metricIds, metrics, entry.id)

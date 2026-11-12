@@ -56,6 +56,7 @@ export function ProjectDetail({ project, content, locale, section = 'all', quali
       {project.contribution && <div><dt>{t.contribution}</dt><dd>{project.contribution[locale]}</dd></div>}
       {project.productStatus && <div><dt>{t.productStatus}</dt><dd>{project.productStatus[locale]}</dd></div>}
     </dl>}
+    {project.results.length > 0 && <><h4>{t.results}</h4><ul className="drf-text-list">{project.results.map((result, i) => <li key={i}>{result[locale]}</li>)}</ul></>}
     </>}
     {engineering && <>
     {project.decisions.length > 0 && <><h4>{t.decisions}</h4><ul className="drf-text-list">{project.decisions.map((decision, i) => <li key={i}>{decision[locale]}</li>)}</ul></>}

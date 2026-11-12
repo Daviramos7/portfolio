@@ -34,9 +34,9 @@ function fixture(initial = 'https://drf.example/', saved = {}) {
   }
 }
 
-test('catalogue preserves nine bilingual records and scoped execution evidence', () => {
+test('catalogue preserves ten bilingual records and scoped execution evidence', () => {
   assert.doesNotThrow(() => validatePortfolioContent(portfolioContent))
-  assert.equal(portfolioContent.projects.length, 9)
+  assert.equal(portfolioContent.projects.length, 10)
   assert.deepEqual(portfolioContent.metrics.slice(0, 2).map(metric => [metric.value, metric.state]), [[127119, 'reproduced'], [7803361234.91, 'reproduced']])
   assert.equal(new Set(portfolioContent.metrics.map(metric => metric.projectId)).size, 5)
   for (const metric of portfolioContent.metrics) {
@@ -71,6 +71,9 @@ test('content boundary rejects broken references, metric ownership and non-finit
   const missingTranslation = structuredClone(portfolioContent)
   missingTranslation.projects[0].title.en = ''
   assert.throws(() => validatePortfolioContent(missingTranslation), /PT\/EN/)
+  const missingResultTranslation = structuredClone(portfolioContent)
+  missingResultTranslation.projects[0].results[0].en = ' '
+  assert.throws(() => validatePortfolioContent(missingResultTranslation), /PT\/EN/)
 })
 
 test('URL preferences override storage; malformed and unrelated targets fall back safely', () => {

@@ -164,7 +164,7 @@ try {
   check(await evaluate('document.querySelector("[data-scene-root]").dataset.sceneStatus==="unavailable"'),'fallback fixture active')
   // Fallback notice deliberately covers the centre; reading remains an explicit action.
   await evaluate('document.querySelector("#drf-open-case").click();true');await waitFor('!!document.querySelector(".drf-case-pane")')
-  check(await evaluate('document.querySelectorAll(".drf-case-stack .drf-chips li").length===5'),'default case content accessible without WebGL')
+  check(await evaluate('document.querySelectorAll(".drf-case-stack .drf-chips li").length==='+portfolioContent.projects[0].technologies.length),'default case content accessible without WebGL')
   await shot('fallback-case-320-pt')
   await writeFile(directory+'/results.json',JSON.stringify({checks,errors,samples,fontResponses},null,2))
   check(errors.length===0,'no console/network errors: '+JSON.stringify(errors))
