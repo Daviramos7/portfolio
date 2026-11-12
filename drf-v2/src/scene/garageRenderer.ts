@@ -110,7 +110,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     canvas.removeEventListener('pointerleave', clearHover)
     canvas.style.cursor = ''
     if (import.meta.env.DEV) delete (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside
-    scheduler.reset(); pass?.dispose(); audio.dispose()
+    scheduler.reset(); pass?.dispose(); garage?.disposeProps(); audio.dispose()
     opening?.restore()
     scene.environment = null
     environmentTarget?.dispose()
@@ -207,6 +207,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.scenePassNextMs = String(snapshot.nextMs ?? '')
       canvas.dataset.sceneClockMs = String(Math.round(trackTimeMs))
       canvas.dataset.sceneTrackModel = pass?.modelStatus ?? 'fallback'
+      canvas.dataset.sceneHandgripModel = garage?.handgripStatus ?? 'fallback'
       const animate = ambientActive()
       if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
       if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { loopRenderedAt = null; requestFrame(); return }
@@ -353,6 +354,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     scene.add(pass.vehicle)
     void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
+    // Optional prop models arrive after the static batches; the procedural stand-ins cover the wait and any failure.
+    void garage.loadProps().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(opening.track)
     const pitLevel = createPitLevel(resources)
     resources.batch(pitLevel)
