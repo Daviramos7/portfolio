@@ -162,7 +162,7 @@ async function runBrowser(disableWebGL) {
       await waitFor('document.querySelector(".drf-ui")?.dataset.viewMode === "recruiter"')
       assert.equal(await evaluate('document.querySelector("canvas")'), null)
       assert.equal(await evaluate('document.querySelectorAll(".drf-recruiter-zone").length'), 5)
-      assert.equal(await evaluate('document.querySelectorAll(".drf-project-card").length'), 9)
+      assert.equal(await evaluate('document.querySelectorAll(".drf-project-card").length'), 10)
       checks.push('WebGL disabled: readable project, single retry, Recruiter without canvas')
     } else {
       await ready()
@@ -180,7 +180,7 @@ async function runBrowser(disableWebGL) {
           return r.width > 0 && r.height > 0 && r.left >= 0 && r.right <= innerWidth && r.top >= 0 && r.bottom <= innerHeight && (hit === node || node.contains(hit));
         });
       })()`), true, 'Default name, summary, complete stack and action are visible and unobstructed')
-      assert.equal(await evaluate('document.querySelector(".drf-program-title").textContent'), 'Plataforma de Análise de Receitas Municipais')
+      assert.equal(await evaluate('document.querySelector(".drf-program-title").textContent'), portfolioContent.projects[0].title.pt)
       assert.equal(await evaluate('document.querySelector(".drf-hud-nav").getBoundingClientRect().width'), 44)
       const measure = await evaluate('(() => { const c = document.querySelector("canvas"); const gl = c.getContext("webgl2"); const ext = gl.getExtension("WEBGL_debug_renderer_info"); return {drawCalls:Number(c.dataset.sceneDrawCalls),triangles:Number(c.dataset.sceneTriangles),dpr:Number(c.dataset.sceneDpr),gpu:ext ? gl.getParameter(ext.UNMASKED_RENDERER_WEBGL) : "unavailable"} })()')
       assert.ok(measure.drawCalls > 0 && measure.triangles > 0)
@@ -312,7 +312,7 @@ async function runBrowser(disableWebGL) {
       await waitFor('document.querySelector(".drf-ui")?.dataset.viewMode === "recruiter"')
       assert.equal(await evaluate('document.querySelector("canvas")'), null)
       assert.equal(await evaluate('document.querySelectorAll(".drf-recruiter-zone").length'), 5)
-      assert.equal(await evaluate('document.querySelectorAll(".drf-project-card").length'), 9)
+      assert.equal(await evaluate('document.querySelectorAll(".drf-project-card").length'), 10)
       assert.equal(await evaluate('location.hash'), '#garage/atleta-hibrido')
       const expectedFacts = portfolioContent.projects.reduce((count, project) => count + [project.problem, project.contribution, project.productStatus].filter(Boolean).length, 0)
       assert.equal(await evaluate('document.querySelectorAll(".drf-facts dt").length'), expectedFacts, 'Only verified optional facts are rendered')
