@@ -7,6 +7,10 @@ import { createProgrammeScreen } from './programmeScreen.ts'
 import { createPersonalDetails } from './personalDetails.ts'
 import { createFacade } from './facade.ts'
 
+/** M16 4b: how far the two rear consoles (Telemetry, Pit Wall) dropped from the approved 1.0 m desk. */
+export const consoleDrop = .2
+const deskTop = 1 - consoleDrop
+
 export function createGarage(r: Resources) {
   const garage = new Group(); garage.name = 'DRF-interior-workshop'
   const { carbon, floor, black, red, white, metal, panel, structure, polymer, light, taskLight, tire } = r.palette
@@ -91,18 +95,20 @@ export function createGarage(r: Resources) {
 
   // Telemetry: instruments, cable tray, rack, keyboards; no invented numerical results.
   const bench = new Group(); bench.position.set(-5.7, 0, -4.75)
-  r.box(bench, [3.7, .95, .8], [0, .48, 0], polymer)
-  r.box(bench, [3.9, .1, 1.12], [0, 1, .04], metal)
-  r.box(bench,[2.92,1.52,.1],[0,1.87,-.23],polymer)
+  // M16 4b (Davi, 11/11): the rear consoles sit `consoleDrop` lower and the monitor bezel is thinner, so the
+  // straight shows between desk and screen on mobile. Screens, signs and cameras keep their place.
+  r.box(bench, [3.7, .95 - consoleDrop, .8], [0, .48 - consoleDrop / 2, 0], polymer)
+  r.box(bench, [3.9, .1, 1.12], [0, deskTop, .04], metal).name = 'telemetry-console-top'
+  r.box(bench,[2.86,1.46,.1],[0,1.87,-.23],polymer)
   screen(bench,'telemetry',[2.8,1.4],[0,1.87,-.167])
-  r.box(bench,[.08,.3,.1],[0,1.16,-.23],metal)
-  r.box(bench,[.7,.035,.25],[0,1.085,.3],carbon)
-  r.rod(bench,[0,1.1,-.3],[0,.17,-.38],.013,black)
+  r.box(bench,[.08,.3 + consoleDrop,.1],[0,1.16 - consoleDrop / 2,-.23],metal)
+  r.box(bench,[.7,.035,.25],[0,deskTop + .085,.3],carbon)
+  r.rod(bench,[0,deskTop + .1,-.3],[0,.17,-.38],.013,black)
   // Socket tray and an insulated maintenance driver, kept below the display sightline.
-  r.box(bench, [.5, .025, .3], [1.25, 1.08, .3], black)
-  for (const x of [.03, .12, .21]) r.rod(bench, [1 + x, 1.1, .3], [1 + x, 1.16, .3], .025, metal)
-  r.rod(bench, [.65, 1.1, .25], [.9, 1.1, .25], .02, metal)
-  r.box(bench, [.13, .045, .06], [.62, 1.1, .25], red)
+  r.box(bench, [.5, .025, .3], [1.25, deskTop + .08, .3], black)
+  for (const x of [.03, .12, .21]) r.rod(bench, [1 + x, deskTop + .1, .3], [1 + x, deskTop + .16, .3], .025, metal)
+  r.rod(bench, [.65, deskTop + .1, .25], [.9, deskTop + .1, .25], .02, metal)
+  r.box(bench, [.13, .045, .06], [.62, deskTop + .1, .25], red)
   garage.add(bench); zoneSign('telemetry', [-5.7, 3.03, -5.02])
   // Open, legible assembly bench: tubular feet and segregated component trays.
   // Kept on the right service aisle, below the pit-wall monitor sightline.
@@ -120,12 +126,12 @@ export function createGarage(r: Resources) {
   for (let y = .3; y < 2; y += .18) r.box(garage, [.53, .025, .025], [-7.72, y, -4.53], metal)
 
   // Pit wall on the other side of the opening.
-  r.box(garage, [3.6, .95, 1], [5.75, .475, -4.65], polymer)
-  r.box(garage, [3.8, .1, 1.16], [5.75, 1, -4.6], metal)
-  r.box(garage,[2.92,1.52,.08],[5.75,1.87,-4.94],polymer)
+  r.box(garage, [3.6, .95 - consoleDrop, 1], [5.75, .475 - consoleDrop / 2, -4.65], polymer)
+  r.box(garage, [3.8, .1, 1.16], [5.75, deskTop, -4.6], metal).name = 'pit-wall-console-top'
+  r.box(garage,[2.86,1.46,.08],[5.75,1.87,-4.94],polymer)
   screen(garage,'pit-wall',[2.8,1.4],[5.75,1.87,-4.89])
-  r.box(garage,[.08,.32,.1],[5.75,1.18,-4.95],metal)
-  r.box(garage,[.7,.03,.27],[5.75,1.07,-4.42],black)
+  r.box(garage,[.08,.32 + consoleDrop,.1],[5.75,1.18 - consoleDrop / 2,-4.95],metal)
+  r.box(garage,[.7,.03,.27],[5.75,deskTop + .07,-4.42],black)
   zoneSign('pit-wall', [5.75, 3.03, -5.05])
 
   // Profile station on left wall, with original abstract Recife bridge and equipment.

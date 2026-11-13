@@ -13,10 +13,11 @@ export const personalDetailDescriptions: Record<ZoneId, Record<Locale, string>> 
   'driver-profile': {pt:'Constância — um handgrip na área do perfil.',en:'Consistency — a handgrip in the profile area.'},
 }
 // Exactly five authored, passive discoveries. These are visual allusions, not biography/data.
+// M16 4b: the two details on the rear consoles follow the desks down 0.2 m (Garage.ts consoleDrop).
 export const personalDetailLayout: readonly { id: string; zone: ZoneId; position: Vec3; yaw: number }[] = [
   { id:'rec-pe', zone:'garage', position:[-3.92,3.05,-6.09], yaw:0 },
-  { id:'three-tone-case', zone:'pit-wall', position:[4.46,1.17,-4.12], yaw:0 },
-  { id:'science-note', zone:'telemetry', position:[-7.22,1.39,-4.18], yaw:.18 },
+  { id:'three-tone-case', zone:'pit-wall', position:[4.46,.97,-4.12], yaw:0 },
+  { id:'science-note', zone:'telemetry', position:[-7.22,1.19,-4.18], yaw:.18 },
   { id:'control-360', zone:'strategy-room', position:[7.09,1.5,3.08], yaw:-Math.PI/2 },
   { id:'constancy-grip', zone:'driver-profile', position:[-6.96,.998,2.9], yaw:Math.PI/2 },
 ]
