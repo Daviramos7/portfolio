@@ -14,6 +14,7 @@ import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
 import { cappedFrameMs, createDprGovernor, type FrameCadence } from './dprGovernor.ts'
 import { estimateTextureBytes } from './textureBytes.ts'
+import { setBrushedAnisotropy } from './garage/surfaceFinish.ts'
 import { createPitLevel } from './garage/pitLevel.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
@@ -230,7 +231,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneGeometryCount = String(renderer.info.memory.geometries)
       canvas.dataset.sceneTextureCount = String(renderer.info.memory.textures)
       // Evidence only: estimated GPU bytes of the scene-owned textures that were actually uploaded.
-      if (import.meta.env.DEV) { const gpu = renderer.properties; canvas.dataset.sceneTextureBytes = String(estimateTextureBytes(scene, map => gpu.has(map) && Boolean(gpu.get(map).__webglTexture)).bytes) }
+      if (import.meta.env.DEV) { const gpu = renderer.properties; canvas.dataset.sceneTextureBytes = String(estimateTextureBytes(scene, map => gpu.has(map) && Boolean((gpu.get(map) as { __webglTexture?: unknown }).__webglTexture)).bytes) }
       canvas.dataset.sceneCameraQuaternion = camera.quaternion.toArray().map(n => n.toFixed(5)).join(',')
       canvas.dataset.sceneCameraPosition = camera.position.toArray().map(n => n.toFixed(4)).join(',')
       canvas.dataset.sceneAmbient = animate ? 'running' : 'paused'
@@ -414,6 +415,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         workshopLight.visible = true
         benchLight.visible = shadows
         rimLight.visible = shadows
+        setBrushedAnisotropy(resources.palette.metal, shadows)
         resize()
       }
       if (previous && previous.reducedMotion !== state.reducedMotion) { scheduler.reset(); pass?.restore() }
