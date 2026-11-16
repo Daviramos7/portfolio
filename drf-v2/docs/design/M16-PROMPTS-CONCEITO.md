@@ -179,6 +179,22 @@ Aprendizados para a próxima rodada de prompts:
 Conferir na escolha de cada seed (olhando o PNG, não o nome): nenhum texto, número, logo, listra de marca de
 chuteira, emblema de capacete ou rosto que lembre personagem existente. Seed com qualquer um desses é descartada.
 
+### Seeds pré-escolhidas na fila 12 (o Davi pode trocar)
+| Objeto | Prompt | Seed | Objeto | Prompt | Seed |
+| --- | --- | --- | --- | --- | --- |
+| controle | P2 v2 | 45 | bola | P5 | 45 |
+| capacete | P5 | 2026 | chuteira em pé | P5 v2 | 45 |
+| caneca | P5 | 16 | chuteira caída | P5 | 16 |
+| figure | P5 | 77 | case de guitarra | P5 v2 | 45 |
+| pneus em mantas | P4 | 77 | amplificador | P5 | 45 |
+| cavalete de câmbio | P4 | 77 | vaso com ESP32 | P5 | 16 |
+| quiosque | P4 v2 | 77 | cinto de ferramentas | P5 | 77 |
+| cobra coral | P5 | 45 | | | |
+
+Motivo de cada escolha, seeds descartadas pela regra de marcas, tempos e hashes:
+`_fila\12-geracao-ia3d-props-eggs.resultado.md` e `C:\Users\davir\drf-ia3d\geracao\escolhas.json` (fora do Git).
+Nada disso entrou no site. Aprovação do Davi: pendente.
+
 ## Ordem
 1. P1 (handgrip) → Hunyuan3D 2.1 (forma) × TripoSG → limpeza → integrar → **gate Davi**.
 2. Se aprovado o pipeline: P2, P4, e só então P3 (carro).
