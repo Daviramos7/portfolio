@@ -13,6 +13,7 @@ import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
 import { cappedFrameMs, createDprGovernor, type FrameCadence } from './dprGovernor.ts'
+import { estimateTextureBytes } from './textureBytes.ts'
 import { createPitLevel } from './garage/pitLevel.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
@@ -228,6 +229,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneTriangles = String(renderer.info.render.triangles)
       canvas.dataset.sceneGeometryCount = String(renderer.info.memory.geometries)
       canvas.dataset.sceneTextureCount = String(renderer.info.memory.textures)
+      // Evidence only: estimated GPU bytes of the scene-owned textures that were actually uploaded.
+      if (import.meta.env.DEV) { const gpu = renderer.properties; canvas.dataset.sceneTextureBytes = String(estimateTextureBytes(scene, map => gpu.has(map) && Boolean(gpu.get(map).__webglTexture)).bytes) }
       canvas.dataset.sceneCameraQuaternion = camera.quaternion.toArray().map(n => n.toFixed(5)).join(',')
       canvas.dataset.sceneCameraPosition = camera.position.toArray().map(n => n.toFixed(4)).join(',')
       canvas.dataset.sceneAmbient = animate ? 'running' : 'paused'
@@ -298,6 +301,11 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   if (import.meta.env.DEV) {
     (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { audio: () => audio.diagnostics,
       solo: (layer: 'ventilation' | 'workshop' | 'pass' | null) => audio.debugSolo(layer),
+      // Evidence only (world coordinates): looks at the exterior from outside the room. Never shipped.
+      view: (position: readonly [number, number, number], target: readonly [number, number, number]) => {
+        transition = null; camera.position.set(position[0], position[1] - roomElevation, position[2])
+        lookAt.set(target[0], target[1] - roomElevation, target[2]); invalidated = true; requestFrame(); return true
+      },
       trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
       if (!scheduler.requestSoon(trackTimeMs, direction)) return false
