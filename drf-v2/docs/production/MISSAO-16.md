@@ -332,3 +332,123 @@ Gate visual: o Davi aprovou o enquadramento da 4a (sala elevada 4,5 m + reta em 
 decisão de desenho; câmera e UI não foram tocadas. Sem FPS medido, sem telefone físico.
 
 Aprovação do Davi: pendente (merge e pendência do 390).
+
+## Fila 11 — materiais (branch `m16-11-materiais`, 15–16/11/2026)
+
+Base: `feat/drf-engineering` em `c96005c`, **sem a 4b**. Câmera, trajetórias, UI, áudio, luzes, ambiente (PMREM) e a
+cota `y=-0,007` não foram tocados. Nenhuma textura baixada: tudo é gerado no código.
+
+### Causa atacada
+A oficina é montada com um cubo e um cilindro unitários escalados por peça. O UV 0..1 deles esticava trama, escovado
+e casca de laranja até o tamanho de cada peça (a mesma trama ocupava 17 m numa soleira e 35 cm num pilar). Isso, mais
+vermelho/branco/preto com `metalness` de metal, era o que mais lia como "demo".
+
+### O que mudou
+- `src/scene/garage/surfaceFinish.ts` (novo): `objectSpaceFinish` troca, via `onBeforeCompile`, os UVs dos mapas por
+  coordenadas **em espaço do objeto, em metros** (`repeat` da textura = tiles por metro; o U segue o lado mais longo
+  da face). Espaço do objeto, não do mundo, para o padrão não "nadar" em peça que gira ou anda (carro da pista,
+  ventilador, e o show car quando a 4b o fizer girar). No mesmo patch: variação lenta de roughness/cor (ruído 3D
+  barato) e uma faixa de desgaste nas arestas do cubo unitário (atributo `drfCube`; outras geometrias leem 0), com
+  largura em metros, nunca maior que 1/4 do lado mais fino, e que some quando fica menor que um pixel.
+- `src/scene/garage/surfaceMaps.ts` (novo): sarja 2×2 (16 fios de 7 mm por tile), escovado em linhas retas (256
+  linhas em 25 cm) e casca de laranja, todos 256 px e sem emenda. O relevo que gera o normal é um canvas separado e
+  não sobe para a GPU.
+- `resources.ts` (paleta):
+  - **carbono**: o campo cinza da trama modula albedo e roughness, normal por fio, `clearcoat .6` /
+    `clearcoatRoughness .2` (antes `.04`). Vale para todas as peças que usam `palette.carbon` (asas, braços,
+    soleira, anel do show car, bancada de estratégia, fundo das placas).
+  - **alumínio** (`metal`): `MeshPhysicalMaterial`, escovado ao longo da peça; anisotropia de material `.55`
+    **só no `balanced`** (`setBrushedAnisotropy`, ligado no mesmo ponto em que o renderer liga sombras). No `low` fica
+    desligada. Cavaletes, tampos, guarda-corpo, montantes e puxadores já usavam `metal`.
+  - **piso**: `roughness` do material = 1 e o mapa carrega o valor absoluto (base ~.50, manchas ±.10, passadas de
+    rodo, trilhas de pneu e riscos mais foscos, poeira junto às paredes), `normalScale .1` com ondulação lenta,
+    `envMapIntensity .65`. O reflexo borrado vem do ambiente pré-filtrado e das lâmpadas; **não há SSR nem espelho**,
+    então o piso não reflete o carro nem os móveis.
+  - **borracha** (`tire`): roughness `.97`, sem metal, `envMapIntensity .25`. Mangueiras e cabo do chão passaram de
+    `black` para `tire`.
+  - **tinta**: `red`, `white`, `black` e `panel` deixaram de ser metálicos (`metalness ≤ .04`, roughness `.52–.88`).
+- `garageRenderer.ts`: uma linha para a anisotropia por qualidade; e, só em DEV, `dataset.sceneTextureBytes` e o hook
+  `drfDebugTrackside.view` (texto idêntico ao da 4b, para o merge não conflitar).
+
+### Decisões tomadas sem perguntar
+- "Anisotropia desde `083fdc0`" é filtro anisotrópico **de textura**, e o teste `text-sharpness` exige que ele fique
+  só no texto. Não mexi nesse teste: o alumínio usa anisotropia **de material**, que é outra coisa.
+- Mapas de material continuam em 256 px e o piso em 512 px (limite pedido: 1024 no `low`). Não subi para não gastar
+  memória no mobile.
+- Não mexi no ambiente nem nas luzes para "ajudar" o metal (a luz é outra missão). Por isso o alumínio ficou com
+  `metalness .88` e cor mais clara: com 1.0 os tampos refletiam o teto escuro e ficavam pretos.
+
+### Medidas (antes × depois)
+Metodologia: dev server em 127.0.0.1:5175, Chrome headless (ANGLE D3D11, RTX 3060), mesma URL e mesma pose, 3,5 s
+depois de `sceneStatus=ready`, leitura de `canvas.dataset` (`renderer.info.render.calls/triangles`,
+`renderer.info.memory.textures`). Bytes de textura: estimativa própria (`src/scene/textureBytes.ts`), soma de
+largura×altura×4 (RGBA8) ×4/3 (mips) das texturas ligadas a materiais da cena **que já subiram para a GPU naquele
+quadro**; não conta o PMREM nem o shadow map e depende do que a pose já mostrou. "Antes" = commit `fce222a` (só a
+medição), "depois" = fim da missão.
+
+| Config · pose | Draw calls | Triângulos | Texturas | Bytes de textura (estim.) |
+| --- | --- | --- | --- | --- |
+| 1440 balanced · hero | 102 → 102 | 70 212 → 70 212 | 29 → 29 | 31 894 187 → 31 894 187 |
+| 1440 balanced · garage | 47 → 47 | 30 434 → 30 434 | 23 → 23 | 20 709 376 → 20 709 376 |
+| 1440 balanced · telemetry | 48 → 48 | 38 362 → 38 282 | 23 → 23 | 20 709 376 → 20 709 376 |
+| 1440 balanced · pit wall | 40 → 40 | 18 756 → 18 676 | 17 → 17 | 10 922 667 → 10 922 667 |
+| 1440 balanced · driver-profile | 48 → 48 | 21 880 → 21 880 | 21 → 21 | 19 223 893 → 19 223 893 |
+| 390 low · hero | 86 → 86 | 66 428 → 66 348 | 24 → 24 | 24 903 680 → 24 903 680 |
+| 390 low · garage | 49 → 49 | 42 652 → 42 652 | 19 → 19 | 17 913 173 → 17 913 173 |
+| 390 low · telemetry | 43 → 43 | 18 362 → 18 282 | 21 → 21 | 20 709 376 → 20 709 376 |
+| 390 low · pit wall | 38 → 38 | 18 468 → 18 388 | 15 → 15 | 10 922 667 → 10 922 667 |
+| 390 low · driver-profile | 40 → 40 | 17 754 → 17 754 | 15 → 15 | 12 233 387 → 12 233 387 |
+
+320 low deu os mesmos números do 390 low nas cinco poses. Os −80 triângulos em algumas poses são a mangueira que
+trocou de lote ao virar `tire` (um cilindro de 80 triângulos). Draw calls, contagem e memória de textura não mudaram:
+a trama do carbono reaproveita a textura que já era o roughness.
+
+**O que essas medidas não dizem:** o custo por pixel subiu (ruído 3D e desgaste em nove materiais, clearcoat mais
+forte no carbono, anisotropia no alumínio no `balanced`) e **isso não foi medido**. Não há FPS nem tempo de quadro.
+O `dprGovernor` ficou em `full` nas capturas `low`, mas a máquina é um desktop com RTX 3060: não vale como
+evidência para celular.
+
+### Validação
+- `npm run lint`: OK. `npm run build`: OK (alerta de chunk conhecido; SceneRoot 679,51 kB).
+- `node --test tests/*.test.mjs` com o preview do build em 5175: **103/103** rodando em série
+  (`--test-concurrency=1`). São os 97 de antes mais 6 novos em `tests/materials-11.test.mjs` (contrato dos materiais,
+  orçamento de textura, âncoras do patch de shader nesta versão do three, cota do piso). Em paralelo (padrão) a
+  primeira rodada deu 100/103 e a segunda 102/103, sempre em testes de UI com Chrome headless; `rescue-ui` passou
+  sozinho. Tratei como disputa entre vários Chromes ao mesmo tempo, **sem ter provado a causa**.
+- `browser-smoke.mjs` no preview: 13 checks, exit 0, console e rede sem erros.
+- Console nas capturas (dev): só o aviso X4122 do compilador HLSL, que já aparecia no "antes".
+
+### Evidência
+Pasta: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila11-materiais\`
+- `before-*` e `after-*`, mesmo enquadramento: `{1440-balanced,390-low,320-low}-{hero,garage,telemetry,pit-wall,driver-profile}.png`.
+- Closes (hook DEV, UI escondida, em 1440 balanced e 390 low): `close-carbono-asa`, `close-carbono-bancada`,
+  `close-carbono-soleira`, `close-piso`, `close-piso-rasante`, `close-aluminio-bancada`,
+  `close-aluminio-guarda-corpo`, `close-pneu-borracha`, `close-pintura-ferramentas`.
+- `before-report.json`, `after-report.json`; `iter1\`, `iter2\`, `iter3\` são as rodadas de ajuste.
+- Harness: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\harness\capture-fila11-materiais.mjs`.
+
+Corrigido depois de olhar os prints: verniz do carbono forte demais (`.8` → `.6`); piso com cara de molhado e mancha
+estourada perto da luminária (base de roughness `.34` → `.50`, `envMapIntensity .65`); alumínio preto nos tampos
+(`metalness 1` → `.88`, cor mais clara); pneu sem volume (cor um pouco mais clara); faixas brancas do piso sumindo.
+
+### O que ficou fraco
+- **Piso:** em ângulo rasante ainda clareia bastante perto da fachada e da luminária, e a variação de roughness é
+  discreta nas poses normais. Com 512 px para 17×20 m (~3,3 cm por texel) não há detalhe fino de perto.
+- **Carbono:** a trama só aparece de perto (closes). Nas cinco poses ela vira um tom liso; o que muda nelas é o brilho
+  do verniz. Os fios têm 7 mm, maiores que os de uma sarja 3K.
+- **Desgaste de aresta:** só existe nas peças feitas com o cubo unitário. Cilindros, o carro e qualquer malha própria
+  não têm. É discreto a ponto de quase não se notar nas poses.
+- **Alumínio:** depende do que o ambiente tem para refletir; em contraluz na fachada ele fica claro, quase branco.
+- **Mobile:** os quadros `before`/`after` de 390 e 320 são quase iguais, porque a ficha cobre o piso e o carro.
+- Rodas (`alloy`, `brake`), vidro da fachada e concreto dos boxes não foram tocados.
+
+### Não verificado
+- Desempenho em aparelho real, FPS e tempo de quadro. Nenhum celular físico.
+- Convivência com a 4b (não fiz merge nem checkout). Risco conhecido: as duas branches acrescentam seção no fim deste
+  arquivo, então este `MISSAO-16.md` deve conflitar (resolver mantendo as duas). Em `resources.ts`, `Garage.ts` e
+  `garageRenderer.ts` editei longe das linhas da 4b, mas isso só o merge confirma. Os materiais novos da 4b (asfalto,
+  grama, brita, tinta de pista) não recebem o acabamento em espaço do objeto.
+- GPUs que não sejam a desta máquina (o patch de shader só foi compilado aqui, em ANGLE D3D11).
+- Reduced motion e fallback sem WebGL só pelo smoke, sem print dedicado.
+
+Aprovação do Davi: pendente
