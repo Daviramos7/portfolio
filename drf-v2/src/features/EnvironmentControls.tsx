@@ -2,6 +2,7 @@ import { Activity, Pause, Volume2, VolumeX } from 'lucide-react'
 import { useSyncExternalStore } from 'react'
 import type { PortfolioShellProps } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
+import { closeDetailsOnEscape } from './detailsEscape.ts'
 
 const mobileQuery = () => window.matchMedia('(max-width: 600px)')
 const subscribeMobile = (notify: () => void) => {
@@ -12,7 +13,8 @@ const subscribeMobile = (notify: () => void) => {
 const isMobile = () => mobileQuery().matches
 const serverMobile = () => false
 
-export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps, 'state' | 'actions'>) {
+// inline: dentro do menu único do HUD compacto (≤ 480 px), sem as gavetas próprias de Ambiente e Movimento.
+export function EnvironmentControls({ state, actions, inline = false }: Pick<PortfolioShellProps, 'state' | 'actions'> & { inline?: boolean }) {
   const t = uiLabels(state.locale)
   const mobile = useSyncExternalStore(subscribeMobile, isMobile, serverMobile)
   const audioEnabled = state.audio === 'on' || state.audio === 'requested'
@@ -35,37 +37,28 @@ export function EnvironmentControls({ state, actions }: Pick<PortfolioShellProps
       <span>{t.environmentShort}<small aria-live="polite">{ambientLabel}</small></span>
     </button>
   </>
+  const motionOptions = <>
+      <fieldset><legend>{t.motion}</legend>
+        {(['system', 'cinematic', 'reduced'] as const).map(choice => <label key={choice}>
+          <input type="radio" name="drf-motion" value={choice} checked={state.motionPreference === choice} onChange={() => actions.setMotionPreference(choice)} />{choice === 'reduced' ? t.motionReduced : t[choice]}
+        </label>)}
+      </fieldset>
+      <p aria-live="polite">{state.systemReducedMotion ? t.systemReduction : t.systemFullMotion} {state.reducedMotion ? t.reduced : t.motionActive}</p>
+      {state.motionPreference === 'cinematic' && state.systemReducedMotion && <p>{t.motionOverride}</p>}
+      <small>{t.sessionOnly}</small>
+  </>
+  if (inline) return <div className="drf-hud-environment drf-hud-environment-inline" role="group" aria-label={t.environment}>
+    {secondary}
+    <div className="drf-motion-inline">{motionOptions}</div>
+  </div>
   return <div className="drf-hud-environment" role="group" aria-label={t.environment}>
-    {mobile ? <details className="drf-environment-panel" onKeyDown={event => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        event.stopPropagation()
-        event.currentTarget.open = false
-        event.currentTarget.querySelector('summary')?.focus({ preventScroll: true })
-      }
-    }}>
+    {mobile ? <details className="drf-environment-panel" onKeyDown={closeDetailsOnEscape}>
       <summary>{t.environmentShort}<small className="drf-environment-state" aria-live="polite">{ambientLabel}</small><small>{t.audio}: {audioLabel}</small></summary>
       <div className="drf-environment-options">{secondary}</div>
     </details> : secondary}
-    <details className="drf-motion-control" onKeyDown={event => {
-      if (event.key === 'Escape') {
-        event.preventDefault()
-        event.stopPropagation()
-        event.currentTarget.open = false
-        event.currentTarget.querySelector('summary')?.focus({ preventScroll: true })
-      }
-    }}>
+    <details className="drf-motion-control" onKeyDown={closeDetailsOnEscape}>
       <summary>{t.motion}<small>{state.motionPreference === 'reduced' ? t.motionReduced : t[state.motionPreference]}</small></summary>
-      <div className="drf-motion-options">
-        <fieldset><legend>{t.motion}</legend>
-          {(['system', 'cinematic', 'reduced'] as const).map(choice => <label key={choice}>
-            <input type="radio" name="drf-motion" value={choice} checked={state.motionPreference === choice} onChange={() => actions.setMotionPreference(choice)} />{choice === 'reduced' ? t.motionReduced : t[choice]}
-          </label>)}
-        </fieldset>
-        <p aria-live="polite">{state.systemReducedMotion ? t.systemReduction : t.systemFullMotion} {state.reducedMotion ? t.reduced : t.motionActive}</p>
-        {state.motionPreference === 'cinematic' && state.systemReducedMotion && <p>{t.motionOverride}</p>}
-        <small>{t.sessionOnly}</small>
-      </div>
+      <div className="drf-motion-options">{motionOptions}</div>
     </details>
   </div>
 }
