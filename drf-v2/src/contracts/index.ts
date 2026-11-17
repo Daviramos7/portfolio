@@ -39,6 +39,7 @@ export type Project = Readonly<{
   problem: Localized | null
   contribution: Localized | null
   decisions: readonly Localized[]
+  results: readonly Localized[] // Measured outcomes stated by the source dossier; empty when none are documented.
   technologies: readonly string[]
   contentStatus: 'reviewed' | 'pending-evidence'
   productStatus: Localized | null

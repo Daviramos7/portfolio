@@ -10,6 +10,7 @@ const project = (entry: Pick<Project, 'id' | 'title' | 'summary' | 'technologies
   problem: null,
   contribution: null,
   decisions: [],
+  results: [],
   contentStatus: 'reviewed',
   productStatus: null,
   limitations: [],
@@ -50,6 +51,40 @@ const baselineContent: PortfolioContent = {
     { id: 'strategy-room', label: text('Sala de Estratégia', 'Strategy Room'), summary: text('Decisões técnicas, evidências e contato.', 'Technical decisions, evidence, and contact.') },
   ],
   projects: [
+    // Featured: first in the catalogue and in Recruiter Mode. Title, summary, problem, solution and results are the
+    // owner's dossier text verbatim (PT/EN); the figures were measured by the owner and must not be rounded.
+    project({
+      id: 'recife-public-budget',
+      title: text('Orçamento Público do Recife: dados prontos para agentes de IA', 'Recife Public Budget: data ready for AI agents'),
+      summary: text(
+        'Pipeline de dados, API e agente de IA que responde perguntas sobre receitas e despesas da Prefeitura do Recife, sem inventar números.',
+        'Data pipeline, API and AI agent that answers questions about the City of Recife\'s revenue and spending without making up numbers.',
+      ),
+      problem: text(
+        'Os dados de orçamento são públicos, mas responder "quanto foi arrecadado de IPTU?" exige baixar CSVs de 86 MB e entender a classificação orçamentária. Um LLM sozinho inventa esses números.',
+        'Budget data is public, but answering "how much property tax was collected?" means downloading 86 MB CSVs and understanding the budget classification. An LLM alone makes these numbers up.',
+      ),
+      decisions: [text(
+        'PySpark e dbt transformam 132 mil registros num modelo dimensional com 86 testes de dados. Uma API FastAPI expõe 10 consultas, e um agente com tool calling responde em português. Um verificador fora do LLM confere se cada número citado veio da API.',
+        'PySpark and dbt turn 132k records into a dimensional model with 86 data tests. A FastAPI service exposes 10 queries, and a tool-calling agent answers in Portuguese. A checker outside the LLM verifies that every number cited came from the API.',
+      )],
+      results: [
+        text('100% de acerto com Gemini e 96,7% com um modelo local de 7B, em 30 perguntas com gabarito em SQL, sem nenhum número inventado', '100% accuracy with Gemini and 96.7% with a local 7B model, on 30 questions with SQL ground truth and zero made-up numbers'),
+        text('Evals que pegaram um bug na API e uma regressão de 90% para 76,7%, ambos corrigidos e documentados', 'Evals that caught an API bug and a regression from 90% to 76.7%, both fixed and documented'),
+        text('Online em planos gratuitos, com usuário de banco de privilégio mínimo; uma consulta que estourava o limite de 2 min em produção passou a rodar em 2,7 s', 'Deployed on free tiers with a least-privilege database user; a query that hit the 2-minute timeout in production now runs in 2.7 s'),
+      ],
+      technologies: ['Python', 'PySpark', 'dbt', 'PostgreSQL', 'FastAPI', 'LLM tool calling', 'Streamlit', 'Docker', 'GitHub Actions', 'Supabase'],
+      productStatus: text('Online em planos gratuitos', 'Deployed on free tiers'),
+      repositoryUrl: `${github}/orcamento-publico-recife`,
+      demoUrl: 'https://orcamento-recife.streamlit.app',
+      evidenceIds: ['recife-budget-dossier'],
+      relatedZones: ['garage', 'strategy-room'],
+      // The dossier's indicator table qualifies both accuracy figures as single runs; keep that caveat visible.
+      limitations: [text(
+        'Números atuais vêm de 1 rodada por modelo na versão final da API: Gemini 3.5 Flash-Lite 100% e qwen2.5:7b 96,7% (93,3% sem o guardrail). Os 30 casos foram escritos por mim e várias correções vieram depois de ver o erro, então não é uma medida de confiabilidade geral. Evals do Gemini com 3 repetições ainda não rodados.',
+        'Current figures come from 1 run per model on the final API: Gemini 3.5 Flash-Lite 100% and qwen2.5:7b 96.7% (93.3% without the guardrail). The 30 cases were written by me and several fixes came after seeing the failures, so this is not a general reliability measure. Gemini evals with 3 repetitions have not been run yet.',
+      )],
+    }),
     project({
       id: 'municipal-revenue-platform',
       title: text('Plataforma de Análise de Receitas Municipais', 'Municipal Revenue Analytics Platform'),
@@ -160,6 +195,8 @@ const baselineContent: PortfolioContent = {
     evidence('atleta-bridge', text('README — Android Bridge', 'README — Android Bridge'), `${github}/AtletaHib/blob/0ae9190/android_bridge/README.md`, '0ae9190'),
     evidence('brasilscore-readme', text('README e código — BrasilScore', 'README and code — BrasilScore'), `${github}/BrasilScore/blob/aadc1e9/README.md`, 'aadc1e9'),
     evidence('stock-readme', text('README — Stock Data Pipeline', 'README — Stock Data Pipeline'), `${github}/stock_data_pipeline/blob/main/README.md`, null),
+    // Owner-measured figures from the project dossier (kept outside Git); the repository is the public reference.
+    { ...evidence('recife-budget-dossier', text('Dossiê do autor e repositório — Orçamento Público do Recife', 'Author dossier and repository — Recife Public Budget'), `${github}/orcamento-publico-recife`, null), checkedAt: '2026-11-11' },
     evidence('horta-user-brief', text('Informação fornecida por Davi; material pendente', 'Information supplied by Davi; materials pending'), null, null),
   ],
 }

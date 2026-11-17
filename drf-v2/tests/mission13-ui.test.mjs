@@ -104,7 +104,7 @@ try {
       return {title:root.querySelector('.drf-program-title').textContent,summary:root.querySelector('.drf-program-summary').textContent,stack:[...root.querySelectorAll('.drf-program-stack li')].map(e=>e.textContent),links:[...root.querySelectorAll('.drf-program-context-actions a')].map(e=>e.getAttribute('href')),height:rect.height,tagSize:parseFloat(getComputedStyle(root.querySelector('.drf-program-stack li')).fontSize),visible:elements.every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&r.top>=rect.top&&r.bottom<=rect.bottom&&r.left>=rect.left&&r.right<=rect.right&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})}
     })()`)
     check(result.title===project.title[locale]&&result.summary===project.summary[locale],label+' canonical title/summary')
-    check(JSON.stringify(result.stack)===JSON.stringify(project.technologies),label+' all technologies')
+    check(JSON.stringify(result.stack)===JSON.stringify(project.technologies.slice(0,6)),label+' card technologies (first 6)')
     check(JSON.stringify(result.links)===JSON.stringify([project.repositoryUrl,project.demoUrl].filter(Boolean)),label+' exact real links')
     check(result.visible&&result.tagSize>=13,label+' visible and readable context')
     check(await noOverflow(),label+' no overflow')
@@ -164,7 +164,7 @@ try {
   check(await evaluate('document.querySelector("[data-scene-root]").dataset.sceneStatus==="unavailable"'),'fallback fixture active')
   // Fallback notice deliberately covers the centre; reading remains an explicit action.
   await evaluate('document.querySelector("#drf-open-case").click();true');await waitFor('!!document.querySelector(".drf-case-pane")')
-  check(await evaluate('document.querySelectorAll(".drf-case-stack .drf-chips li").length===5'),'default case content accessible without WebGL')
+  check(await evaluate('document.querySelectorAll(".drf-case-stack .drf-chips li").length==='+portfolioContent.projects[0].technologies.length),'default case content accessible without WebGL')
   await shot('fallback-case-320-pt')
   await writeFile(directory+'/results.json',JSON.stringify({checks,errors,samples,fontResponses},null,2))
   check(errors.length===0,'no console/network errors: '+JSON.stringify(errors))

@@ -238,7 +238,7 @@ try {
     const publicBytes=await readFile(join('public',portfolioContent.profile.cvUrl.replace(/^\//,'')))
     const publicHash=await evaluate(`fetch(${JSON.stringify(portfolioContent.profile.cvUrl)}).then(r=>r.arrayBuffer()).then(b=>crypto.subtle.digest('SHA-256',b)).then(h=>[...new Uint8Array(h)].map(x=>x.toString(16).padStart(2,'0')).join(''))`)
     check(publicHash===createHash('sha256').update(publicBytes).digest('hex'),'existing public PDF GET preserves canonical bytes')
-    check(await evaluate('!document.querySelector(".drf-case-tab-list") && document.querySelectorAll(".drf-dossiers .drf-project-card").length===9'),'Recruiter preserves nine complete linear cases')
+    check(await evaluate('!document.querySelector(".drf-case-tab-list") && document.querySelectorAll(".drf-dossiers .drf-project-card").length===10'),'Recruiter preserves ten complete linear cases')
   }
   await writeFile(directory+'/'+phase+'-identity-results.json',JSON.stringify({checks,errors,fonts,fontResponses},null,2))
   check(errors.length===0,'no console/network errors: '+JSON.stringify(errors))

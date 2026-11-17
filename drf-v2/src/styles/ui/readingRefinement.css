@@ -3,7 +3,7 @@
 .drf-ui .drf-program-context-actions :is(button,a) { font-size: 13px; }
 .drf-program-evidence { font-size: .75rem; }
 .drf-program-position { margin-block: 6px; }
-.drf-program-context-copy { padding-block: 8px; }
+.drf-program-context-copy { padding-block: 8px 6px; } /* M16 fila 17: cabe a ficha de 6 tecnologias nos 45% do smoke */
 .drf-ui .drf-program-summary { font-size: 13px; line-height: 1.45; margin-bottom: 8px; }
 .drf-ui .drf-program-title { margin-bottom: 6px; }
 .drf-project-detail { gap: 16px; }
