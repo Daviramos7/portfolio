@@ -1,0 +1,49 @@
+/* M16 fila 15 — HUD enxuto no celular (≤ 480 px). Desktop e tablet não mudam: tudo aqui fica dentro da media query
+   e as classes novas (.drf-hud-menu, .drf-showcase-toggle, [data-compact], [data-sheet]) só existem nesse tamanho. */
+@media (max-width: 480px) {
+  /* Topo: marca + menu único + Recruiter. */
+  .drf-ui .drf-hud-header { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-height: 52px; padding-bottom: 8px; }
+  .drf-ui .drf-hud-brand { flex: 1 1 auto; min-width: 0; }
+  .drf-hud-menu { flex: 0 0 auto; }
+  .drf-ui .drf-recruiter-switch { min-width: 44px; justify-content: center; }
+  .drf-hud-menu > summary { white-space: nowrap; display: flex; align-items: center; gap: 6px; min-width: 44px; min-height: 44px; padding: 0 10px; list-style: none; background: var(--drf-carbon); border: 1px solid var(--hud-border); font-size: .75rem; cursor: pointer; }
+  .drf-hud-menu > summary::-webkit-details-marker { display: none; }
+  .drf-hud-menu > summary small { font-family: var(--drf-font-mono); font-size: .65rem; color: var(--drf-metal); }
+  .drf-hud-menu > summary:focus-visible { outline: 2px solid var(--drf-white); outline-offset: 3px; }
+  .drf-hud-menu[open] > summary { border-color: var(--drf-white); }
+  .drf-hud-menu-panel { position: absolute; z-index: 7; top: calc(100% + 8px); left: 0; right: 0; display: grid; gap: 12px; max-height: calc(100dvh - 180px); overflow: auto; padding: 14px; background: var(--drf-carbon); border: 1px solid var(--drf-metal); box-shadow: 0 12px 30px #0008; }
+  .drf-hud-menu-panel .drf-hud-locale { display: grid; grid-template-columns: 1fr 1fr; padding: 0; }
+  .drf-hud-menu-panel .drf-hud-locale button { width: auto; height: 44px; }
+  .drf-ui .drf-hud-environment-inline { display: grid; grid-template-columns: minmax(0,1fr); align-items: start; gap: 8px; justify-content: stretch; }
+  .drf-ui .drf-hud-environment-inline > button { width: 100%; min-height: 44px; justify-content: flex-start; padding-inline: 10px; }
+  .drf-ui .drf-hud-environment-inline .drf-volume-control { width: 100%; min-height: 44px; }
+  .drf-motion-inline fieldset { min-width: 0; margin: 0; padding: 0; border: 0; }
+  .drf-motion-inline legend { margin-bottom: 6px; font-weight: 700; }
+  .drf-motion-inline label { display: flex; align-items: center; gap: 8px; min-height: 44px; border-top: 1px solid var(--drf-metal); }
+  .drf-motion-inline input { accent-color: var(--drf-red); }
+  .drf-motion-inline p { margin-block: 10px; font-size: .75rem; }
+
+  /* Status da cena e coordenada saem da tela; o status continua para leitor de tela (role=status). */
+  .drf-ui .drf-zone-coordinate { display: none; }
+  .drf-ui .drf-hud-status { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; border: 0; }
+
+  /* Ficha: barra fina recolhida por padrão na Garagem; nas outras estações, só o nome da zona e a leitura. */
+  .drf-ui .drf-showcase[data-compact] { padding: 6px 8px; }
+  .drf-ui .drf-showcase[data-compact]:not([data-sheet]) .drf-showcase-toolbar { display: none; }
+  .drf-ui .drf-showcase[data-sheet=closed] { display: flex; align-items: center; gap: 8px; }
+  .drf-ui .drf-showcase[data-sheet=closed] .drf-showcase-toolbar { flex: 1 1 auto; min-width: 0; padding: 0; border: 0; }
+  .drf-ui .drf-showcase[data-sheet=closed] :is(.drf-program-identity,.drf-program-selector,.drf-program-context) { display: none; }
+  .drf-ui .drf-showcase[data-sheet=closed] .drf-showcase-command { display: block; flex: 0 0 auto; }
+  .drf-ui .drf-showcase[data-sheet=open] { max-height: calc(100dvh - 160px); overflow: auto; overscroll-behavior: contain; }
+  .drf-showcase-toggle { display: grid; gap: 2px; width: 100%; min-height: 44px; margin: 0; padding: 2px 4px; text-align: left; color: inherit; background: none; border: 0; cursor: pointer; }
+  .drf-showcase-toggle-head { display: flex; align-items: center; gap: 8px; }
+  .drf-showcase-toggle-head .drf-code { margin: 0; }
+  .drf-showcase-toggle-head .drf-program-count { margin-left: auto; font-size: .7rem; }
+  .drf-showcase-toggle-title { overflow: hidden; font-size: .85rem; font-weight: 600; line-height: 1.3; white-space: nowrap; text-overflow: ellipsis; }
+
+  /* Leitura aberta: começa logo abaixo do topo, que agora tem uma linha só. */
+  .drf-ui .drf-workstation { top: calc(max(12px,env(safe-area-inset-top)) + 64px); }
+}
+@media (max-width: 360px) {
+  .drf-hud-menu > summary small { display: none; }
+}

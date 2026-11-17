@@ -94,7 +94,7 @@ try {
   const key=async name=>{await command('Input.dispatchKeyEvent',{type:'keyDown',key:name,code:name,...(name==='Enter'?{text:'\r',windowsVirtualKeyCode:13}:{})});await command('Input.dispatchKeyEvent',{type:'keyUp',key:name,code:name})}
   await viewport(1440,900,false)
   await load('/?lang=pt&mode=immersive#garage/'+portfolioContent.projects[0].id)
-  await click('.drf-motion-control summary');await click('input[value=cinematic]');await key('Escape')
+  await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=cinematic]');await key('Escape')
   await waitFor('document.querySelector(".drf-ui").dataset.reducedMotion==="false"')
   const diagnostic=await evaluate(`({scene:{...document.querySelector('[data-scene-root]').dataset},context:document.querySelector('.drf-showcase').textContent,rect:document.querySelector('.drf-showcase').getBoundingClientRect().toJSON(),summaryPresent:!!document.querySelector('.drf-program-summary'),stackPresent:!!document.querySelector('.drf-program-stack')})`)
   if(phase==='baseline') {
@@ -105,6 +105,8 @@ try {
     await evaluate('window.__editorialCanvas=document.querySelector("canvas");true')
     for(const width of [1440,390,320]) {
       await viewport(width,width===1440?900:844,width!==1440)
+      // M16 fila 15: no celular a ficha começa recolhida; o contexto completo é conferido com ela aberta.
+      if(width!==1440){await waitFor('!!document.querySelector(".drf-showcase-toggle")');await evaluate('document.querySelector(".drf-showcase-toggle").getAttribute("aria-expanded")==="false"&&document.querySelector(".drf-showcase-toggle").click();true');await waitFor('document.querySelector(".drf-showcase-toggle").getAttribute("aria-expanded")==="true"')}
       for(const locale of ['pt','en']) {
         await evaluate(`document.querySelectorAll('.drf-hud-locale button')[${locale==='pt'?0:1}].click();true`)
         await waitFor(`document.querySelector('.drf-ui').lang===${JSON.stringify(locale)}`)
@@ -129,7 +131,7 @@ try {
     check(await evaluate('document.querySelector("#drf-reading-title").textContent===document.querySelector(".drf-program-title").textContent'),'case opens selected record')
     await key('Escape');await frames()
     check(await evaluate('document.activeElement===document.querySelector(".drf-program-context button")'),'Escape restores case trigger focus')
-    await click('.drf-motion-control summary');await click('input[value=reduced]');await key('Escape')
+    await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=reduced]');await key('Escape')
     await waitFor('document.querySelector(".drf-ui").dataset.reducedMotion==="true"')
     check(await evaluate('getComputedStyle(document.querySelector(".drf-program-title > span")).animationName==="none"'),'reduced title remains static')
     await shot('reduced-320')

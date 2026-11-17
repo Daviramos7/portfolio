@@ -16,6 +16,7 @@ import './programShowcase.css'
 import '../styles/ui/typography.css'
 import '../styles/ui/readingInteractions.css'
 import '../styles/ui/readingRefinement.css'
+import './compactHud.css'
 import { ProgramEvidenceStamp } from '../components/drf/ProgramIdentity.tsx'
 
 // The stable visual slot is owned by the Lead. Reading never replaces its tree.

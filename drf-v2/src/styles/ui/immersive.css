@@ -133,6 +133,8 @@
   .drf-hud-nav.drf-zone-nav button { flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 56px; padding: 6px 2px; gap: 4px; border-left: 0; border-bottom: 2px solid transparent; }
   .drf-hud-nav.drf-zone-nav button + button { border-top: 0; border-left: 1px solid #73798280; }
   .drf-hud-nav.drf-zone-nav button[aria-current] { border-bottom-color: var(--drf-white); }
+  /* Barra colada nas bordas: o anel global (offset 5 px) saía da barra; aqui ele fica dentro da aba. */
+  .drf-ui .drf-hud-nav.drf-zone-nav button:focus-visible { outline-offset: -4px; }
   .drf-nav-index { font-size: .65rem; }
   .drf-nav-label { display: none; }
   .drf-nav-short { display: block; font-size: .6rem; line-height: 1.3; }

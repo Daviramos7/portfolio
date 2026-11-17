@@ -84,23 +84,23 @@ try {
   const assert=(v,m)=>{if(!v)throw Error(m);checks.push(m)};
   for(const width of [1440,390,320]){
     await viewport(width,width===1440?900:844,width!==1440);await load('/?lang=pt&mode=immersive#garage');
-    await evaluate('document.querySelector(".drf-motion-control summary").click();true');
-    await waitFor('document.querySelector(".drf-motion-control").open');
+    await evaluate('document.querySelector(":is(.drf-motion-control,.drf-hud-menu) > summary").click();true');
+    await waitFor('document.querySelector(":is(.drf-motion-control,.drf-hud-menu)").open');
     assert(await evaluate('document.querySelector("input[value=system]").checked'), 'system default '+width);
-    assert(await evaluate('document.querySelector(".drf-motion-options").getBoundingClientRect().right<=innerWidth && document.querySelector(".drf-motion-options").getBoundingClientRect().left>=0'), 'motion panel fits '+width);
+    assert(await evaluate('document.querySelector(":is(.drf-motion-options,.drf-hud-menu-panel)").getBoundingClientRect().right<=innerWidth && document.querySelector(":is(.drf-motion-options,.drf-hud-menu-panel)").getBoundingClientRect().left>=0'), 'motion panel fits '+width);
     await shot('p1-after-motion-system-'+width);
     await evaluate('document.querySelector("input[value=cinematic]").click();true');await waitFor('document.querySelector(".drf-ui").dataset.reducedMotion === "false"');
     assert(await evaluate('document.querySelector("#drf-audio-toggle").getAttribute("aria-pressed")==="false"'),'motion does not enable audio '+width);
     await evaluate('document.querySelector("input[value=reduced]").click();true');await waitFor('document.querySelector(".drf-ui").dataset.reducedMotion === "true"');
     await evaluate('document.querySelector("input[value=reduced]").focus();true');await command('Input.dispatchKeyEvent',{type:'keyDown',key:'Escape',code:'Escape'});await command('Input.dispatchKeyEvent',{type:'keyUp',key:'Escape',code:'Escape'});
-    assert(await evaluate('!document.querySelector(".drf-motion-control").open && document.activeElement.matches(".drf-motion-control summary")'),'Escape returns focus '+width);
+    assert(await evaluate('!document.querySelector(":is(.drf-motion-control,.drf-hud-menu)").open && document.activeElement.matches(":is(.drf-motion-control,.drf-hud-menu) > summary")'),'Escape returns focus '+width);
     assert(await noOverflow(),'no horizontal overflow '+width);
     await load('/?lang=en&mode=recruiter#driver-profile');
     assert(await evaluate('Array.from(document.querySelectorAll("a[download]")).some(e=>e.textContent.includes("Download résumé"))'),'English public CV '+width);
     await shot('p1-after-recruiter-cv-'+width);
   }
   assert(await evaluate('(async()=>{const r=await fetch(document.querySelector("a[download]").href);return r.ok && (await r.text()).startsWith("%PDF-")})()'),'public PDF responds with PDF');
-  await load('/?lang=en&mode=immersive#telemetry');await evaluate('document.querySelector(".drf-motion-control summary").click();true');await shot('p1-after-motion-en-320');
+  await load('/?lang=en&mode=immersive#telemetry');await evaluate('document.querySelector(":is(.drf-motion-control,.drf-hud-menu) > summary").click();true');await shot('p1-after-motion-en-320');
   // P1: effective motion wins over native OS reduction; real values stay final.
   await viewport(1440,900,false)
   await load('/?lang=pt&mode=immersive#telemetry')
@@ -120,7 +120,7 @@ try {
     await command('Input.dispatchMouseEvent',{type:'mousePressed',...rect,button:'left',clickCount:1})
     await command('Input.dispatchMouseEvent',{type:'mouseReleased',...rect,button:'left',clickCount:1})
   }
-  await pointer('.drf-motion-control summary')
+  await pointer(':is(.drf-motion-control,.drf-hud-menu) > summary')
   await pointer('input[value=cinematic]')
   await waitFor('document.querySelector(".drf-instrument-value").dataset.animate === "true"')
   await waitFor('document.querySelector(".drf-instrument-value").dataset.visible === "true"')
@@ -134,7 +134,8 @@ try {
   await command('Input.dispatchKeyEvent',{type:'keyDown',key:'End',code:'End'})
   assert(await evaluate('document.activeElement.getAttribute("aria-label").startsWith("Repetir")'), 'toolbar End focus')
   await pointer('[aria-label="Repetir demonstração visual do valor"]')
-  await viewport(320,844,true)
+  // M16 fila 15: com o topo enxuto a leitura ficou mais alta; em 320×640 o valor ainda sai da tela ao rolar.
+  await viewport(320,640,true)
   await evaluate('document.querySelector(".drf-readout-evidence").open=true;document.querySelector(".drf-workstation-body").scrollTop=100000;true')
   await waitFor('document.querySelector(".drf-instrument-value").dataset.visible === "false"')
   assert(await evaluate('getComputedStyle(document.querySelector(".drf-number-glyph")).animationPlayState === "paused"'), 'offscreen pauses digit animation')
@@ -168,6 +169,6 @@ try {
   await command('Fetch.disable')
   await waitFor('document.querySelector("[data-scene-root]")?.dataset.sceneStatus === "ready"')
   // Restore English motion control for the existing fallback check below.
-  await pointer('.drf-motion-control summary')
+  await pointer(':is(.drf-motion-control,.drf-hud-menu) > summary')
   assert(await evaluate(`document.querySelector("input[value=cinematic]").parentElement.textContent.includes("Cinematic")`), 'English motion label');await command('Page.addScriptToEvaluateOnNewDocument', {source: 'const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args)}'});await load('/?lang=en&mode=immersive#strategy-room');await waitFor(`document.querySelector(".drf-ui").dataset.reducedMotion === "true"`);await evaluate(`document.querySelector("#drf-inspect").click();true`);await waitFor(`!!document.querySelector("#drf-reading-title")`);assert(await evaluate(`document.querySelector("#drf-reading-title").textContent.length>0`),'HTML reading without WebGL');await shot('p1-after-fallback-strategy-320');assert(await evaluate("document.querySelector('[data-scene-root]').dataset.sceneStatus === 'unavailable' && document.querySelector('#drf-ambient-toggle').disabled && document.querySelector('#drf-ambient-toggle').textContent.includes('Scene unavailable')"),'ambient unavailable is honest');await writeFile(directory+'p1-directed-results.json',JSON.stringify({checks,errors},null,2));assert(errors.length===0,'no console/network errors');console.log(JSON.stringify({checks,errors,directory},null,2));
 }finally{socket?.close();chrome.kill()}
