@@ -195,6 +195,33 @@ Motivo de cada escolha, seeds descartadas pela regra de marcas, tempos e hashes:
 `_fila\12-geracao-ia3d-props-eggs.resultado.md` e `C:\Users\davir\drf-ia3d\geracao\escolhas.json` (fora do Git).
 Nada disso entrou no site. Aprovação do Davi: pendente.
 
+### Fila 18 (17/11/2026): case de guitarra elétrica (v3, v4) e guitarra elétrica
+Motivo: no gate de 16/11 o Davi viu a v2 do case como capa de violão. Mesmo final de prompt e mesmas seeds
+(16, 45, 77, 2026) da P5.
+
+- **case-guitarra-v3** (descartado, as 4 seeds viraram mala de viagem curta): `Studio product photo of a single
+  closed rectangular hardshell electric guitar case standing upright on its short end, flat rectangular box shape
+  with rounded edges, slightly narrower at the top end, slim and shallow depth, black textured tolex vinyl covering,
+  polished chrome metal corner protectors on all eight corners, three chrome metal latches along the long side edge,
+  black carry handle on the long side, plain lid surface with no badge and no stickers`
+- **case-guitarra-v4** (usado, seed 16): `Studio product photo of a single closed hardshell electric guitar case
+  standing upright, long and narrow, about three times taller than it is wide, sized to hold one solid-body electric
+  guitar, wide squared lower end for the guitar body tapering in a straight line to a narrow squared upper end for
+  the neck, slim shallow depth, black textured tolex vinyl covering, polished chrome metal corner protectors on every
+  corner, three small chrome latches along the long side edge, black carry handle on the long side, plain lid with no
+  badge and no stickers`
+- **guitarra-eletrica** (seed 77): `Studio product photo of a single solid-body electric guitar of an original custom
+  design standing upright, front view, sharp asymmetric offset double-cutaway body with angular bevelled horns, gloss
+  black finish with one thin red stripe and one thin white stripe running in parallel diagonally across the body, six
+  metal strings, two black rectangular humbucker pickups clearly visible, black pickguard, fixed bridge, three plain
+  black control knobs, dark fretboard with small dot inlays, plain pointed angular headstock with six chrome tuners and
+  no logo`
+
+Aprendizado: para case de elétrica, dar a proporção ("three times taller than wide") e o afunilamento em linha reta;
+"contoured" puxa violão e "rectangular" sem proporção puxa mala. A malha do TripoSG é só geometria: as faixas
+vermelha e branca da guitarra não estão no GLB (precisam de material/decalque à mão, se ela entrar na cena).
+Resultado: `_fila\18-guitarra-case.resultado.md`. Aprovação do Davi: pendente.
+
 ## Ordem
 1. P1 (handgrip) → Hunyuan3D 2.1 (forma) × TripoSG → limpeza → integrar → **gate Davi**.
 2. Se aprovado o pipeline: P2, P4, e só então P3 (carro).
