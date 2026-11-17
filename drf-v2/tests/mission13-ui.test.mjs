@@ -114,17 +114,19 @@ try {
     await viewport(width,width===1440?900:844,width!==1440)
     for(const locale of ['pt','en']){
       await load('/?lang='+locale+'&mode=immersive#garage')
-      await click('.drf-motion-control summary');await click('input[value=cinematic]');await key('Escape');await finish()
+      await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=cinematic]');await key('Escape');await finish()
+      // M16 fila 15: no celular a ficha começa recolhida; o contexto completo é conferido com ela aberta.
+      if(width!==1440){check(await evaluate('document.querySelector(".drf-showcase-toggle").getAttribute("aria-expanded")==="false"'),'programs sheet collapsed by default '+width+'/'+locale);await click('.drf-showcase-toggle');await finish()}
       const defaults=await context(portfolioContent.projects[0],locale,'default '+width+'/'+locale)
       check(await evaluate('location.hash==="#garage"'),'default context does not force URL selection')
       await shot('default-'+width+'-'+locale)
       if(width!==1440){
-        check(await evaluate('!document.querySelector(".drf-environment-panel").open'),'secondary controls collapsed by default')
-        check(await evaluate(`document.querySelector('.drf-environment-state').textContent===${JSON.stringify(locale==='pt'?'Ativado':'Enabled')}`),'closed summary reports actual Cinematic ambience')
-        await click('.drf-environment-panel summary')
+        check(await evaluate('!document.querySelector(".drf-hud-menu").open'),'secondary controls collapsed by default')
+        check(await evaluate(`document.querySelector('#drf-ambient-toggle small').textContent===${JSON.stringify(locale==='pt'?'Ativado':'Enabled')}`),'menu reports actual Cinematic ambience')
+        await click('.drf-hud-menu summary')
         check(await evaluate('document.querySelector("#drf-audio-toggle").getBoundingClientRect().height>=44 && document.querySelector("#drf-ambient-toggle").getBoundingClientRect().height>=44'),'environment controls accessible at 44px')
         await key('Escape')
-        check(await evaluate('document.activeElement===document.querySelector(".drf-environment-panel summary")'),'environment Escape restores focus')
+        check(await evaluate('document.activeElement===document.querySelector(".drf-hud-menu summary")'),'environment Escape restores focus')
       }
       for(const project of portfolioContent.projects){
         const cameraSequence=await evaluate('Number(document.querySelector("canvas").dataset.sceneCameraSeq)')
@@ -135,7 +137,7 @@ try {
         await shot('program-'+width+'-'+locale+'-'+project.id)
         await evaluate('window.__m13canvas=document.querySelector("canvas");true')
         await click('#drf-open-case');await waitFor('!!document.querySelector(".drf-case-pane")');await finish()
-        if(width!==1440) check(await evaluate(`document.querySelector('.drf-environment-state').textContent.includes(${JSON.stringify(locale==='pt'?'Pausado':'Paused')})`),'closed summary reports reading pause')
+        if(width!==1440) check(await evaluate(`document.querySelector('#drf-ambient-toggle small').textContent.includes(${JSON.stringify(locale==='pt'?'Pausado':'Paused')})`),'menu reports reading pause')
         const reading=await evaluate(`(()=>{
           const body=document.querySelector('.drf-workstation-body'),r=body.getBoundingClientRect(),tabs=document.querySelector('.drf-case-tab-list').getBoundingClientRect();
           const elements=[body.querySelector('.drf-lead'),...body.querySelectorAll('.drf-chips li')];
@@ -157,7 +159,8 @@ try {
   }
   await viewport(320,844,true);await load('/?lang=en&mode=immersive#garage')
   check(await evaluate('document.querySelector(".drf-ui").dataset.reducedMotion==="true"'),'native reduced preserved')
-  check(await evaluate('document.querySelector(".drf-environment-state").textContent.includes("Restricted")'),'closed summary reports effective system restriction')
+  check(await evaluate('document.querySelector("#drf-ambient-toggle small").textContent.includes("Restricted")'),'menu reports effective system restriction')
+  await click('.drf-showcase-toggle');await finish() // M16 fila 15: ficha recolhida por padrão no celular
   await context(portfolioContent.projects[0],'en','reduced default');await shot('reduced-default-320-en')
   await command('Page.addScriptToEvaluateOnNewDocument',{source:'const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args)}'})
   await load('/?lang=pt&mode=immersive#garage')

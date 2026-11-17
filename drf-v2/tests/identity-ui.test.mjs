@@ -150,7 +150,8 @@ try {
       await viewport(width,width===1440?900:844,width!==1440)
       for(const locale of ['pt','en']){
         await load('/?lang='+locale+'&mode=immersive#garage/atleta-hibrido')
-        await click('.drf-motion-control summary');await click('input[value=cinematic]');await key('Escape');await finish()
+        await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=cinematic]');await key('Escape');await finish()
+        if(width!==1440){await click('.drf-showcase-toggle');await finish()} // M16 fila 15: ficha recolhida por padrão no celular
         fonts.push(await evaluate('({display:getComputedStyle(document.querySelector(".drf-program-title")).fontFamily,body:getComputedStyle(document.querySelector(".drf-program-summary")).fontFamily})'))
         check(await noOverflow(),'garage fits '+width+'/'+locale)
         await shot('garage-'+width+'-'+locale)
@@ -192,7 +193,7 @@ try {
       }
     }
     await viewport(1440,900,false);await load('/?lang=pt&mode=immersive#garage')
-    await click('.drf-motion-control summary');await click('input[value=cinematic]');await key('Escape')
+    await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=cinematic]');await key('Escape')
     for(const [i,zone]of portfolioContent.zones.entries()){
       await click('.drf-hud-nav button:nth-child('+(i+1)+')');await frames();await click('#drf-inspect');await waitFor('!!document.querySelector("#drf-reading-title")');await finish()
       await shot('station-'+zone.id+'-1440-pt');check(await noOverflow(),'station fits '+zone.id);await key('Escape');await frames()
@@ -220,14 +221,15 @@ try {
     check(await evaluate('!document.querySelector(".drf-copy-feedback")'),'copy feedback clears on metric selection')
     check(await noOverflow(),'expanded toolbar fits 390')
     await key('Escape');await frames()
-    await click('.drf-motion-control summary');await click('input[value=reduced]');await key('Escape')
+    await click(':is(.drf-motion-control,.drf-hud-menu) > summary');await click('input[value=reduced]');await key('Escape')
     await click('.drf-hud-nav button:first-child');await frames()
     await evaluate('(()=>{const s=document.querySelector("#drf-program-select");s.value="atleta-hibrido";s.dispatchEvent(new Event("change",{bubbles:true}))})()')
+    await evaluate('document.querySelector(".drf-showcase-toggle")?.getAttribute("aria-expanded")==="false"&&document.querySelector(".drf-showcase-toggle").click();true');await finish() // M16 fila 15
     await click('#drf-open-case');await waitFor('!!document.querySelector(".drf-case-pane")')
     check(await evaluate('getComputedStyle(document.querySelector(".drf-case-pane")).animationName==="none"'),'reduced case transition is static')
     await shot('reduced-case-390-en')
     await command('Page.addScriptToEvaluateOnNewDocument',{source:'const original=HTMLCanvasElement.prototype.getContext;HTMLCanvasElement.prototype.getContext=function(type,...args){return /webgl/i.test(type)?null:original.call(this,type,...args)}'})
-    await load('/?lang=en&mode=immersive#garage/atleta-hibrido');await click('#drf-open-case');await waitFor('!!document.querySelector(".drf-case-pane")')
+    await load('/?lang=en&mode=immersive#garage/atleta-hibrido');await click('.drf-showcase-toggle');await finish();await click('#drf-open-case');await waitFor('!!document.querySelector(".drf-case-pane")')
     await click('[data-case-tab=evidence]')
     check(await evaluate('document.querySelector("[data-scene-root]").dataset.sceneStatus==="unavailable" && !!document.querySelector(".drf-source-detail")'),'new reading interactions work without WebGL')
     await shot('fallback-evidence-390-en')
