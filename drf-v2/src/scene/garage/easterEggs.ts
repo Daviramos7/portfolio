@@ -23,6 +23,9 @@ export type EasterEggModel = {
   finish: { roughness: number; metalness?: number; tint?: string }
 }
 
+// Fila 22: the ball corner sits on the floor right of the car's nose (the old corner hid behind the "Programas"
+// card) and the coral snake on the bench next to the figure, so both read in the 1440 and 390 framings. The boots
+// keep the fila 21 arrangement around the ball, turned by -0.52 rad towards the cameras.
 export const easterEggModels: readonly EasterEggModel[] = [
   { id:'caneca', zone:'telemetry', url:'models/props/caneca.glb', tier:'all', position:[-6.58,.85,-4.38], yaw:.62, scale:1.4,
     limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32 } },
@@ -36,13 +39,13 @@ export const easterEggModels: readonly EasterEggModel[] = [
     limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78 } },
   { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', lightUrl:'models/props/guitarra-512.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
     limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22 } },
-  { id:'bola', zone:'garage', url:'models/props/bola.glb', lightUrl:'models/props/bola-512.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
+  { id:'bola', zone:'garage', url:'models/props/bola.glb', lightUrl:'models/props/bola-512.glb', tier:'full', position:[2.6,0,3.6], yaw:-.22, scale:1,
     limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7 } },
-  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', lightUrl:'models/props/chuteira-em-pe-512.glb', tier:'full', position:[-1.555,0,4.141], yaw:2.57, scale:1,
+  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', lightUrl:'models/props/chuteira-em-pe-512.glb', tier:'full', position:[2.724,0,3.776], yaw:2.05, scale:1,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', lightUrl:'models/props/chuteira-caida-512.glb', tier:'full', position:[-1.743,0,4.276], yaw:.75, scale:1, tilt:[-.2,0], ground:true,
+  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', lightUrl:'models/props/chuteira-caida-512.glb', tier:'full', position:[2.494,0,3.8], yaw:.23, scale:1, tilt:[-.2,0], ground:true,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', lightUrl:'models/props/cobra-coral-512.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
+  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', lightUrl:'models/props/cobra-coral-512.glb', tier:'full', position:[-6.85,.61,1.25], yaw:.4, scale:1,
     limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4 } },
   { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', lightUrl:'models/props/vaso-esp32-512.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
     limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8 } },

@@ -71,7 +71,7 @@ test('phones on Auto show all twelve: selection first, then each station when it
   assert.deepEqual([...requested].sort(),['caneca','capacete','figure'],'opening load is the selection alone')
   const hidden=eggs.root.getObjectByName('easter-egg-setlists');assert.equal(hidden.visible,true,'all twelve are shown')
   await eggs.setZone('pit-wall')
-  assert.deepEqual(requested.slice(3).sort(),['amplificador','case-guitarra','guitarra'])
+  assert.deepEqual(requested.slice(3).sort(),['amplificador-512','case-guitarra-512','guitarra-512'],'phones fetch the 512 px variants (fila 22)')
   await eggs.setZone('pit-wall')
   assert.equal(requested.length,6,'a station is fetched once')
   await eggs.setQuality('low','light')
@@ -79,4 +79,20 @@ test('phones on Auto show all twelve: selection first, then each station when it
   await eggs.setZone('strategy-room')
   assert.equal(requested.length,6,'Leve never downloads more')
   eggs.dispose()
+})
+
+// M16 fila 22: the light profile fetches a variant with the same mesh and UVs and a 512 px texture (desktop unchanged).
+const jpegSize=bytes=>{const b=new Uint8Array(bytes);for(let i=2;i<b.length;){const marker=b[i+1],length=b[i+2]<<8|b[i+3];if(marker>=0xc0&&marker<=0xc2)return[b[i+7]<<8|b[i+8],b[i+5]<<8|b[i+6]];i+=2+length}return null}
+const glbParts=bytes=>{const view=new DataView(bytes),length=view.getUint32(12,true),json=gltfJson(bytes),bin=new Uint8Array(bytes,28+length,view.getUint32(20+length,true));return{json,view:index=>{const v=json.bufferViews[index];return bin.subarray(v.byteOffset??0,(v.byteOffset??0)+v.byteLength)}}}
+test('light variants keep the mesh and UVs and carry a 512 px texture',async()=>{
+  const lighter=easterEggModels.filter(spec=>spec.lightUrl)
+  assert.deepEqual(lighter.map(spec=>spec.id).sort(),easterEggModels.filter(spec=>spec.tier==='full').map(spec=>spec.id).sort())
+  for(const spec of lighter){
+    const full=glbParts(await bytesOf(spec.url)),light=glbParts(await bytesOf(spec.lightUrl))
+    assert.deepEqual(light.json.accessors,full.json.accessors,spec.id+' accessors')
+    assert.deepEqual(light.json.meshes,full.json.meshes,spec.id+' meshes')
+    for(const accessor of full.json.accessors) assert.deepEqual(light.view(accessor.bufferView),full.view(accessor.bufferView),spec.id+' vertex data')
+    assert.deepEqual(jpegSize(light.view(light.json.images[0].bufferView).slice().buffer),[512,512],spec.id+' light texture')
+    assert.deepEqual(jpegSize(full.view(full.json.images[0].bufferView).slice().buffer),[1024,1024],spec.id+' desktop texture')
+  }
 })
