@@ -54,14 +54,14 @@ export const easterEggModels: readonly EasterEggModel[] = [
 ]
 
 // Atlas rectangles in pixels (1024 x 1024). Paper is opaque; marks on objects keep a transparent background.
-const atlasSize = 1024
-const rects = {
+export const atlasSize = 1024
+export const rects = {
   setlist1:[0,0,256,384], setlist2:[256,0,256,384], watchlist:[512,0,256,384], board:[768,0,256,176],
   postit:[768,192,128,128], ticket:[896,192,128,64], tape:[896,264,128,48],
   helmetName:[0,400,256,96], helmetNumber:[256,400,96,96], bootNumber:[352,400,96,96],
   mug:[448,400,320,96], pick:[768,400,96,96], sticker:[864,400,160,72],
 } as const
-type Rect = keyof typeof rects
+export type Rect = keyof typeof rects
 const hand = `"Segoe Print", "Bradley Hand", "Comic Sans MS", ${bodyFont}`
 const setlists = {
   setlist1:['NOITE 1','Waiting for the End','The Little Things Give You Away','November Rain',"Don't Cry",'Re-Arranged','Boiler','Lost in Hollywood','Soldier Side','Sad Statue','Old School Hollywood'],
@@ -70,7 +70,7 @@ const setlists = {
 const watched = ['Dragon Ball','Attack on Titan','Dr. Stone','Death Note','Hunter x Hunter','Cowboy Bebop']
 const watching = ['Vinland Saga','Fullmetal Alchemist','Jujutsu Kaisen']
 
-function drawAtlas(ctx: CanvasRenderingContext2D) {
+export function drawAtlas(ctx: CanvasRenderingContext2D) {
   ctx.clearRect(0, 0, atlasSize, atlasSize)
   const tile = (name: Rect, draw: (w: number, h: number) => void) => {
     const [x, y, w, h] = rects[name]; ctx.save(); ctx.beginPath(); ctx.rect(x, y, w, h); ctx.clip(); ctx.translate(x, y); draw(w, h); ctx.restore()
@@ -133,10 +133,34 @@ function drawAtlas(ctx: CanvasRenderingContext2D) {
   })
 }
 
-function mapToRect(geometry: PlaneGeometry | CylinderGeometry, name: Rect) {
+export function mapToRect(geometry: PlaneGeometry | CylinderGeometry, name: Rect) {
   const [x, y, w, h] = rects[name], uv = geometry.getAttribute('uv')
   for (let i = 0; i < uv.count; i++) uv.setXY(i, (x + uv.getX(i) * w) / atlasSize, 1 - (y + (1 - uv.getY(i)) * h) / atlasSize)
   return geometry
+}
+
+/** Fila 25: marks printed on a generated surface, as data, so the inspection showcase can rebuild them. Model-local
+ * metres before the group scale; `wrap` is the mug's open cylinder, `dark` the dark-ink variant. */
+export type EggMark = { rect: Rect; size: readonly [number, number]; position: Vec3; rotation?: Vec3; wrap?: boolean; dark?: boolean }
+export function eggMarks(id: string): readonly EggMark[] {
+  switch (id) {
+    // Wrapped on the body (centre x -0.018, radius 0.041), on the side away from the handle.
+    case 'caneca': return [{ rect:'mug', size:[.0425, .026], position:[-.018, .055, 0], wrap:true, dark:true }]
+    case 'capacete': return [
+      ...[-1, 1].map(side => ({ rect:'helmetName' as const, size:[.13, .05] as const, position:[side * .177, .245, -.01] as Vec3, rotation:[0, side * Math.PI / 2, 0] as Vec3 })),
+      { rect:'helmetNumber', size:[.035, .035], position:[0, .27, -.137], rotation:[0, Math.PI, 0] },
+    ]
+    case 'chuteira-em-pe': return [{ rect:'bootNumber', size:[.035, .035], position:[-.146, .085, 0], rotation:[0, -Math.PI / 2, 0] }]
+    case 'chuteira-caida': return [{ rect:'tape', size:[.11, .04], position:[.02, .072, .064], rotation:[0, 0, .04] }]
+    case 'amplificador': return [{ rect:'sticker', size:[.08, .036], position:[.08, .235, .095], rotation:[0, 0, -.06] }]
+    case 'case-guitarra': return [{ rect:'pick', size:[.045, .045], position:[.02, 1.052, 0], rotation:[-Math.PI / 2, 0, .5] }]
+    case 'cinto-ferramentas': return [{ rect:'ticket', size:[.1, .05], position:[.005, .25, .052], rotation:[0, 0, .28] }]
+    default: return []
+  }
+}
+/** Geometry for one mark (the caller owns and disposes it). */
+export function eggMarkGeometry(mark: EggMark) {
+  return mapToRect(mark.wrap ? new CylinderGeometry(mark.size[0], mark.size[0], mark.size[1], 24, 1, true, -1.35, 2.7) : new PlaneGeometry(...mark.size), mark.rect)
 }
 
 export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof createPropModelLease>[2], startDelayMs = 1200, restDelayMs = 1500) {
@@ -235,18 +259,10 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     // Marks that sit on a generated surface (model-local metres, before the group scale).
     function marks(id: string, group: Group) {
       const s = easterEggModels.find(spec => spec.id === id)?.scale ?? 1
-      if (id === 'caneca') {
-        // Wrapped on the body (centre x -0.018, radius 0.041), on the side away from the handle.
-        const wrap = mapToRect(r.geometry(new CylinderGeometry(.0425, .0425, .026, 24, 1, true, -1.35, 2.7)), 'mug')
-        r.mesh(group, wrap, darkInk, [-.018 * s, .055 * s, 0]).scale.setScalar(s)
-      } else if (id === 'capacete') {
-        for (const side of [-1, 1]) decal(group, 'helmetName', [.13, .05], [side * .177, .245, -.01], [0, side * Math.PI / 2, 0])
-        decal(group, 'helmetNumber', [.035, .035], [0, .27, -.137], [0, Math.PI, 0])
-      } else if (id === 'chuteira-em-pe') decal(group, 'bootNumber', [.035, .035], [-.146, .085, 0], [0, -Math.PI / 2, 0])
-      else if (id === 'chuteira-caida') decal(group, 'tape', [.11, .04], [.02, .072, .064], [0, 0, .04])
-      else if (id === 'amplificador') decal(group, 'sticker', [.08, .036], [.08, .235, .095], [0, 0, -.06])
-      else if (id === 'case-guitarra') decal(group, 'pick', [.045, .045], [.02, 1.052, 0], [-Math.PI / 2, 0, .5])
-      else if (id === 'cinto-ferramentas') decal(group, 'ticket', [.1, .05], [.005, .25, .052], [0, 0, .28])
+      for (const mark of eggMarks(id)) {
+        if (mark.wrap) { r.mesh(group, r.geometry(eggMarkGeometry(mark)), mark.dark ? darkInk : ink, [mark.position[0] * s, mark.position[1] * s, mark.position[2] * s]).scale.setScalar(s); continue }
+        decal(group, mark.rect, mark.size, mark.position, mark.rotation)
+      }
       group.traverse(object => { object.userData.dynamic = true })
     }
   }

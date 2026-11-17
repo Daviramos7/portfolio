@@ -1,4 +1,4 @@
-import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, RingGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
+import { CanvasTexture, CatmullRomCurve3, CylinderGeometry, Group, MeshBasicMaterial, MeshPhysicalMaterial, PlaneGeometry, RingGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
 import type { Camera } from 'three'
 import type { Locale, Quality, QualityLevel, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
@@ -204,15 +204,29 @@ export function createGarage(r: Resources) {
   // Functional ventilation and a slow instrumentation sweep: the renderer owns their one clock.
   const fanAssembly = new Group(); fanAssembly.position.set(-8.03, 3.72, -.15); fanAssembly.rotation.y = Math.PI / 2
   const fan = new Group(); fanAssembly.add(fan)
+  // Fila 25: dark graphite rim and blades so the fan reads against the pale wall; brushed hub keeps a metal glint.
+  const graphite = r.material(new MeshPhysicalMaterial({ color: '#23282e', metalness: .78, roughness: .38, envMapIntensity: .85, clearcoat: .3, clearcoatRoughness: .35 }))
   for (let n = 0; n < 5; n++) {
-    const blade = r.box(fan, [.15, .43, .035], [0, .22, 0], metal)
+    const blade = r.box(fan, [.15, .43, .035], [0, .22, 0], graphite)
     blade.position.set(Math.sin(n * Math.PI * 2 / 5) * .19, Math.cos(n * Math.PI * 2 / 5) * .19, 0)
     blade.rotation.z = -n * Math.PI * 2 / 5; blade.userData.dynamic = true; blade.castShadow = false
   }
+  const hub = r.mesh(fan, r.geometry(new CylinderGeometry(.075, .085, .08, 24)), metal, [0, 0, .01])
+  hub.rotation.x = Math.PI / 2; hub.castShadow = false; hub.userData.dynamic = true
   garage.add(fanAssembly)
+  // Soft contact shadow on the wall face (x = -8.3) behind the fan: a baked radial falloff, no extra light.
+  const shadowCanvas = document.createElement('canvas'); shadowCanvas.width = shadowCanvas.height = 128
+  const shadowCtx = shadowCanvas.getContext('2d')
+  if (shadowCtx) {
+    const falloff = shadowCtx.createRadialGradient(64, 64, 18, 64, 64, 64)
+    falloff.addColorStop(0, 'rgba(0,0,0,.55)'); falloff.addColorStop(.62, 'rgba(0,0,0,.28)'); falloff.addColorStop(1, 'rgba(0,0,0,0)')
+    shadowCtx.fillStyle = falloff; shadowCtx.fillRect(0, 0, 128, 128)
+  }
+  const fanShadow = r.mesh(garage, r.geometry(new PlaneGeometry(1.5, 1.5)), r.material(new MeshBasicMaterial({ map: r.texture(new CanvasTexture(shadowCanvas)), transparent: true, depthWrite: false, opacity: .8 })), [-8.29, 3.66, -.12])
+  fanShadow.rotation.y = Math.PI / 2; fanShadow.castShadow = fanShadow.receiveShadow = false; fanShadow.name = 'fan-contact-shadow'
   const personal=createPersonalDetails(r);garage.add(personal.root)
   const eggs=createEasterEggs(r);garage.add(eggs.root)
-  const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .05, 8, 32)), metal, [-8, 3.72, -.15])
+  const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .055, 10, 40)), graphite, [-8, 3.72, -.15])
   fanRing.rotation.y = Math.PI / 2; fanRing.castShadow = false
   const projected = new Vector3(), fanWorld = new Vector3()
   function updateAmbient(timeMs: number, camera: Camera) {
@@ -239,7 +253,7 @@ export function createGarage(r: Resources) {
       // Second pass of the static batcher: only the late, non-dynamic pieces (tyres, sidewalls, paper, scarf,
       // stand) are still loose meshes; full-tier groups and model groups are dynamic and stay out.
       r.batch(garage);return loading},
-    disposeProps:()=>{personal.disposeModels();eggs.dispose()}, get handgripStatus(){return personal.handgripStatus},
+    disposeProps:()=>{personal.disposeModels();eggs.dispose()}, easterEggRoot: eggs.root, get handgripStatus(){return personal.handgripStatus},
     setQuality:(quality: Quality, level?: QualityLevel)=>eggs.setQuality(quality, level), setZone:(zone: ZoneId)=>eggs.setZone(zone), get easterEggStatus(){return eggs.status},
     setScreenScale:(scale:number)=>screens.forEach(display=>display.setScale(scale)),
     get screenResolution(){return screens[0]?.resolution ?? [0,0]},

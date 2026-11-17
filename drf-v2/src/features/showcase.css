@@ -1,0 +1,33 @@
+/* Fila 25: inspection showcase and Coleção. Same dark glass and red rule as the HUD panels. */
+.drf-collection-switch { appearance: none; min-height: 44px; padding: .45rem .8rem; border: 1px solid #5d6d78; background: #0c1421d9; color: #eff4f5; font: inherit; font-size: .8rem; letter-spacing: .04em; cursor: pointer; }
+.drf-collection-switch:hover, .drf-collection-switch:focus-visible { border-color: #ea879a; }
+.drf-collection-switch:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.drf-hud-menu-panel .drf-collection-switch { width: 100%; text-align: left; }
+.drf-showcase-backdrop { position: fixed; inset: 0; z-index: 80; display: grid; place-items: center; padding: max(12px, env(safe-area-inset-top)) 12px max(12px, env(safe-area-inset-bottom)); background: #03070dcc; }
+.drf-showcase-dialog { display: flex; flex-direction: column; gap: .6rem; width: min(640px, 100%); max-height: 100%; padding: .9rem 1rem 1rem; background: #0b121cf5; border: 1px solid #2b3945; border-top: 2px solid #b82c45; color: #eff4f5; overflow: auto; }
+.drf-showcase-head { display: flex; align-items: center; gap: .5rem; }
+.drf-showcase-head h2 { flex: 1; margin: 0; font-size: 1.05rem; letter-spacing: .03em; }
+.drf-showcase-count { color: #a9bac4; font: 500 .72rem monospace; }
+.drf-showcase-icon { appearance: none; display: grid; place-content: center; width: 44px; height: 44px; flex-shrink: 0; border: 1px solid #3d4d59; background: #101a26; color: #eff4f5; cursor: pointer; }
+.drf-showcase-icon:hover, .drf-showcase-icon:focus-visible { border-color: #ea879a; }
+.drf-showcase-icon:focus-visible, .drf-collection-grid button:focus-visible, .drf-showcase-canvas:focus-visible { outline: 2px solid #fff; outline-offset: 2px; }
+.drf-showcase-stage { position: relative; aspect-ratio: 4 / 3; max-height: 58vh; width: 100%; background: radial-gradient(circle at 50% 42%, #253442 0%, #0d151f 72%); }
+.drf-showcase-canvas { display: block; width: 100%; height: 100%; touch-action: none; cursor: grab; }
+.drf-showcase-canvas:active { cursor: grabbing; }
+.drf-showcase-status { position: absolute; inset: auto 0 45% 0; margin: 0; text-align: center; color: #bdccd5; font-size: .8rem; }
+.drf-showcase-caption { margin: 0; font-size: .95rem; line-height: 1.45; }
+.drf-showcase-hint { margin: 0; color: #a9bac4; font-size: .74rem; }
+.drf-showcase-tools { display: flex; align-items: center; gap: .4rem; }
+.drf-showcase-tools .drf-showcase-hint { flex: 1; }
+.drf-collection-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(118px, 1fr)); gap: .5rem; margin: 0; padding: 0; list-style: none; }
+.drf-collection-grid button { position: relative; appearance: none; display: flex; flex-direction: column; align-items: center; gap: .35rem; width: 100%; min-height: 44px; padding: .5rem .4rem; border: 1px solid #2b3945; background: #101a26; color: #eff4f5; font: inherit; font-size: .76rem; text-align: center; cursor: pointer; }
+.drf-collection-grid button:hover { border-color: #ea879a; }
+.drf-collection-grid img { width: 96px; height: 96px; object-fit: contain; background: radial-gradient(circle at 50% 42%, #253442 0%, #0d151f 72%); }
+.drf-collection-grid small { position: absolute; top: .3rem; right: .4rem; color: #ea879a; }
+@media (max-width: 480px) {
+  .drf-showcase-dialog { padding: .7rem; }
+  .drf-collection-grid { grid-template-columns: repeat(3, 1fr); }
+  .drf-collection-grid img { width: 72px; height: 72px; }
+  .drf-showcase-stage { aspect-ratio: 1; }
+  .drf-showcase-tools .drf-showcase-hint { font-size: .68rem; }
+}
