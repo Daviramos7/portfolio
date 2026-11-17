@@ -13,7 +13,7 @@ const bytesOf=async url=>{const file=await readFile(new URL('../public/'+url,imp
 const withoutImages=bytes=>{
   const view=new DataView(bytes),jsonLength=view.getUint32(12,true),json=JSON.parse(new TextDecoder().decode(new Uint8Array(bytes,20,jsonLength)))
   delete json.images;delete json.textures;delete json.samplers
-  for(const material of json.materials??[])delete material.pbrMetallicRoughness?.baseColorTexture
+  for(const material of json.materials??[]){delete material.pbrMetallicRoughness?.baseColorTexture;delete material.normalTexture}
   let text=JSON.stringify(json);while(text.length%4)text+=' '
   const head=new TextEncoder().encode(text),rest=new Uint8Array(bytes,20+jsonLength),out=new Uint8Array(20+head.length+rest.length),outView=new DataView(out.buffer)
   outView.setUint32(0,0x46546c67,true);outView.setUint32(4,2,true);outView.setUint32(8,out.length,true);outView.setUint32(12,head.length,true);outView.setUint32(16,0x4e4f534a,true)
@@ -55,7 +55,8 @@ const gltfJson=bytes=>{const view=new DataView(bytes),length=view.getUint32(12,t
 test('each easter egg GLB carries one JPEG base colour texture and UVs',async()=>{
   for(const spec of easterEggModels){
     const json=gltfJson(await bytesOf(spec.url))
-    assert.equal(json.images?.length,1,spec.id+' images')
+    // Fila 22d: the figure also carries a normal map (strands and beard grain) on TEXCOORD_1.
+    assert.equal(json.images?.length,spec.id==='figure'?2:1,spec.id+' images')
     // Fila 22b: the figure is modelled by script with a flat-colour palette (PNG, nearest filtering), not a photo.
     assert.equal(json.images[0].mimeType,spec.id==='figure'?'image/png':'image/jpeg',spec.id+' image type')
     assert.ok(json.materials?.[0]?.pbrMetallicRoughness?.baseColorTexture,spec.id+' base colour texture')
@@ -100,11 +101,15 @@ test('light variants keep the mesh and UVs and carry a 512 px texture',async()=>
 
 test('the figure is the scripted model: palette texture with nearest filtering, one mesh, under 15k triangles',async()=>{
   const spec=easterEggModels.find(item=>item.id==='figure'),bytes=await bytesOf(spec.url),json=gltfJson(bytes)
-  assert.equal(json.samplers?.[0]?.magFilter,9728,'nearest mag filter keeps the colour cells clean')
+  const pbr=json.materials[0].pbrMetallicRoughness,base=json.textures[pbr.baseColorTexture.index]
+  assert.equal(json.samplers?.[base.sampler]?.magFilter,9728,'nearest mag filter keeps the colour cells clean')
+  const normal=json.materials[0].normalTexture
+  assert.ok(normal&&normal.texCoord===1,'normal map on the second UV set')
+  assert.ok(json.meshes[0].primitives.every(p=>p.attributes.TEXCOORD_1!==undefined),'second uv set')
   assert.equal(json.meshes.length,1)
   const root=await parse(bytes);let triangles=0;root.traverse(o=>{if(o instanceof Mesh)triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3})
   assert.ok(triangles<=15000,'triangles '+triangles)
   const size=new Box3().setFromObject(root).getSize(new Vector3())
   assert.ok(Math.abs(size.y-.18)<.002,'height '+size.y)
-  assert.ok(bytes.byteLength<400000,'bytes '+bytes.byteLength)
+  assert.ok(bytes.byteLength<450000,'bytes '+bytes.byteLength) // 22d: +normal map and second UV set (~410 kB)
 })

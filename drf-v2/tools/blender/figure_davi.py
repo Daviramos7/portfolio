@@ -1,9 +1,10 @@
-"""Model the Davi vinyl figure procedurally (M16 fila 22b) and export one GLB.
+"""Model the Davi vinyl figure procedurally (M16 fila 22b, refined in 22d) and export one GLB.
 
   blender.sh --background --python figure_davi.py -- --output figure.glb [--palette paleta.png] [--report figure.json]
 
 Generic chibi vinyl style: big smooth head, eyes and brows as flat paint (decals with no relief), swept-back wavy
-hair as a sculpted cap plus seven locks, short full beard and moustache as their own volumes, black race suit with a
+hair as a thin cap plus fourteen tapering locks, a close-cropped beard, a separate moustache and a painted mouth
+(strand and grain normal map on a second UV set), black race suit with a
 red and white chest band (front and back), gloves, a matte helmet held at the hip and a round base.
 Built in units of 1.8 = total height, then scaled to 0.18 m. Blender is Z-up, front is -Y (the exporter turns it
 into Y-up / +Z front).
@@ -40,7 +41,16 @@ PALETTE = {
     "olho": "#141210",
     "brilho": "#ffffff",      # eye highlight
     "orelha": "#eabd9c",      # ears and nose, a hair darker than the face
+    "boca": "#8a4a42",        # mouth line between moustache and beard (fila 22d)
 }
+
+# Normal map (fila 22d): second UV set "Fios" (glTF TEXCOORD_1). Left half of the texture = strand grooves that vary
+# only along v (hair: u is constant, v follows the comb angle); right half = short grain for beard and moustache
+# (v 0..0.75) and a flat band (v 0.75..1) where every other face points.
+NM_W, NM_H = 256, 128
+NM_FLAT, NM_HAIR, NM_BEARD = 0, 1, 2
+NM_STRANDS = 8            # grooves per texture height
+NM_HAIR_REPEATS = 2.0     # texture repeats per quarter turn of comb angle (32 grooves across the head)
 CELLS = 4
 CELL_PX = 16
 
@@ -74,9 +84,10 @@ class Builder:
     def __init__(self):
         self.bm = bmesh.new()
         self.col = self.bm.faces.layers.int.new("col")
+        self.nm = self.bm.faces.layers.int.new("nm")
         self.names = list(PALETTE)
 
-    def add_bm(self, src, colour, smooth=True, sharp_deg=None, matrix=None):
+    def add_bm(self, src, colour, smooth=True, sharp_deg=None, matrix=None, nm=NM_FLAT):
         """Append a bmesh; colour is a palette name or a function(face_centre_world) -> name."""
         if matrix is not None:
             bmesh.ops.transform(src, matrix=matrix, verts=src.verts)
@@ -84,15 +95,15 @@ class Builder:
         me = bpy.data.meshes.new("tmp")
         src.to_mesh(me)
         src.free()
-        self.add_mesh(me, colour, smooth, sharp_deg)
+        self.add_mesh(me, colour, smooth, sharp_deg, nm)
         bpy.data.meshes.remove(me)
 
-    def add_object(self, obj, colour, smooth=True, sharp_deg=None):
+    def add_object(self, obj, colour, smooth=True, sharp_deg=None, nm=NM_FLAT):
         """Append an object with its modifiers applied (curves and solidified shells)."""
         dg = bpy.context.evaluated_depsgraph_get()
         me = bpy.data.meshes.new_from_object(obj.evaluated_get(dg))
         me.transform(obj.matrix_world)
-        self.add_mesh(me, colour, smooth, sharp_deg)
+        self.add_mesh(me, colour, smooth, sharp_deg, nm)
         bpy.data.meshes.remove(me)
         data = obj.data
         bpy.data.objects.remove(obj)
@@ -101,7 +112,7 @@ class Builder:
         elif isinstance(data, bpy.types.Mesh):
             bpy.data.meshes.remove(data)
 
-    def add_mesh(self, me, colour, smooth, sharp_deg):
+    def add_mesh(self, me, colour, smooth, sharp_deg, nm=NM_FLAT):
         tmp = bmesh.new()
         tmp.from_mesh(me)
         bmesh.ops.triangulate(tmp, faces=tmp.faces[:])
@@ -123,6 +134,7 @@ class Builder:
             nf.smooth = f.smooth
             name = colour(f.calc_center_median()) if callable(colour) else colour
             nf[self.col] = self.names.index(name)
+            nf[self.nm] = nm
         self.bm.edges.ensure_lookup_table()
         for e in tmp.edges:
             if not e.smooth:
@@ -300,47 +312,89 @@ def build(b):
     nose_p, nose_n = head_surface(0.0, 1.36)
     b.add_bm(ellipsoid_bm(nose_p - nose_n * 0.012, (0.04, 0.03, 0.032), seg=14, rings=7), "orelha")
 
-    # Hair cap: shell over the head, cut by a plane that sits high at the forehead and low at the nape.
-    cap = ellipsoid_bm(HEAD_C, HEAD_R * 1.02, seg=40, rings=20)
-    bmesh.ops.bisect_plane(cap, geom=cap.verts[:] + cap.edges[:] + cap.faces[:], plane_co=(0, 0, 1.455),
-                           plane_no=Vector((0, 0.5, 1)).normalized(), clear_inner=True)
-    b.add_object(shell_obj("hair-cap", cap, 0.035), "cabelo")
+    # Mouth: a painted line, visible between the moustache and the beard.
+    b.add_bm(decal_bm(0.0, 1.252, 0.052, 0.013, lift=0.004, seg=16), "boca")
 
-    # Seven wavy locks combed back over the cap, with extra volume at the top front.
-    R = Vector((HEAD_R.x * 1.04, HEAD_R.y * 1.04, HEAD_R.z * 1.04))
-    for i, beta_deg in enumerate((-54, -36, -18, 0, 18, 36, 54)):
+    # Hair cap: thin shell under the locks (no scalp shows between them), high at the forehead, low at the nape.
+    cap = ellipsoid_bm(HEAD_C, HEAD_R * 1.012, seg=40, rings=20)
+    bmesh.ops.bisect_plane(cap, geom=cap.verts[:] + cap.edges[:] + cap.faces[:], plane_co=(0, 0, 1.47),
+                           plane_no=Vector((0, 0.55, 1)).normalized(), clear_inner=True)
+    # Swell the cap under the quiff with the same bell as the locks: from the front the top is one smooth arc and
+    # the locks only ripple on it (no crown of separate bumps).
+    for v in cap.verts:
+        d = v.co - HEAD_C
+        q = Vector((d.x / HEAD_R.x, d.y / HEAD_R.y, d.z / HEAD_R.z)).normalized()
+        beta = math.degrees(math.asin(max(-1.0, min(1.0, q.x))))
+        phi = math.degrees(math.atan2(q.z, -q.y))
+        bell = math.exp(-((phi - 74) / 30) ** 2) * math.exp(-(beta / 36) ** 2)
+        v.co = HEAD_C + d * (1 + 0.115 * bell)
+    b.add_object(shell_obj("hair-cap", cap, 0.022), "cabelo", nm=NM_HAIR)
+
+    # Fourteen thinner locks, all combed back: thick rounded root at the hairline, tapering to a thin tip.
+    # The quiff lift is a smooth bell over the comb angle, so from the front the top reads as one arc (no crown).
+    # (comb angle, start, end, lift of the quiff, tube depth); sides start later and end sooner: short and close.
+    locks = [(b_, 55 + 0.12 * abs(b_), 200, 0.12, 0.05) for b_ in (-26, -15.5, -5.2, 5.2, 15.5, 26)]
+    locks += [(b_, 61, 188, 0.05, 0.045) for b_ in (-49, -37.5, 37.5, 49)]
+    locks += [(b_, 70, 168, 0.0, 0.036) for b_ in (-67, -59, 59, 67)]
+    R = HEAD_R * 1.035
+    for i, (beta_deg, phi0, phi1, quiff, depth) in enumerate(locks):
         pts, radii = [], []
         steps = 18
         for k in range(steps):
             t = k / (steps - 1)
-            phi = math.radians(50 + t * (196 - 50))
-            beta = math.radians(beta_deg * (1 - 0.15 * t) + 4.0 * math.sin(2.6 * phi + i * 0.9))
+            phi_deg = phi0 + t * (phi1 - phi0)
+            phi = math.radians(phi_deg)
+            wave = 2.2 * math.sin(math.radians(phi_deg) * 2.4 + i * 1.3)
+            beta = math.radians(beta_deg * (1 - 0.12 * t) + wave)
             u = Vector((math.sin(beta), -math.cos(phi) * math.cos(beta), math.sin(phi) * math.cos(beta)))
-            lift = 0.94 + 0.06 * min(1, t * 5) + 0.08 * math.exp(-((math.degrees(phi) - 78) / 30) ** 2) * (1 - abs(beta_deg) / 90)
+            bell = math.exp(-((phi_deg - 74) / 26) ** 2) * math.exp(-(beta_deg / 34) ** 2)
+            lift = 0.955 + 0.045 * min(1, t * 6) + quiff * bell + 0.008 * math.sin(phi * 3 + i)
             pts.append(HEAD_C + Vector((R.x * u.x, R.y * u.y, R.z * u.z)) * lift)
-            radii.append(0.3 + 0.7 * math.sin(math.pi * min(1, 0.04 + t * 0.98)) ** 0.7)
-        b.add_object(tube_obj(f"lock-{i}", pts, radii, 0.07), "cabelo")
+            root = 0.6 + 0.4 * min(1, t / 0.07)
+            radii.append(root * (0.14 + 0.86 * (1 - t) ** 0.75))
+        b.add_object(tube_obj(f"lock-{i}", pts, radii, depth), "cabelo", nm=NM_HAIR)
 
-    # Beard: half shell (x >= 0) below a line that climbs to the sideburns, mirrored; short and thick-edged.
-    beard = ellipsoid_bm(HEAD_C, HEAD_R * 1.025, seg=48, rings=24)
-    cuts = [((0, 0, 0), (-1, 0, 0)),                                         # keep x >= 0
-            ((0, 0.1, 0), (0, 1, 0)),                                          # keep the front (y <= 0.1)
-            ((0, 0, 1.22), Vector((-0.3, 0, 1)).normalized())]                 # below the cheek line
-    for co, no in cuts:
-        bmesh.ops.bisect_plane(beard, geom=beard.verts[:] + beard.edges[:] + beard.faces[:], plane_co=co,
-                               plane_no=no, clear_outer=True)
-    b.add_object(shell_obj("beard", beard, 0.045, mirror_x=True), "cabelo")
+    # Beard: close-cropped shell (2 mm on the 18 cm figure) on the jaw and cheeks, climbing to the sideburns in front
+    # of the ears, leaving the mouth and upper lip bare. One symmetric piece (no mirror seam).
+    beard = ellipsoid_bm(HEAD_C, HEAD_R * 1.004, seg=60, rings=30)
 
-    # Moustache: its own tube arching under the nose and dropping at the corners.
+    def smoothstep(e0, e1, x):
+        t = min(1.0, max(0.0, (x - e0) / (e1 - e0)))
+        return t * t * (3 - 2 * t)
+
+    def in_beard(c):
+        ax = abs(c.x)
+        top = 1.212 + 0.215 * smoothstep(0.1, 0.4, ax)
+        back = -0.045 + 0.2 * smoothstep(1.32, 1.1, c.z)
+        return c.z < top and c.y < back
+
+    bmesh.ops.delete(beard, geom=[f for f in beard.faces if not in_beard(f.calc_center_median())], context="FACES")
+    bmesh.ops.delete(beard, geom=[v for v in beard.verts if not v.link_faces], context="VERTS")
+    # Relax the stair-stepped border into a clean line, keeping it on the head surface.
+    for _ in range(8):
+        moves = {}
+        for v in beard.verts:
+            if not v.is_boundary:
+                continue
+            nb = [e.other_vert(v).co for e in v.link_edges if e.is_boundary]
+            if len(nb) == 2:
+                moves[v] = v.co * 0.4 + (nb[0] + nb[1]) * 0.3
+        for v, co in moves.items():
+            d = co - HEAD_C
+            k = 1 / math.sqrt((d.x / HEAD_R.x) ** 2 + (d.y / HEAD_R.y) ** 2 + (d.z / HEAD_R.z) ** 2) * 1.004
+            v.co = HEAD_C + d * k
+    b.add_object(shell_obj("beard", beard, 0.02), "cabelo", nm=NM_BEARD)
+
+    # Moustache: separate thin tube arching under the nose, tapering at the corners, clear of the beard.
     pts, radii = [], []
-    for k in range(13):
-        t = k / 12
-        x = -0.15 + 0.3 * t
-        z = 1.3 - 0.05 * (abs(x) / 0.15) ** 1.6
+    for k in range(15):
+        t = k / 14
+        x = -0.14 + 0.28 * t
+        z = 1.302 - 0.04 * (abs(x) / 0.14) ** 1.6
         p, n = head_surface(x, z)
-        pts.append(p + n * 0.035)
-        radii.append(0.55 + 0.45 * math.sin(math.pi * t))
-    b.add_object(tube_obj("moustache", pts, radii, 0.033), "cabelo")
+        pts.append(p + n * 0.016)
+        radii.append(0.3 + 0.7 * math.sin(math.pi * t) ** 0.6)
+    b.add_object(tube_obj("moustache", pts, radii, 0.024), "cabelo", nm=NM_BEARD)
 
 
 def palette_image(path):
@@ -362,6 +416,57 @@ def palette_image(path):
     return img
 
 
+def normal_image(path):
+    """Tangent-space normal map (see NM_* above), linear data, saved as PNG and packed."""
+    import numpy as np
+    h = np.zeros((NM_H, NM_W))
+    half = NM_W // 2
+    v = (np.arange(NM_H) + 0.5) / NM_H
+    # Strands: rounded ridges with narrow grooves between them, constant along u.
+    ridge = np.abs(np.sin(math.pi * NM_STRANDS * v)) ** 0.6
+    h[:, :half] = ridge[:, None] * 1.5
+    # Grain: blurred random bumps (a few pixels wide) in the beard band; flat band on top.
+    rng = np.random.default_rng(22)
+    beard_rows = int(NM_H * 0.75)
+    g = rng.random((beard_rows, half))
+    for _ in range(3):
+        g = (g + np.roll(g, 1, 0) + np.roll(g, -1, 0) + np.roll(g, 1, 1) + np.roll(g, -1, 1)) / 5
+    h[:beard_rows, half:] = (g - g.mean()) * 3.5
+    dx = (np.roll(h, -1, 1) - np.roll(h, 1, 1)) / 2
+    dy = (np.roll(h, -1, 0) - np.roll(h, 1, 0)) / 2
+    dx[:, half - 1:half + 1] = 0  # no seam ridge between the halves
+    dx[:, -1] = dx[:, 0] = 0
+    dy[beard_rows - 1:beard_rows + 1, half:] = 0
+    dy[-1, half:] = dy[0, half:] = 0
+    n = np.stack([-dx, -dy, np.ones_like(h)], -1)
+    n /= np.linalg.norm(n, axis=-1, keepdims=True)
+    rgba = np.concatenate([n * 0.5 + 0.5, np.ones((NM_H, NM_W, 1))], -1)
+    img = bpy.data.images.new("figure-normal", NM_W, NM_H, alpha=False, is_data=True)
+    img.colorspace_settings.name = "Non-Color"
+    img.pixels = rgba.astype(np.float32).ravel()  # Blender rows start at the bottom; the map has no up/down
+    img.filepath_raw = path
+    img.file_format = "PNG"
+    img.save()
+    img.pack()
+    return img
+
+
+def strand_uv(co, mode):
+    """Second UV set: hair follows the comb angle (lines of constant x on the head run forehead to nape)."""
+    if mode == NM_HAIR:
+        d = co - HEAD_C
+        q = Vector((d.x / HEAD_R.x, d.y / HEAD_R.y, d.z / HEAD_R.z)).normalized()
+        beta = math.asin(max(-1.0, min(1.0, q.x)))
+        return (0.25, beta / (math.pi / 2) * NM_HAIR_REPEATS)
+    if mode == NM_BEARD:
+        d = co - HEAD_C
+        az = math.atan2(d.x, -d.y) / math.pi  # -0.5 .. 0.5 over the front half
+        u = 0.5 + min(0.97, max(0.03, az + 0.5)) * 0.5
+        v = min(0.72, max(0.02, (co.z - 1.0) / 0.45 * 0.72))
+        return (u, v)
+    return (0.75, 0.875)
+
+
 def cell_uv(idx):
     cx, cy = idx % CELLS, idx // CELLS
     return ((cx + 0.5) / CELLS, (cy + 0.5) / CELLS)
@@ -378,12 +483,17 @@ def main():
     build(b)
     bm = b.bm
     bmesh.ops.remove_doubles(bm, verts=bm.verts[:], dist=1e-5)
+    uv = bm.loops.layers.uv.new("UVMap")  # first: palette cells (TEXCOORD_0)
+    fios = bm.loops.layers.uv.new("Fios")  # second: normal map (TEXCOORD_1), in model units before the final scale
+    for f in bm.faces:
+        mode = f[b.nm]
+        for loop in f.loops:
+            loop[fios].uv = strand_uv(loop.vert.co, mode)
     zs = [v.co.z for v in bm.verts]
     s = TARGET_HEIGHT / (max(zs) - min(zs))
     bmesh.ops.transform(bm, matrix=Matrix.Diagonal((s, s, s, 1.0)), verts=bm.verts)
     zmin = min(v.co.z for v in bm.verts)
     bmesh.ops.translate(bm, vec=(0, 0, -zmin), verts=bm.verts)
-    uv = bm.loops.layers.uv.new("UVMap")
     per_colour = {}
     for f in bm.faces:
         idx = f[b.col]
@@ -391,6 +501,7 @@ def main():
         for loop in f.loops:
             loop[uv].uv = cell_uv(idx)
     bm.faces.layers.int.remove(b.col)
+    bm.faces.layers.int.remove(b.nm)
     bm.normal_update()
     me = bpy.data.meshes.new("figure")
     bm.to_mesh(me)
@@ -409,6 +520,18 @@ def main():
     tex.image = img
     tex.interpolation = "Closest"
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
+    nimg = normal_image(os.path.join(out_dir, "figure-normal.png"))
+    ntex = nt.nodes.new("ShaderNodeTexImage")
+    ntex.image = nimg
+    ntex.interpolation = "Linear"
+    uvn = nt.nodes.new("ShaderNodeUVMap")
+    uvn.uv_map = "Fios"
+    nmap = nt.nodes.new("ShaderNodeNormalMap")
+    nmap.uv_map = "Fios"
+    nmap.inputs["Strength"].default_value = 1.0
+    nt.links.new(uvn.outputs["UV"], ntex.inputs["Vector"])
+    nt.links.new(ntex.outputs["Color"], nmap.inputs["Color"])
+    nt.links.new(nmap.outputs["Normal"], bsdf.inputs["Normal"])
     me.materials.append(mat)
 
     triangles = sum(len(p.vertices) - 2 for p in me.polygons)

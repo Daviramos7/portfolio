@@ -208,9 +208,14 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
       const lease = createPropModelLease(model => {
         // The file's own base colour texture (projected FLUX image); the scene material keeps our lighting settings.
         let map: Texture | null = null
-        model.traverse(object => { if (!map && object instanceof Mesh && !Array.isArray(object.material)) map = (object.material as MeshStandardMaterial).map ?? null })
+        let source: MeshStandardMaterial | null = null
+        model.traverse(object => { if (!source && object instanceof Mesh && !Array.isArray(object.material)) { source = object.material as MeshStandardMaterial; map = source.map ?? null } })
+        // Fila 22d: a file's own normal map (the figure's hair strands and beard grain, on its second UV set) is kept.
+        const normal: { normalMap?: Texture, normalScale?: MeshStandardMaterial['normalScale'] } = {}
+        const src = source as MeshStandardMaterial | null
+        if (src?.normalMap) { normal.normalMap = src.normalMap; normal.normalScale = src.normalScale.clone() }
         const glow = spec.glow && map ? { emissive: '#ffffff', emissiveMap: map, emissiveIntensity: spec.glow } : {}
-        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, map, color: map ? spec.finish.tint ?? '#ffffff' : '#3a3c3f', roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6, ...glow }))
+        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, map, color: map ? spec.finish.tint ?? '#ffffff' : '#3a3c3f', roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6, ...normal, ...glow }))
         model.traverse(object => {
           if (!(object instanceof Mesh)) return
           // Small props receive the room's shadows but do not cast: ~150k extra triangles stay out of the shadow pass.

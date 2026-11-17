@@ -240,3 +240,27 @@ Comandos:
 ```
 Na cena: mesma posição, giro e escala da fila 22 (`easterEggs.ts`, `[-6.93,.61,1.85]`, yaw 1.2, 2,1×). Licença: obra própria
 gerada por script do repositório.
+
+## Fila 22d — figure v5: cabelo em mechas e barba rente (17/11/2026)
+Refino da v3 (22b) no mesmo script `drf-v2/tools/blender/figure_davi.py`, **sem IA na cabeça** (a v4 da 22c, cabeça
+TripoSG, foi reprovada pelo Davi e não entrou). Corpo, rosto, olhos, cores e capacete iguais à v3.
+
+- Cabelo: calota fina (2,2 mm) inflada sob o topete + **14 mechas** penteadas para trás (raiz arredondada, afinando até a
+  ponta; topete sobe e vai para trás; laterais curtas e rentes; ondulação suave). As mechas nascem atrás da linha do
+  cabelo, então de frente o topo é um arco liso, sem coroa de pontas.
+- Barba: casca única de 2 mm (sem espelho, some a fresta sob o bigode da v3) no maxilar e nas bochechas, subindo até as
+  costeletas na frente da orelha; borda relaxada (sem dente de serra). **Bigode separado**; **boca** pintada (cor nova
+  `boca` `#8a4a42`) visível entre bigode e barba.
+- **Normal map** 256×128 PNG (dado linear) no segundo UV (`Fios`, glTF `TEXCOORD_1`): metade esquerda ranhuras de fios
+  que seguem o ângulo do penteado; metade direita granulado curto (barba e bigode) e faixa lisa para o resto.
+  Cena: `easterEggs.ts` passa a manter o `normalMap` do arquivo (só o figure tem).
+
+| Arquivo | Bytes | sha256 |
+| --- | --- | --- |
+| `public/models/props/figure.glb` | 409820 | `76194b4509ad3cc41c9c993991dda414adfbb8171d01827cc36382c5243e6cec` |
+| `drf-ia3d/geracao/figure-v5/figure-normal.png` (fora do Git) | — | `d66373dab1d1cda896a1b27d2b2a8232ec9f682c97a9f2f86ebf20daab51eed0` |
+| `drf-ia3d/geracao/figure-v5/figure-paleta.png` (fora do Git) | — | `cc070accc7ad2ee3fffb63d982129d35573e926260e714a1d98790c64823463d` |
+
+Triângulos 14056 (teto 15000), 0.12186 × 0.10581 × 0.18 m (Blender XYZ). Por cor: cabelo/barba/bigode 8224, pele 1680,
+luvas 1168, macacão 1140, capacete 713, orelha/nariz 616, base 188, faixa vermelha 168, viseira 53, faixa branca 40,
+olho 36, brilho 16, boca 14. Comandos iguais aos da 22b, trocando `figure-v3` por `figure-v5`. Licença: obra própria.
