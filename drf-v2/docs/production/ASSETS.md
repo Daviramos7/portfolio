@@ -132,3 +132,38 @@ Uso na cena: `createEasterEggs`, montado depois do primeiro quadro. `low` baixa 
 9 só baixam em `balanced`. Limites por objeto (maior dimensão e triângulos) em `easterEggModels`; arquivo ausente ou fora
 do limite deixa só os detalhes de papel e geometria simples. Pneus: textura de borracha e marcações (`DRF ENGINEERING`,
 `RACE SLICK · 18`) desenhadas em canvas em `src\scene\car\wheels.ts`, sem nome de fornecedor real.
+
+## Easter eggs com cor — fila 21 (17/11/2026)
+
+**Método (opção A, sem download):** `C:\Users\davir\drf-ia3d\scripts\colorir_projecao.py` (Blender 5.2 headless + numpy,
+fora do repo). Para cada GLB limpo da fila 19: procura a direção de vista ortográfica cuja silhueta casa com o alfa do
+recorte BiRefNet da imagem FLUX escolhida (`<pasta>-s<seed>-cut.png`; IoU em grade 72×72, azimute 0–360°, elevação
+≥ −5° para não cair na vista antípoda espelhada), projeta UV por essa vista, recorta a imagem num quadrado em volta do
+objeto, estende as bordas para o fundo transparente (anel a anel, média dos vizinhos) e grava o GLB com a textura em
+JPEG (qualidade 86). O lado oculto recebe a cor da frente, atravessada pela projeção (cor aproximada). Lado da textura:
+512 px nos objetos do nível Leve (caneca, capacete, figure), 1024 no resto. Geometria, triângulos e escala iguais aos
+da fila 19; só mudaram UV, material e imagem. Opção B (regiões com material próprio) não foi necessária.
+Textos (DAVI, 16, 7, SIUUU, caneca, ingresso, palheta, adesivo) continuam no atlas de canvas próprio, por cima; o da
+caneca passou a tinta escura porque a caneca gerada é branca. Prancha de conferência:
+`C:\Users\davir\drf-ia3d\geracao\cor-prancha.png`; resumo por objeto em `geracao\cor.json`.
+Na cena: o material usa o `map` do GLB; o amplificador leva um tom multiplicador `#6a6a6a` (o tolex da imagem é cinza
+médio e a luz do Pit Wall clareava demais); a figure tem 22% de autoiluminação pela própria textura (destaque sem luz
+nova, para não recompilar os programas da cena).
+
+| Arquivo | Imagem de origem | Textura (px) | IoU silhueta | Vista (az / el) | Bytes | SHA-256 do GLB | SHA-256 da textura PNG (`geracao\<pasta>\<id>-cor-<px>.png`) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `bola.glb` | `bola` s45 | 1024 | 0.96 | 209.0° / 73.0° | 307832 | `93c6a6e110f5f73f9164f728a972970456f7d96f9e076d00b0d4e1b869af7e19` | `359a22995da9464cfd4757b15d0a337a8defafe48fd45d4d4720a476b5f3cdf1` |
+| `capacete.glb` | `capacete` s2026 | 512 | 0.969 | 318.0° / 14.0° | 561636 | `d5121360f2de84ff7feb13f85506138d9d91f164efd1f5f49c73667edcfa87f4` | `ab7cb70e4b5141d0179d9fb0a1cd48cde452d6da9b09d89c5d3821bb23a31de8` |
+| `caneca.glb` | `caneca` s16 | 512 | 0.922 | 355.0° / 6.0° | 164968 | `c381adeb0c00760c169d994a11cfcc6fe6b0fbc1eb0aa7f56f51750713f1a3b0` | `1e0731d095a7e9d4b34bfac8213ee5c3ed2f70f3e4db9622c539030b43981b3c` |
+| `figure.glb` | `figure` s77 | 512 | 0.891 | 335.0° / 15.0° | 475448 | `5a1581c5fa670c12c32ce2be565622dc8be5a851b1c7997174ad94b76222d2a9` | `01743e676f5d7260150ee83584223615aa6d66b10c233761f482bfc9d5f1e286` |
+| `amplificador.glb` | `amplificador` s45 | 1024 | 0.926 | 330.0° / 35.0° | 601264 | `8404dfde3c3a337056b00c862a10bce7d79ab0709484d229ede62a56349d3767` | `6b1041630b83c0a26648aa3035222d33cad2685aaf86953c2e3d8247f58b3b75` |
+| `case-guitarra.glb` | `case-guitarra-v4` s16 | 1024 | 0.937 | 54.0° / 13.0° | 483776 | `0a46cc564d97cc7f3f871d9e81a30fca726eeaaded16f4a83d492c6f969aea97` | `46ea0122d53275feb70b6b7695164bdbf8c0ffc6f2f9be240ffa300536f733e0` |
+| `guitarra.glb` | `guitarra-eletrica` s77 | 1024 | 0.878 | 329.0° / -1.0° | 579260 | `d35ae87fb07db4383304da62f5fd0f33937d0da3e1346de762c3c37afd52aa05` | `e3913e36dd6829659a4dc69c2bd1d8a0c69fb2db6100b8ca3b2a22f9366ba307` |
+| `chuteira-em-pe.glb` | `chuteira-em-pe-v2` s45 | 1024 | 0.917 | 18.0° / 31.0° | 285744 | `9b7578ce82cc538f8ff3fdf27019380dd694b0b2adad6b03159f970a3a80feda` | `1b59c3edda6ab0db221310a0b1d921dd6bb1effc703cf690fc1c2f504c9a3216` |
+| `chuteira-caida.glb` | `chuteira-caida` s16 | 1024 | 0.932 | 2.0° / 68.0° | 264696 | `07c6f4221aaf08d751b736cfc33a6d1433aecb24f8a6803cfbff8672eb291dbe` | `7b5ebdb1b89ac23b65525a5d6319c5daa54fb2c77ec18bdd96cb55cc8d16f2dd` |
+| `cobra-coral.glb` | `cobra-coral` s45 | 1024 | 0.928 | 337.0° / 25.0° | 353624 | `e0045e95085e1ddcc1152bd72773f02dace030cd61b4285d5599f789625b2676` | `b4c120f11cf0db4441ce12c5738760d460b0d41b117f68afb4cfededbc868567` |
+| `vaso-esp32.glb` | `vaso-esp32` s16 | 1024 | 0.833 | 351.0° / 16.0° | 504516 | `40f028bedf01e689cd67dec6e1ed516d53c3a27bc102c7a876dcf3b70f262c30` | `3449cc191899dd186638ea911dfc234093cb780fea0e02e429cef23fdf99ebe8` |
+| `cinto-ferramentas.glb` | `cinto-ferramentas` s77 | 1024 | 0.93 | 12.0° / 7.0° | 579208 | `0a4584b0401a9fa0aecc9879f722e12ad58cde1a36d22a60abf439c16649a804` | `b4164dbb9d7cd8670888891281226c7f17ba2c1f1b015f85b1f06f32af95440c` |
+
+Total dos 12: 5161972 bytes (fila 19: 4,22 MB). Origem e licença: as mesmas da fila 19 (imagens FLUX.2 klein 4B e
+malhas TripoSG geradas localmente; sem marca, logo ou texto de terceiros).
