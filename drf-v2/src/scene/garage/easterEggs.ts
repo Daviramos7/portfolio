@@ -1,4 +1,4 @@
-import { BufferAttribute, CanvasTexture, Color, CylinderGeometry, Group, Mesh, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
+import { BufferAttribute, CanvasTexture, Color, CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
 import type { Quality } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { bodyFont, displayFont } from './canvasText.ts'
@@ -158,8 +158,9 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
   const canvas = document.createElement('canvas'); canvas.width = canvas.height = atlasSize
   const ctx = canvas.getContext('2d')
   const atlas = r.textTexture(new CanvasTexture(canvas)); atlas.colorSpace = SRGBColorSpace
-  // Lit like the room, alpha-tested so marks on objects have no box around them; offset beats coplanar flicker.
-  const ink = r.material(new MeshStandardMaterial({ map: atlas, alphaTest: .5, roughness: .78, metalness: 0, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
+  // Same program as the floor contact patch (basic, mapped, transparent): no extra shader compile on slow GPUs.
+  // Dimmed so paper and prints sit in the room light; the offset beats coplanar flicker on the surfaces.
+  const ink = r.material(new MeshBasicMaterial({ map: atlas, color: '#c4c6c4', transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
   const redraw = () => { if (ctx) { drawAtlas(ctx); atlas.needsUpdate = true } }
   redraw(); r.onFontsReady?.(redraw)
   const { metal, black, red, white, polymer } = r.palette

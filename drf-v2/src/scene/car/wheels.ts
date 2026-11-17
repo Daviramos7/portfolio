@@ -1,4 +1,4 @@
-import { CanvasTexture, CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshStandardMaterial, RepeatWrapping, RingGeometry, SRGBColorSpace, Shape, SphereGeometry, TorusGeometry, Vector2 } from 'three'
+import { CanvasTexture, CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, RingGeometry, SRGBColorSpace, Shape, SphereGeometry, TorusGeometry, Vector2 } from 'three'
 import type { Resources } from '../garage/resources.ts'
 import { displayFont } from '../garage/canvasText.ts'
 
@@ -24,8 +24,9 @@ function tyreSurfaces(r: Resources) {
     }
     nctx.putImageData(nimg, 0, 0); rctx.putImageData(rimg, 0, 0)
   }
+  // The grain canvas doubles as albedo: same map set as the floor (map, roughness, normal), so no new shader program.
   const [normalMap, roughnessMap] = [normal, rough].map(canvas => { const map = r.texture(new CanvasTexture(canvas)); map.wrapS = map.wrapT = RepeatWrapping; map.repeat.set(20, 2); return map })
-  const rubber = r.material(new MeshStandardMaterial({ name: 'tyre-rubber', color: '#1c1d1f', metalness: 0, roughness: 1, roughnessMap, normalMap, normalScale: new Vector2(.45, .45), envMapIntensity: .3 }))
+  const rubber = r.material(new MeshStandardMaterial({ name: 'tyre-rubber', color: '#262729', map: roughnessMap, metalness: 0, roughness: 1, roughnessMap, normalMap, normalScale: new Vector2(.45, .45), envMapIntensity: .3 }))
   // Sidewall marks drawn in polar form: the ring's planar UVs put the canvas centre on the axle.
   const side = document.createElement('canvas'); side.width = side.height = 512
   const sctx = side.getContext('2d')
@@ -47,7 +48,8 @@ function tyreSurfaces(r: Resources) {
     marks.needsUpdate = true
   }
   draw(); r.onFontsReady?.(draw)
-  const ink = r.material(new MeshStandardMaterial({ name: 'tyre-sidewall-marks', map: marks, alphaTest: .5, roughness: .9, metalness: 0, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
+  // Same program as the floor contact patch (basic, mapped, transparent); dimmed so the unlit print sits in the rubber.
+  const ink = r.material(new MeshBasicMaterial({ name: 'tyre-sidewall-marks', map: marks, color: '#b9bcbf', transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
   return { rubber, ink }
 }
 
