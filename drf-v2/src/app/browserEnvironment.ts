@@ -1,8 +1,11 @@
-import type { Locale, Quality } from '../contracts/index.ts'
+import type { Locale, Quality, QualityLevel } from '../contracts/index.ts'
 import { isLocale, isViewMode } from './navigation.ts'
 import type { SavedPreferences } from './navigation.ts'
 
 const preferencesKey = 'drf-engineering.preferences.v1'
+const qualityKey = 'drf-engineering.quality.v1'
+export const qualityLevels = ['auto', 'light', 'high', 'max'] as const satisfies readonly QualityLevel[]
+export const isQualityLevel = (value: unknown): value is QualityLevel => qualityLevels.includes(value as QualityLevel)
 export type EnvironmentEvents = Readonly<{
   location: () => void
   reducedMotion: (enabled: boolean) => void
@@ -16,6 +19,9 @@ export type ExperienceEnvironment = Readonly<{
   reducedMotion: () => boolean
   documentVisible: () => boolean
   quality: () => Quality
+  /** Optional so test doubles stay valid; missing storage reads as `auto`. */
+  readQualityLevel?: () => QualityLevel
+  saveQualityLevel?: (level: QualityLevel) => void
   setDocumentLanguage: (locale: Locale) => void
   watch: (events: EnvironmentEvents) => () => void
 }>
@@ -39,6 +45,15 @@ export function createBrowserEnvironment(browser: Window | undefined = typeof wi
     reducedMotion: () => motion?.matches ?? false,
     documentVisible: () => browser?.document.visibilityState !== 'hidden',
     quality: () => browser && browser.innerWidth <= 820 ? 'low' : 'balanced',
+    readQualityLevel: () => {
+      try {
+        const saved = browser?.localStorage.getItem(qualityKey)
+        return isQualityLevel(saved) ? saved : 'auto'
+      } catch { return 'auto' }
+    },
+    saveQualityLevel: level => {
+      try { browser?.localStorage.setItem(qualityKey, level) } catch { /* Armazenamento é opcional: sem ele, volta para Auto. */ }
+    },
     setDocumentLanguage: locale => { if (browser) browser.document.documentElement.lang = locale },
     watch: events => {
       if (!browser) return () => {}

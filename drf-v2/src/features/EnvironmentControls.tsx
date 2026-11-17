@@ -2,6 +2,7 @@ import { Activity, Pause, Volume2, VolumeX } from 'lucide-react'
 import { useSyncExternalStore } from 'react'
 import type { PortfolioShellProps } from '../contracts/index.ts'
 import { uiLabels } from './uiLabels.ts'
+import { qualityLevels } from '../app/browserEnvironment.ts'
 import { closeDetailsOnEscape } from './detailsEscape.ts'
 
 const mobileQuery = () => window.matchMedia('(max-width: 600px)')
@@ -47,9 +48,20 @@ export function EnvironmentControls({ state, actions, inline = false }: Pick<Por
       {state.motionPreference === 'cinematic' && state.systemReducedMotion && <p>{t.motionOverride}</p>}
       <small>{t.sessionOnly}</small>
   </>
+  const qualityName = { auto: t.qualityAuto, light: t.qualityLight, high: t.qualityHigh, max: t.qualityMax }
+  const qualityOptions = <>
+      <fieldset><legend>{t.quality}</legend>
+        {qualityLevels.map(choice => <label key={choice}>
+          <input type="radio" name="drf-quality" value={choice} checked={state.qualityLevel === choice} onChange={() => actions.setQualityLevel(choice)} />{qualityName[choice]}
+        </label>)}
+      </fieldset>
+      <p aria-live="polite">{state.qualityReduced ? t.qualityReduced : state.qualityLevel === 'max' ? t.qualityMaxWarning : state.qualityLevel === 'auto' ? t.qualityAutoHint : ''}</p>
+      <small>{t.qualitySaved}</small>
+  </>
   if (inline) return <div className="drf-hud-environment drf-hud-environment-inline" role="group" aria-label={t.environment}>
     {secondary}
     <div className="drf-motion-inline">{motionOptions}</div>
+    <div className="drf-motion-inline drf-quality-inline">{qualityOptions}</div>
   </div>
   return <div className="drf-hud-environment" role="group" aria-label={t.environment}>
     {mobile ? <details className="drf-environment-panel" onKeyDown={closeDetailsOnEscape}>
@@ -59,6 +71,10 @@ export function EnvironmentControls({ state, actions, inline = false }: Pick<Por
     <details className="drf-motion-control" onKeyDown={closeDetailsOnEscape}>
       <summary>{t.motion}<small>{state.motionPreference === 'reduced' ? t.motionReduced : t[state.motionPreference]}</small></summary>
       <div className="drf-motion-options">{motionOptions}</div>
+    </details>
+    <details className="drf-motion-control drf-quality-control" onKeyDown={closeDetailsOnEscape}>
+      <summary>{t.quality}<small>{qualityName[state.qualityLevel]}{state.qualityReduced ? ' ↓' : ''}</small></summary>
+      <div className="drf-motion-options">{qualityOptions}</div>
     </details>
   </div>
 }

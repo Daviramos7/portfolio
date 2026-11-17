@@ -241,6 +241,8 @@ export function createGarage(r: Resources) {
       r.batch(garage);return loading},
     disposeProps:()=>{personal.disposeModels();eggs.dispose()}, get handgripStatus(){return personal.handgripStatus},
     setQuality:(quality: Quality)=>eggs.setQuality(quality), get easterEggStatus(){return eggs.status},
+    setScreenScale:(scale:number)=>screens.forEach(display=>display.setScale(scale)),
+    get screenResolution(){return screens[0]?.resolution ?? [0,0]},
     get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},
     get screenUploads(){return screens.reduce((sum,screen)=>sum+screen.uploadVersion,0)} }
 }
