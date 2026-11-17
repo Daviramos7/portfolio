@@ -1,5 +1,6 @@
-import { BufferAttribute, CanvasTexture, Color, CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
-import type { Quality } from '../../contracts/index.ts'
+import { CanvasTexture, CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
+import type { Texture } from 'three'
+import type { Quality, QualityLevel, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { bodyFont, displayFont } from './canvasText.ts'
 import { createPropModelLease } from './propModel.ts'
@@ -10,61 +11,40 @@ import type { PropModelLimits } from './propModel.ts'
 // never in a generated image. Passive details: no clicks (interactives are a later mission).
 // `low` keeps a small selection; `balanced` adds the rest. Coordinates are garage-local (floor y = 0).
 
-type Paint = (x: number, y: number, z: number) => string
 type Tier = 'all' | 'full'
+// Fila 21: colour comes from the chosen FLUX image, projected onto each cleaned mesh in Blender
+// (drf-ia3d/scripts/colorir_projecao.py, outside the repo) and stored as the GLB base colour texture.
 export type EasterEggModel = {
-  id: string; url: string; tier: Tier; position: Vec3; yaw: number; scale: number
+  id: string; zone: ZoneId; url: string; tier: Tier; position: Vec3; yaw: number; scale: number
   tilt?: readonly [x: number, z: number]; limits: PropModelLimits
-  finish: { roughness: number; metalness?: number; paint: Paint }
+  finish: { roughness: number; metalness?: number }
 }
-
-const solid = (color: string): Paint => () => color
-const between = (value: number, low: number, high: number) => value >= low && value < high
-// Helmet: DRF-01 livery, matte black with a red and white horizontal band round the shell (decision 11/11).
-// The visor faces local +z, so the band stops short of it instead of crossing the opening.
-const helmet: Paint = (_x, y, z) => z > .045 ? '#141619' : between(y, .165, .205) ? '#9b1730' : between(y, .205, .222) ? '#d9dede' : '#141619'
-// Original mascot: round black base, red race suit with a white chest band, warm face, dark hair.
-// The head is large (anime proportions) and starts near y .097; the face looks along local +z.
-const mascot: Paint = (_x, y, z) => y < .016 ? '#1b1e22' : y < .028 ? '#2a2d31' : between(y, .07, .079) ? '#e4e6e3' : y < .097 ? '#8e1529' : y > .163 || z < -.024 ? '#2a211d' : '#d6a382'
-// Coral snake rings (red, black, yellow-white, black) follow the coil angle; plain belly near the floor.
-const coral: Paint = (x, y, z) => {
-  if (y < .006) return '#3b2a22'
-  const ring = Math.floor((Math.atan2(z, x) / (Math.PI * 2) + .5) * 28 + Math.hypot(x, z) * 30) % 4
-  return ['#a5281e', '#121212', '#e3d7a6', '#121212'][ring]
-}
-// Guitar: gloss black body crossed by a red and a white stripe; dark neck and headstock (no logo).
-const guitar: Paint = (x, y) => {
-  if (y > .33) return '#241b15'
-  const s = y + x * .55
-  return between(s, .15, .19) ? '#a31a33' : between(s, .19, .215) ? '#e2e5e4' : '#0f1012'
-}
-const pot: Paint = (_x, y) => y < .088 ? '#8f4f33' : y < .1 ? '#6d3a25' : '#3f6b36'
 
 export const easterEggModels: readonly EasterEggModel[] = [
-  { id:'caneca', url:'models/props/caneca.glb', tier:'all', position:[-6.58,.85,-4.38], yaw:.62, scale:1.4,
-    limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32,paint:solid('#16181b')} },
-  { id:'capacete', url:'models/props/capacete.glb', tier:'all', position:[-2.6,1.085,2.95], yaw:.95, scale:1,
-    limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62,paint:helmet} },
-  { id:'figure', url:'models/props/figure.glb', tier:'all', position:[-7.02,.61,1.15], yaw:1.57, scale:1.6,
-    limits:{longest:[.15,.21],triangles:16000}, finish:{roughness:.45,paint:mascot} },
-  { id:'amplificador', url:'models/props/amplificador.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
-    limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85,paint:solid('#1c1e21')} },
-  { id:'case-guitarra', url:'models/props/case-guitarra.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
-    limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78,paint:solid('#121315')} },
-  { id:'guitarra', url:'models/props/guitarra.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
-    limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22,paint:guitar} },
-  { id:'bola', url:'models/props/bola.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
-    limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7,paint:(_x,y)=>y<.05?'#a9a291':'#d8d2c2'} },
-  { id:'chuteira-em-pe', url:'models/props/chuteira-em-pe.glb', tier:'full', position:[-1.25,0,4.3], yaw:2.2, scale:1,
-    limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55,paint:(_x,y)=>y<.018?'#d0d2cf':'#17191c'} },
-  { id:'chuteira-caida', url:'models/props/chuteira-caida.glb', tier:'full', position:[-2.25,0,4.45], yaw:-.5, scale:1,
-    limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55,paint:solid('#17191c')} },
-  { id:'cobra-coral', url:'models/props/cobra-coral.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
-    limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4,paint:coral} },
-  { id:'vaso-esp32', url:'models/props/vaso-esp32.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
-    limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8,paint:pot} },
-  { id:'cinto-ferramentas', url:'models/props/cinto-ferramentas.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
-    limits:{longest:[.55,.65],triangles:16000}, finish:{roughness:.7,paint:solid('#4f3421')} },
+  { id:'caneca', zone:'telemetry', url:'models/props/caneca.glb', tier:'all', position:[-6.58,.85,-4.38], yaw:.62, scale:1.4,
+    limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32 } },
+  { id:'capacete', zone:'garage', url:'models/props/capacete.glb', tier:'all', position:[-2.6,1.085,2.95], yaw:.95, scale:1,
+    limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62 } },
+  { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-7.02,.61,1.15], yaw:1.57, scale:1.6,
+    limits:{longest:[.15,.21],triangles:16000}, finish:{roughness:.45 } },
+  { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
+    limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85 } },
+  { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
+    limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78 } },
+  { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
+    limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22 } },
+  { id:'bola', zone:'garage', url:'models/props/bola.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
+    limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7 } },
+  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', tier:'full', position:[-1.25,0,4.3], yaw:2.2, scale:1,
+    limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
+  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', tier:'full', position:[-2.25,0,4.45], yaw:-.5, scale:1,
+    limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
+  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
+    limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4 } },
+  { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
+    limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8 } },
+  { id:'cinto-ferramentas', zone:'strategy-room', url:'models/props/cinto-ferramentas.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
+    limits:{longest:[.55,.65],triangles:16000}, finish:{roughness:.7 } },
 ]
 
 // Atlas rectangles in pixels (1024 x 1024). Paper is opaque; marks on objects keep a transparent background.
@@ -168,6 +148,8 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     // Same program as the floor contact patch (basic, mapped, transparent): no extra shader compile on slow GPUs.
     // Dimmed so paper and prints sit in the room light; the offset beats coplanar flicker on the surfaces.
     const ink = r.material(new MeshBasicMaterial({ map: atlas, color: '#c4c6c4', transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
+    // The generated mug is white: its line is printed in dark ink (same program, only the colour differs).
+    const darkInk = r.material(new MeshBasicMaterial({ map: atlas, color: '#24272b', transparent: true, depthWrite: false, polygonOffset: true, polygonOffsetFactor: -2, polygonOffsetUnits: -2 }))
     const redraw = () => { if (ctx) { drawAtlas(ctx); atlas.needsUpdate = true } }
     redraw(); r.onFontsReady?.(redraw)
     const { metal, black, red, white, polymer } = r.palette
@@ -218,18 +200,12 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
       const group = place(spec.id, spec.tier, spec.position, spec.yaw)
       if (spec.tilt) { group.rotation.order = 'YXZ'; group.rotation.x = spec.tilt[0]; group.rotation.z = spec.tilt[1] }
       const lease = createPropModelLease(model => {
-        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, vertexColors: true, roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6 }))
-        // Parse each paint colour once; the loop then only copies three floats per vertex.
-        const parsed = new Map<string, Color>()
+        // The file's own base colour texture (projected FLUX image); the scene material keeps our lighting settings.
+        let map: Texture | null = null
+        model.traverse(object => { if (!map && object instanceof Mesh && !Array.isArray(object.material)) map = (object.material as MeshStandardMaterial).map ?? null })
+        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, map, color: map ? '#ffffff' : '#3a3c3f', roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6 }))
         model.traverse(object => {
           if (!(object instanceof Mesh)) return
-          const position = object.geometry.getAttribute('position'), colors = new Float32Array(position.count * 3)
-          for (let i = 0; i < position.count; i++) {
-            const key = spec.finish.paint(position.getX(i), position.getY(i), position.getZ(i))
-            let color = parsed.get(key); if (!color) { color = new Color(key); parsed.set(key, color) }
-            color.toArray(colors, i * 3)
-          }
-          object.geometry.setAttribute('color', new BufferAttribute(colors, 3))
           // Small props receive the room's shadows but do not cast: ~150k extra triangles stay out of the shadow pass.
           object.material = material; object.castShadow = false; object.receiveShadow = true
         })
@@ -244,7 +220,7 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
       if (id === 'caneca') {
         // Wrapped on the body (centre x -0.018, radius 0.041), on the side away from the handle.
         const wrap = mapToRect(r.geometry(new CylinderGeometry(.0425, .0425, .026, 24, 1, true, -1.35, 2.7)), 'mug')
-        r.mesh(group, wrap, ink, [-.018 * s, .055 * s, 0]).scale.setScalar(s)
+        r.mesh(group, wrap, darkInk, [-.018 * s, .055 * s, 0]).scale.setScalar(s)
       } else if (id === 'capacete') {
         for (const side of [-1, 1]) decal(group, 'helmetName', [.13, .05], [side * .177, .245, -.01], [0, side * Math.PI / 2, 0])
         decal(group, 'helmetNumber', [.035, .035], [0, .27, -.137], [0, Math.PI, 0])
@@ -257,27 +233,45 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     }
   }
 
-  // Files are fetched only once loading was requested and the quality is known, so `low` never downloads the
-  // full-tier models; moving up to `balanced` later fetches the rest (each lease loads at most once).
-  let quality: Quality | null = null, base: string | null = null, queue: Promise<void> = Promise.resolve()
+  // Files are fetched only once loading was requested and the quality is known. Leve keeps the `all` selection and
+  // never downloads the rest. Any other level shows all twelve (fila 21): the full profile (desktop) fetches them
+  // right after the selection; the light profile (phones on Auto/Alta) fetches each one only when its station is
+  // framed, and the opening station waits for the selection plus a pause, so the first load is the selection alone.
+  let quality: Quality | null = null, showAll = false, base: string | null = null, queue: Promise<void> = Promise.resolve()
+  let selectionDone = false
+  const framed = new Set<ZoneId>()
   function applyVisibility() {
     if (quality === null) return
-    for (const [, group] of groups) group.visible = quality !== 'low' || group.userData.tier === 'all'
+    for (const [, group] of groups) group.visible = showAll || group.userData.tier === 'all'
   }
+  const wantedNow = ({ spec }: Lease) => spec.tier === 'all' || (showAll && (quality === 'balanced' || (selectionDone && framed.has(spec.zone))))
   function sync() {
     if (base === null || quality === null) return Promise.resolve()
-    const from = base, wanted = leases.filter(({ spec }) => quality !== 'low' || spec.tier === 'all')
-    // One file at a time with a macrotask between them: parsing and painting never stack into one long task.
-    const yieldToFrame = () => new Promise<void>(resolve => setTimeout(resolve, 0))
-    queue = queue.then(async () => { for (const { spec, lease } of wanted) { await lease.load(new URL(spec.url, from).href); await yieldToFrame() } })
+    const from = base
+    // One file at a time with a macrotask between them: parsing never stacks into one long task.
+    const yieldToFrame = (ms = 0) => new Promise<void>(resolve => setTimeout(resolve, ms))
+    queue = queue.then(async () => {
+      for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await yieldToFrame() }
+      if (!selectionDone && showAll && quality === 'low') {
+        await yieldToFrame(1500); selectionDone = true
+        for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await yieldToFrame() }
+      }
+      selectionDone = true
+    })
     return queue
   }
   return {
     root,
-    setQuality(next: Quality) {
-      quality = next
+    /** `profile` is the scene profile; `level` the visitor's choice (defaults keep the profile's old meaning). */
+    setQuality(profile: Quality, level: QualityLevel = profile === 'low' ? 'light' : 'max') {
+      quality = profile; showAll = level !== 'light'
       applyVisibility()
       return sync()
+    },
+    /** The station the camera is framing; on the light profile its eggs are fetched now. */
+    setZone(zone: ZoneId) {
+      if (framed.has(zone)) return queue
+      framed.add(zone); return sync()
     },
     // Asynchronous and optional: missing files leave only the procedural details.
     load(from = document.baseURI) {

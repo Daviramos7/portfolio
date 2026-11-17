@@ -1,6 +1,6 @@
 import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, RingGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
 import type { Camera } from 'three'
-import type { Locale, Quality, SceneProps, ZoneId } from '../../contracts/index.ts'
+import type { Locale, Quality, QualityLevel, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
 import { applyTyreDetail } from '../car/wheels.ts'
 import type { Resources, Vec3 } from './resources.ts'
@@ -240,7 +240,7 @@ export function createGarage(r: Resources) {
       // stand) are still loose meshes; full-tier groups and model groups are dynamic and stay out.
       r.batch(garage);return loading},
     disposeProps:()=>{personal.disposeModels();eggs.dispose()}, get handgripStatus(){return personal.handgripStatus},
-    setQuality:(quality: Quality)=>eggs.setQuality(quality), get easterEggStatus(){return eggs.status},
+    setQuality:(quality: Quality, level?: QualityLevel)=>eggs.setQuality(quality, level), setZone:(zone: ZoneId)=>eggs.setZone(zone), get easterEggStatus(){return eggs.status},
     setScreenScale:(scale:number)=>screens.forEach(display=>display.setScale(scale)),
     get screenResolution(){return screens[0]?.resolution ?? [0,0]},
     get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},

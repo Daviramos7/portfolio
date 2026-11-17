@@ -436,13 +436,17 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         reportedReduced = false
         if (previous) resize()
       }
+      // M16 fila 19/21: Leve keeps a selection of the easter eggs and never downloads the rest; other levels show all
+      // twelve (on the light profile each file is fetched when its station is framed).
+      if (garage && (previous?.quality !== state.quality || previous?.qualityLevel !== state.qualityLevel))
+        void garage.setQuality(state.quality, state.qualityLevel).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
+      if (garage && previous?.target.zoneId !== state.target.zoneId)
+        void garage.setZone(state.target.zoneId).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
       if (previous?.quality !== state.quality) {
         const shadows = state.quality === 'balanced'
         // Design §4: low drops the box props and keeps one horizon plane.
         if (pitLevel) setPitLevelQuality(pitLevel, state.quality)
         if (skyline) setSkylineQuality(skyline, state.quality)
-        // M16 fila 19: `low` keeps a selection of the easter eggs and never downloads the rest.
-        if (garage) void garage.setQuality(state.quality).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
         canvas.dataset.sceneQuality = state.quality
         renderer.shadowMap.enabled = shadows
         renderer.shadowMap.needsUpdate = shadows
