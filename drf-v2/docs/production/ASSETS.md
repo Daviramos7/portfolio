@@ -167,3 +167,42 @@ nova, para não recompilar os programas da cena).
 
 Total dos 12: 5161972 bytes (fila 19: 4,22 MB). Origem e licença: as mesmas da fila 19 (imagens FLUX.2 klein 4B e
 malhas TripoSG geradas localmente; sem marca, logo ou texto de terceiros).
+
+## Fila 22 — figure com cabelo e barba, texturas 512 no celular (17/11/2026)
+**Figure novo (`figure.glb`).** Mesmo estilo chibi do mascote (macacão preto com faixa vermelha e branca, capacete sob o
+braço, base redonda), agora com cabelo penteado para trás, ondulado, volume no topo e laterais curtas, e barba cheia,
+curta e escura. Personagem original, sem marca nem texto.
+- Prompt (FLUX.2 klein 4B, revisão `e7b7dc27…`, 4 passos, guidance 1.0, 1024 px, sufixo padrão do lote em
+  `drf-ia3d\geracao\objetos.json`, id `figure-v2`): "Studio product photo of a single small collectible vinyl figure of
+  an original chibi race mechanic mascot, oversized round head, simple friendly face with small dot eyes, dark brown hair
+  swept back with soft waves and volume on top, short sides, full short dark beard covering the jaw and chin, plain matte
+  black racing overalls with one horizontal red and white stripe across the chest, plain black gloves and boots, holding
+  a plain black racing helmet under one arm, standing on a small round black base, original character design not based
+  on any existing character".
+- Seeds 16, 45, 77, 2026; escolhida **s45** (motivo em `geracao\escolhas.json`; s16 descartada por emblema na manga).
+  Imagem `figure-v2-s45-flux.png` `2414f722fa6792d4c23481ee782e566a101482b85186b0c1d2dd80097e3e57b3`; recorte, malha
+  bruta (1.393.592 faces) e GLB limpo (14.924 triângulos, maior lado 0,18 m) com hashes em `geracao\TABELA.md`.
+- Cor: `colorir_projecao.py` (fila 21), vista 321° / 15°, IoU 0,883, textura 512. Retoque só na textura
+  (`drf-ia3d\scripts\retocar_testa.py <glb> 129 170 370`): 4.546 pixels cor de pele acima da linha das sobrancelhas
+  viram o castanho mediano do cabelo (73, 54, 51), porque o topete da malha é mais alto que o da foto e puxava a testa.
+  Textura final `figure-cor-retocado-textura.png` `0e263a2ed52897758737b3e000deaf8e561d14bbe13b78fe7ea0496a371f7f57`.
+- `figure.glb`: 507.032 bytes, `f2db8ccb3f2a6f5410373394964893eede60f85f47eac022c7b00e0d7e56adbf`. O GLB da fila 21
+  ficou guardado em `drf-ia3d\geracao\figure\figure-site-fila21.glb`.
+
+**Variantes 512 (`<id>-512.glb`).** Para os 9 objetos de textura 1024, o perfil leve (celular) baixa uma cópia com a
+mesma malha, os mesmos UV e a textura reduzida para 512 (Lanczos, JPEG 86). Só os bytes da imagem mudam
+(`drf-ia3d\scripts\textura_lado.py 512 <ids>`); o desktop segue com os arquivos de 1024.
+
+| Arquivo | Bytes (1024 → 512) | SHA-256 da variante |
+|---|---|---|
+| `amplificador-512.glb` | 601264 → 508204 | `c501dbb66888fd81eb0e6c5843f23e506c9dd009efc9201a916201ba4cd62e88` |
+| `case-guitarra-512.glb` | 483776 → 457364 | `108523ad3aaaae5be518a97adb61344421a0328a8a3b32fd54a03a5cc0e3edab` |
+| `guitarra-512.glb` | 579260 → 546952 | `9b770234273dd6015613d3b08b2e4a8108f61153b16d414fef240b85b54a66ca` |
+| `bola-512.glb` | 307832 → 226732 | `1572915126106bbad757a1e4413e00a6883bcbf17c82901fc92fb7e5845cd7b5` |
+| `chuteira-em-pe-512.glb` | 285744 → 244760 | `ad6a8646ffaa34df250055bae0c4cf1a24f10f0e9119359affc01eb1fdfa5360` |
+| `chuteira-caida-512.glb` | 264696 → 230252 | `89e15297e071e1886ba2783fc2fac89760f6590f6abccf761a01a0aa9af281c3` |
+| `cobra-coral-512.glb` | 353624 → 270612 | `659d9f48f107bfb38b542124880e55afe85946e31c5c07548d9eff247e58077c` |
+| `vaso-esp32-512.glb` | 504516 → 470912 | `365dbc023b3e61b4f6254d818db1cd408d980fc95ff91a39c60efd5148765b8f` |
+| `cinto-ferramentas-512.glb` | 579208 → 524084 | `6195ab617c6f7b47ba1ad57d601ee07081b2c2ecdfe93cb5da7b177f88594406` |
+
+Origem e licença: as mesmas da fila 19 (geração local, sem marca, logo ou texto de terceiros).
