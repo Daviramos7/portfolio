@@ -1,5 +1,5 @@
 import { ACESFilmicToneMapping, BoxGeometry, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
-import type { CatmullRomCurve3, WebGLRenderTarget } from 'three'
+import type { CatmullRomCurve3, Group as SceneGroup, WebGLRenderTarget } from 'three'
 import type { ExperienceState, SceneEvent, SceneProps, SceneHandle, ZoneId } from '../contracts/index.ts'
 import { createResources } from './garage/resources.ts'
 import { createGarage } from './garage/Garage.ts'
@@ -13,7 +13,9 @@ import { createWorkshopEnvironment } from './garage/environment.ts'
 import { tracksidePose } from './trackside/preparation.ts'
 import { personalDetailLayout } from './garage/personalDetails.ts'
 import { cappedFrameMs, createDprGovernor, type FrameCadence } from './dprGovernor.ts'
-import { createPitLevel } from './garage/pitLevel.ts'
+import { createPitLevel, pitLevelHiddenFrom, setPitLevelQuality } from './garage/pitLevel.ts'
+import { createCircuit } from './trackside/circuit.ts'
+import { createSkyline, setSkylineQuality } from './trackside/skyline.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -89,6 +91,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const rimLight = new PointLight('#c5e7ff', 105, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
   let opening: ReturnType<typeof createTrackOpening> | null = null
+  let pitLevel: SceneGroup | null = null, skyline: SceneGroup | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()
   const pickVolumes: Mesh[] = []
   const availableZones = new Set<ZoneId>()
@@ -218,6 +221,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneDprState = dprGovernor.state
       loopRenderedAt = nowMs
       camera.lookAt(room.localToWorld(worldLookAt.copy(lookAt)))
+      if (pitLevel) pitLevel.visible = !pitLevelHiddenFrom(camera.position)
       renderer.render(scene, camera)
       canvas.dataset.sceneRenderedFrames = String(++renderedFrames)
       canvas.dataset.sceneFrameTimestamp = nowMs.toFixed(3)
@@ -298,6 +302,11 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   if (import.meta.env.DEV) {
     (canvas as HTMLCanvasElement & { drfDebugTrackside?: unknown }).drfDebugTrackside = { audio: () => audio.diagnostics,
       solo: (layer: 'ventilation' | 'workshop' | 'pass' | null) => audio.debugSolo(layer),
+      // Evidence only (world coordinates): looks at the exterior from outside the room. Never shipped.
+      view: (position: readonly [number, number, number], target: readonly [number, number, number]) => {
+        transition = null; camera.position.set(position[0], position[1] - roomElevation, position[2])
+        lookAt.set(target[0], target[1] - roomElevation, target[2]); invalidated = true; requestFrame(); return true
+      },
       trigger: (direction: 'left-to-right' | 'right-to-left' = 'left-to-right') => {
       if (!state || state.reducedMotion || !canSchedulePass(state, ready && !transition && settledSequence === state.navigationSeq)) return false
       if (!scheduler.requestSoon(trackTimeMs, direction)) return false
@@ -354,10 +363,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
     resources.batch(opening.track)
-    const pitLevel = createPitLevel(resources)
-    resources.batch(pitLevel)
+    // M16 4b: boxes, circuit dressing and horizon are built instanced/merged, so they skip the generic batcher.
+    pitLevel = createPitLevel(resources); skyline = createSkyline(resources)
     room.add(garage.garage, opening.anchors)
-    scene.add(opening.track, pitLevel)
+    scene.add(opening.track, pitLevel, createCircuit(resources), skyline)
     canvas.dataset.sceneRoomElevation = String(roomElevation)
     const pickShape = resources.geometry(new BoxGeometry(1, 1, 1))
     const pickMaterial = resources.material(new MeshBasicMaterial({ visible: false }))
@@ -400,6 +409,10 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       }
       if (previous?.quality !== state.quality) {
         const shadows = state.quality === 'balanced'
+        // Design §4: low drops the box props and keeps one horizon plane.
+        if (pitLevel) setPitLevelQuality(pitLevel, state.quality)
+        if (skyline) setSkylineQuality(skyline, state.quality)
+        canvas.dataset.sceneQuality = state.quality
         renderer.shadowMap.enabled = shadows
         renderer.shadowMap.needsUpdate = shadows
         renderer.shadowMap.autoUpdate = false

@@ -104,6 +104,11 @@ export type Vec3 = readonly [number, number, number]
     taskLight: material(new MeshBasicMaterial({ color: '#ffdfa8', toneMapped: false })),
     redLight: material(new MeshBasicMaterial({ color: '#e33352', toneMapped: false })),
     glass: material(new MeshStandardMaterial({ color: '#0b1a23', metalness: .55, roughness: .19 })),
+    // M16 4b exterior: matte ground finishes; trackPaint is white so instance colours tint kerbs and lines.
+    asphalt: material(new MeshStandardMaterial({ color: '#2a2e33', metalness: 0, roughness: .95 })),
+    grass: material(new MeshStandardMaterial({ color: '#4c5a41', metalness: 0, roughness: 1 })),
+    gravel: material(new MeshStandardMaterial({ color: '#9d9786', metalness: 0, roughness: 1 })),
+    trackPaint: material(new MeshStandardMaterial({ color: '#ffffff', metalness: 0, roughness: .78 })),
   }
   function mesh(parent: Group, shape: BufferGeometry, mat: Material, position: Vec3 = [0, 0, 0]) {
     const object = new Mesh(shape, mat); object.position.set(...position)
@@ -141,11 +146,16 @@ export type Vec3 = readonly [number, number, number]
     }
     setText(text);onFontsReady(()=>setText(currentLabel,currentDetail));return { object, setText }
   }
+  /** One draw call per repeated type; the owner disposes it. Callers fill matrices, then computeBoundingSphere. */
+  function instanced(parent: Group, shape: BufferGeometry, mat: Material, count: number, name: string) {
+    const object = new InstancedMesh(shape, mat, count); object.name = name
+    object.castShadow = object.receiveShadow = false; instances.add(object); parent.add(object); return object
+  }
   function batch(parent: Group) {
     parent.updateMatrixWorld(true); const inverse = new Matrix4().copy(parent.matrixWorld).invert()
     const buckets = new Map<string, Mesh[]>()
     parent.traverse(object => {
-      if (!(object instanceof Mesh) || Array.isArray(object.material) || object.userData.dynamic) return
+      if (!(object instanceof Mesh) || object instanceof InstancedMesh || Array.isArray(object.material) || object.userData.dynamic) return
       const key = object.geometry.uuid + '/' + object.material.uuid + '/' + object.castShadow + '/' + object.receiveShadow
       const bucket = buckets.get(key) ?? []; bucket.push(object); buckets.set(key, bucket)
     })
@@ -166,6 +176,6 @@ export type Vec3 = readonly [number, number, number]
     for (const item of materials) item.dispose()
     instances.clear(); textures.clear(); geometries.clear(); materials.clear()
   }
-  return { geometry, material, texture, textTexture, setTextAnisotropy, palette, box, rod, mesh, sign, batch, dispose, onFontsReady }
+  return { geometry, material, texture, textTexture, setTextAnisotropy, palette, box, rod, mesh, sign, batch, instanced, dispose, onFontsReady }
 }
 export type Resources = ReturnType<typeof createResources>

@@ -5,7 +5,7 @@ import { tracksideRoute } from './preparation.ts'
 export function createTrackOpening(r: Resources) {
   const track = new Group()
   track.name = 'trackside-static-opening'
-  const { carbon, red, white, metal, concrete: floor } = r.palette
+  const { carbon, white, metal, asphalt, concrete: floor } = r.palette
   // Garage finish is y=-.007. A 5mm drainage fall to the apron is not a raised terrace.
   const groundY=tracksideRoute.start[1]
   // M16 4a: the straight sits at z -52, so the paddock scenery moves behind it. The right end stays open
@@ -14,10 +14,10 @@ export function createTrackOpening(r: Resources) {
   const apron=r.box(track, [width, .14, 74], [0, -.082, -38.4], floor);apron.name='level-service-apron'
   // Begin at the garage floor's rear edge z=-8.5, avoiding overlapping coplanar finishes.
   const laneDepth=back-.15+8.5
-  const lane=r.box(track, [width, .07, -laneDepth], [0, groundY-.035, -8.5+laneDepth/2], carbon);lane.name='supported-service-lane'
-  const exitRoad=r.box(track, [9, .07, 64], [tracksideRoute.end[0], groundY-.035, back-.15-32], carbon);exitRoad.name='curve-exit-road'
+  const lane=r.box(track, [width, .07, -laneDepth], [0, groundY-.035, -8.5+laneDepth/2], asphalt);lane.name='supported-service-lane'
+  const exitRoad=r.box(track, [9, .07, 64], [tracksideRoute.end[0], groundY-.035, back-.15-32], asphalt);exitRoad.name='curve-exit-road'
   for (const z of [-8.5, back-.15]) r.box(track, [width, .002, .1], [0, groundY+.001, z], white)
-  for (let x = -24; x <= exitGap-4; x += 2) r.box(track, [2, .03, .4], [x, groundY+.015, back+.25], x % 4 === 0 ? red : white)
+  // M16 4b: kerbs, edge lines, verges and the horizon live in circuit.ts and skyline.ts.
   // A low separator behind the lane, with fencing at its flanks. No bars across the race sightline.
   const left=-60, separatorWidth=exitGap-left
   const barrier=r.box(track, [separatorWidth, .42, .35], [(left+exitGap)/2, groundY+.21, back], floor);barrier.name='low-paddock-separator'
@@ -27,11 +27,6 @@ export function createTrackOpening(r: Resources) {
     if(x<=-8||x>=8)r.rod(track, [x, groundY+.42, back-.1], [x, 4.2, back-.1], .025, metal)
   }
   for (const y of [1.1, 1.45, 1.8, 2.15])for(const [a,b] of [[-40,-8],[8,exitGap-4]])r.rod(track, [a, y+groundY, back-.1], [b, y+groundY, back-.1], .012, metal)
-  // Abstract local horizon; original low-poly industrial/coastal forms.
-  for (let n = 0; n < 12; n++) {
-    const height = 1 + (n * 7 % 5) * .45
-    r.box(track, [1.5, height, 1.8], [-36 + n * 4.5, height / 2, back-4.4 - (n % 3)], metal)
-  }
   const anchors = new Group()
   anchors.name = 'trackside-effect-anchors-inactive'
   const reflection = new Group()

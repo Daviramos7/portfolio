@@ -332,3 +332,112 @@ Gate visual: o Davi aprovou o enquadramento da 4a (sala elevada 4,5 m + reta em 
 decisão de desenho; câmera e UI não foram tocadas. Sem FPS medido, sem telefone físico.
 
 Aprovação do Davi: pendente (merge e pendência do 390).
+
+## Fase 4b — pista, boxes e horizonte + mobile 390 (fila 10, 12/11/2026, branch `m16-fase4b`)
+
+Base: `feat/drf-engineering` em `c96005c` (4a integrada). Sem corrida nova (4c fora), carro provisório igual, câmera,
+trajetórias, ficha "Programas" e cota `y = −0,007` sem mudança. Sem download, sem dependência nova.
+
+**O que entrou**
+- **Pista** (`src/scene/trackside/circuit.ts`, grupo `circuit-dressing`, 9 draw calls): faixa branca de borda (reta,
+  dois arcos da curva, estrada de saída, borda do pit lane e a reta em frente ao muro), **zebras** vermelho/branco
+  (entrada, arco externo, saída e ápice interno; 50 blocos), **postes a cada 10 m** na margem de trás da reta e ao
+  longo da saída (18 postes, luminária separada), **placas 100/50** a 100 m e 50 m do ponto de virada (x −84 e x −34),
+  dupla face, um atlas em canvas; **muro do pit** (z −17) com alambrado; gramado (5 placas) e caixa de brita por fora
+  da curva. Tudo que repete é um `InstancedMesh` por tipo. A pista continua sendo a laje da 4a, agora com material de
+  asfalto; nada do que foi adicionado fica sob os pneus (teste com raios ao longo da rota).
+- **Boxes** (`src/scene/garage/pitLevel.ts`): 3 portas só de frente, **profundidade falsa de 2 m** (parede escura em
+  z −6,3), testeira com faixa vermelha e placas BOX 01–03, porta de enrolar recolhida, marcações do pit. Estrutura
+  inteira em 1 `InstancedMesh` com cor por instância. Props (`pit-box-props`, só `balanced`): pilhas de pneus em
+  mantas. **8 slots vazios e nomeados** em `pit-box-slots` para a IA 3D: `slot-cobra-cavalete`,
+  `slot-bola-chuteiras`, `slot-case-guitarra`, `slot-mini-amp`, `slot-vaso-esp32`, `slot-placa-rec-pe`,
+  `slot-cinto-ferramentas`, `slot-setlists` (sem geometria substituta).
+- **Horizonte** (`src/scene/trackside/skyline.ts`): 2 planos recortados (alpha test 0,5, sem transparência) com **um
+  atlas** 2048×512 desenhado em canvas: fundo em z −90 (torres inventadas e um farol genérico), frente em z −76
+  (galpões, ponte em arco com vãos vazados, dois guindastes de cais, coqueiros). Sem tone mapping e com névoa, então
+  dissolve na cor exata do céu. O plano da frente tem um vão onde passa a estrada de saída. Saíram as 12 caixas do
+  horizonte antigo e a zebra solta junto ao separador.
+- **Mobile 390** (decisão de 11/11): consoles de telemetria e pit wall **0,2 m mais baixos** (tampo 1,05 → 0,85) e
+  moldura do monitor mais fina (bezel 6 → 3 cm). Telas, placas, hotspots e câmeras no mesmo lugar. O estojo e o cartão
+  que ficam sobre as mesas desceram junto. Vale também no desktop (a geometria é a mesma).
+- `low`: sem os props dos boxes, horizonte em 1 plano (o da frente). `data-scene-quality` novo no canvas.
+- Hook só de DEV `drfDebugTrackside.view(posição, alvo)` para tirar prints de fora da sala (não existe no build).
+
+**Decisões que eu tomei (sem perguntar, pelo arquivo de decisões)**
+1. Placas em distância real (100 m e 50 m do ponto de virada), não "onde aparece melhor".
+2. Coqueiros entram no horizonte (D2 B cita coqueiros); o "coqueiro/rede" cortado em 11/11 era easter egg.
+3. Pórtico do pit **não** entrou: não está na lista da fila 10 e viraria uma viga-caixa na frente do horizonte.
+4. Giro lento do show car (citado na 4a como "4b") **não** entrou: não está na fila 10.
+5. Os boxes não são desenhados enquanto a câmera está dentro da sala (ver achado abaixo); voltam em qualquer câmera
+   de fora.
+6. O monitor não subiu: a decisão fala em baixar/afinar, e a tela é conteúdo já visto pelo Davi.
+
+**⚠ Achado: os boxes não aparecem de nenhuma estação.** Já estava no relatório da 4a ("o pit lane e os boxes não
+aparecem de nenhuma estação") e continua valendo: a laje e o peitoril escondem o chão mais perto que z −25
+(telemetria/pit wall desktop) ou z −47,8 (hero). Os boxes ficam em z −8,5…−6,3, embaixo da sala. Consequência: os
+easter eggs planejados para "boxes embaixo" **não seriam vistos** com as câmeras de hoje. Precisa de decisão do Davi
+(nova câmera/estação, ou levar esses objetos para a sala). Os prints dos boxes abaixo são do hook de DEV.
+
+**Medidas** — Chrome headless (ANGLE D3D11, RTX 3060), servidor de dev na 5175, `data-scene-draw-calls` e
+`data-scene-triangles` do quadro parado depois de 3 s na estação, sem carro. "1440 low" = carregar a 800 px e
+redimensionar para 1440×900 (a qualidade é decidida na carga). Antes = `c96005c`, depois = esta branch.
+
+| Enquadramento | Antes: calls / tri | Depois: calls / tri |
+| --- | --- | --- |
+| hero 1440 `balanced` | 102 / 70.212 | **106 / 70.598** |
+| hero 1440 `low` | 102 / 70.212 | 105 / 70.596 |
+| garagem (tela de programas) 1440 `balanced` | 47 / 30.434 | 50 / 30.256 |
+| telemetria 1440 `balanced` | 48 / 38.362 | 51 / 38.532 |
+| pit wall 1440 `balanced` | 40 / 18.756 | 43 / 18.934 |
+| hero 390 e 320 `low` | 86 / 66.428 | **87 / 65.996** |
+| garagem (tela de programas) 390 e 320 | 49 / 42.652 | 50 / 42.460 |
+| telemetria 390 e 320 | 43 / 18.362 | 45 / 18.530 |
+| pit wall 390 e 320 | 38 / 18.468 | 40 / 18.644 |
+
+O smoke no build de produção (preview 5175) repetiu 106 / 70.598 no hero 1440. Sem esconder os boxes o hero dava
+112 calls (medido no meio do trabalho, mesma metodologia). Estimativa do desenho (§4): ~106 **com** a corrida; a
+corrida (+3) ainda não entrou, então a 4c deve fechar perto de 109. Bundle: `SceneRoot` 674 → 690,9 kB (alerta de
+chunk conhecido). Sem FPS medido. Sem telefone físico.
+
+**Validação**
+- `npm run lint` OK; `npm run build` OK.
+- `node --test tests/*.test.mjs` (preview 5175 de pé): **107 pass, 0 fail, 0 skip** (97 de antes + 10 novos em
+  `tests/circuit-4b.test.mjs`: instância por tipo e teto de 9 calls, postes a cada 10 m, zebras alternadas e fora da
+  linha de corrida, placas a 100/50 m e dupla face, cota sob os pneus, 3 portas com 2 m e slots vazios, `low`, regra
+  de esconder os boxes, horizonte em um atlas em z −60…−90 e acima do meio do quadro, consoles 0,2 m mais baixos com
+  telas no lugar). Nenhum teste antigo foi alterado.
+- `browser-smoke.mjs` (preview 5175): exit 0, console e rede sem erros, reduced motion e sem WebGL passando. A falha
+  conhecida da ficha "Programas" (~435 px contra 405) **não apareceu** nesta execução.
+- Harness de captura: 0 erros de console nas 16 estações + reduced motion + 12 vistas externas.
+
+**O carro aparece? (passagem forçada pelo hook DEV, mesmos enquadramentos)**
+| Estação | 1440 `balanced` | 390 `low` |
+| --- | --- | --- |
+| Hero | sim, pequeno, atrás do guarda-corpo (como na 4a) | **não**: continua atrás da ficha "Programas" |
+| Telemetria | sim, à direita da mesa | **parcial**: rodas e metade de baixo do carro no vão entre mesa e monitor; a metade de cima fica atrás do monitor |
+| Pit wall | sim, à esquerda do monitor | **parcial**, igual à telemetria (só perto da curva) |
+
+Para o carro aparecer inteiro no 390 das estações de fundo o monitor teria que subir ~12 cm ou a câmera mudar; não
+fiz nenhum dos dois. Aceito e documentado, como manda a fila.
+
+**O que eu olhei nos prints e achei fraco**
+- No hero a pista é uma faixa fina entre o guarda-corpo e a cobertura da 4a; zebras e placas **não aparecem no hero**
+  (zebra da curva e brita só na pit wall; a placa 50 fica a ~75 m do hero, pequena e com névoa).
+- A placa 100 (x −84) não entra em nenhuma estação.
+- A cobertura/arquibancada da 4a (laje fina sobre postes) continua com cara de mesa comprida na frente do horizonte.
+- O alambrado do muro do pit aparece na telemetria/pit wall só como um cabo e um poste soltos sobre o gramado.
+- Horizonte: silhueta chapada, sem luz nem janelas; lê como recorte (é o pedido), mas os coqueiros são grandes para
+  a escala das torres. A caixa de brita é um leque de borda reta.
+- Boxes: frente simples (portas, testeira, pneus); sem os props da IA 3D fica vazio de propósito.
+
+**Origem dos desenhos** (o `ASSETS.md` não existe nesta base; ele nasce na branch da fila 09 — levar estas linhas
+para lá na integração): atlas do horizonte, atlas das placas 100/50 e placas BOX 01–03 são **canvas gerado em
+código**, autoria própria, sem arquivo, sem imagem de terceiro, sem prédio real; fonte Barlow Condensed já do site.
+
+**Evidência**: `C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila10-4b\`
+(`before-*` e `after-*` em 1440-balanced, 1440-low, 390-low e 320-low para hero, garage, telemetry e pit-wall;
+`*-carro-x*.png`; `cmp-*.png` lado a lado; `after-*-ext-*.png` = vistas externas do hook DEV; `*-report.json`;
+`smoke\`, `smoke.txt`). Harness:
+`C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\harness\capture-fila10-4b.mjs`.
+
+Aprovação do Davi: pendente.
