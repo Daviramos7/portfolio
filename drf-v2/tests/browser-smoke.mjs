@@ -171,7 +171,8 @@ async function runBrowser(disableWebGL) {
       assert.equal(await evaluate('document.querySelectorAll(".drf-intro,.drf-project-card,.drf-footer").length'), 0)
       // Default now includes the displayed programme's complete context. Keep a
       // measured desktop footprint, and check actual visible content, not DOM only.
-      assert.ok(await evaluate('document.querySelector(".drf-showcase").getBoundingClientRect().height < innerHeight * .45'), 'Default desktop context leaves most of the scene visible')
+      const [showcaseHeight, viewportHeight] = await evaluate('[document.querySelector(".drf-showcase").getBoundingClientRect().height, innerHeight]')
+      assert.ok(showcaseHeight < viewportHeight * .45, `Default desktop context leaves most of the scene visible (ficha: ${showcaseHeight} px de ${viewportHeight})`)
       assert.equal(await evaluate(`(() => {
         const context = document.querySelector('.drf-program-context');
         const nodes = [...document.querySelectorAll('.drf-program-title,.drf-program-summary,.drf-program-stack li,#drf-open-case')];

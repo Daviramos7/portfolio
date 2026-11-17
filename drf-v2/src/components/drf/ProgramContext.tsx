@@ -2,6 +2,9 @@ import { ArrowUpRight } from 'lucide-react'
 import type { Locale, Project } from '../../contracts/index.ts'
 import { uiLabels } from '../../features/uiLabels.ts'
 
+// The compact card lists only the first technologies (ordered by relevance in the content); the case page shows all.
+const PROGRAM_CARD_STACK_LIMIT = 6
+
 // A compact HTML equivalent for selected in-world programme information.
 export function ProgramContext({ project, locale, reading, onInspect }: { project: Project; locale: Locale; reading: boolean; onInspect: (trigger: HTMLButtonElement) => void }) {
   const t = uiLabels(locale)
@@ -10,7 +13,7 @@ export function ProgramContext({ project, locale, reading, onInspect }: { projec
       <p className="drf-program-summary">{project.summary[locale]}</p>
       {project.technologies.length > 0 && <>
         <p className="drf-code">{t.stack}</p>
-        <ul className="drf-program-stack">{project.technologies.map(technology => <li key={technology}>{technology}</li>)}</ul>
+        <ul className="drf-program-stack">{project.technologies.slice(0, PROGRAM_CARD_STACK_LIMIT).map(technology => <li key={technology}>{technology}</li>)}</ul>
       </>}
     </div>
     <div className="drf-program-context-actions">

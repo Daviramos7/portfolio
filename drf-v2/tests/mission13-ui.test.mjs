@@ -104,7 +104,7 @@ try {
       return {title:root.querySelector('.drf-program-title').textContent,summary:root.querySelector('.drf-program-summary').textContent,stack:[...root.querySelectorAll('.drf-program-stack li')].map(e=>e.textContent),links:[...root.querySelectorAll('.drf-program-context-actions a')].map(e=>e.getAttribute('href')),height:rect.height,tagSize:parseFloat(getComputedStyle(root.querySelector('.drf-program-stack li')).fontSize),visible:elements.every(e=>{const r=e.getBoundingClientRect();return r.top>=0&&r.bottom<=innerHeight&&r.top>=rect.top&&r.bottom<=rect.bottom&&r.left>=rect.left&&r.right<=rect.right&&e.contains(document.elementFromPoint(r.x+r.width/2,r.y+r.height/2))})}
     })()`)
     check(result.title===project.title[locale]&&result.summary===project.summary[locale],label+' canonical title/summary')
-    check(JSON.stringify(result.stack)===JSON.stringify(project.technologies),label+' all technologies')
+    check(JSON.stringify(result.stack)===JSON.stringify(project.technologies.slice(0,6)),label+' card technologies (first 6)')
     check(JSON.stringify(result.links)===JSON.stringify([project.repositoryUrl,project.demoUrl].filter(Boolean)),label+' exact real links')
     check(result.visible&&result.tagSize>=13,label+' visible and readable context')
     check(await noOverflow(),label+' no overflow')
