@@ -213,6 +213,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneClockMs = String(Math.round(trackTimeMs))
       canvas.dataset.sceneTrackModel = pass?.modelStatus ?? 'fallback'
       canvas.dataset.sceneHandgripModel = garage?.handgripStatus ?? 'fallback'
+      if (garage) canvas.dataset.sceneEasterEggs = Object.values(garage.easterEggStatus).filter(status => status === 'loaded').length.toString()
       const animate = ambientActive()
       if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
       if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { loopRenderedAt = null; requestFrame(); return }
@@ -419,6 +420,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         // Design §4: low drops the box props and keeps one horizon plane.
         if (pitLevel) setPitLevelQuality(pitLevel, state.quality)
         if (skyline) setSkylineQuality(skyline, state.quality)
+        // M16 fila 19: `low` keeps a selection of the easter eggs and never downloads the rest.
+        if (garage) void garage.setQuality(state.quality).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
         canvas.dataset.sceneQuality = state.quality
         renderer.shadowMap.enabled = shadows
         renderer.shadowMap.needsUpdate = shadows

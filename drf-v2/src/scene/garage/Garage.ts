@@ -1,11 +1,12 @@
 import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometry, RingGeometry, TorusGeometry, TubeGeometry, Vector3 } from 'three'
 import type { Camera } from 'three'
-import type { Locale, SceneProps, ZoneId } from '../../contracts/index.ts'
+import type { Locale, Quality, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { createProgrammeScreen } from './programmeScreen.ts'
 import { createPersonalDetails } from './personalDetails.ts'
 import { createFacade } from './facade.ts'
+import { createEasterEggs } from './easterEggs.ts'
 
 /** M16 4b: how far the two rear consoles (Telemetry, Pit Wall) dropped from the approved 1.0 m desk. */
 export const consoleDrop = .2
@@ -209,6 +210,7 @@ export function createGarage(r: Resources) {
   }
   garage.add(fanAssembly)
   const personal=createPersonalDetails(r);garage.add(personal.root)
+  const eggs=createEasterEggs(r);garage.add(eggs.root)
   const fanRing = r.mesh(garage, r.geometry(new TorusGeometry(.48, .05, 8, 32)), metal, [-8, 3.72, -.15])
   fanRing.rotation.y = Math.PI / 2; fanRing.castShadow = false
   const projected = new Vector3(), fanWorld = new Vector3()
@@ -229,7 +231,9 @@ export function createGarage(r: Resources) {
     team.setText('DRF ENGINEERING', locale === 'pt' ? 'RECIFE / BRASIL · EQUIPE FICTÍCIA' : 'RECIFE / BRAZIL · FICTIONAL TEAM')
   }
   return { garage, updateLabels, updateAmbient,
-    loadProps:()=>personal.loadModels(), disposeProps:()=>personal.disposeModels(), get handgripStatus(){return personal.handgripStatus},
+    loadProps:()=>Promise.all([personal.loadModels(),eggs.load()]).then(()=>undefined),
+    disposeProps:()=>{personal.disposeModels();eggs.dispose()}, get handgripStatus(){return personal.handgripStatus},
+    setQuality:(quality: Quality)=>eggs.setQuality(quality), get easterEggStatus(){return eggs.status},
     get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},
     get screenUploads(){return screens.reduce((sum,screen)=>sum+screen.uploadVersion,0)} }
 }

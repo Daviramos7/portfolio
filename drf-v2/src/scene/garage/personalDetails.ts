@@ -77,7 +77,10 @@ export function createPersonalDetails(r: Resources, dependencies?: Parameters<ty
       ctx.strokeStyle=tile===1?'#32474b':'#92bbc3';ctx.lineWidth=4
       ctx.fillStyle=tile===1?'#243d42':'#edf1e6'
       if(tile===0){
-        ctx.font=`700 60px ${displayFont}`;ctx.fillText('REC / PE',16,62)
+        // M16 fila 19: redrawn as an original street plate (enamel blue, white inset border); same words and drawing.
+        ctx.fillStyle='#1d4a78';ctx.fillRect(0,0,256,256)
+        ctx.strokeStyle='#eef1ea';ctx.lineWidth=5;ctx.beginPath();ctx.roundRect(7,7,242,242,14);ctx.stroke();ctx.lineWidth=4
+        ctx.fillStyle='#eef1ea';ctx.font=`700 60px ${displayFont}`;ctx.fillText('REC / PE',20,66)
         // Invented bridge elevation and waves: no copied skyline, seal or municipal mark.
         ctx.beginPath();ctx.moveTo(18,162);ctx.lineTo(238,162)
         for(const x of [70,182]){ctx.moveTo(x,165);ctx.lineTo(x,105);ctx.lineTo(x+8,105);ctx.lineTo(x+8,165)}
