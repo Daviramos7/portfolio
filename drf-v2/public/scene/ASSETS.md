@@ -205,3 +205,12 @@ Reutiliza materiais e atlas512 existentes, sem novo mapa/arquivo/download.
 Cinco detalhes totalizam4256 triângulos nesta versão; controle2750. Recursos
 compartilhados pertencem a Resources/dispose. Termos do repositório; não CC0.
 REC/PE, science e handgrip e seus textos originais permanecem inalterados.
+
+## Missão 16 — handgrip gerado
+
+Asset `models/props/handgrip.glb` (fora desta pasta, em `public/models/props/`):
+198.672 bytes; SHA-256
+`3ddbae133956c17e54a982254cd403737634d630abf5d3793bcaa65ba409c7a5`; 5.840
+triângulos. Gerado localmente (FLUX.2 klein 4B, BiRefNet, TripoSG) e limpo em
+Blender. Origem, licenças, prompt, seed e hashes completos em
+`docs/production/ASSETS.md`. O handgrip procedural acima segue como fallback.

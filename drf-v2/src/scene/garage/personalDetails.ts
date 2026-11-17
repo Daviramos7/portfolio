@@ -1,9 +1,11 @@
-import { CanvasTexture, Group, MeshBasicMaterial, PlaneGeometry, SRGBColorSpace, TorusGeometry } from 'three'
+import { CanvasTexture, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, TorusGeometry, Vector2 } from 'three'
 import type { Locale, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { bodyFont, displayFont } from './canvasText.ts'
 import { createGamepad, gamepadBadgePosition } from './gamepad.ts'
+import { createPropModelLease } from './propModel.ts'
+import type { PropModelLimits } from './propModel.ts'
 
 export const personalDetailDescriptions: Record<ZoneId, Record<Locale, string>> = {
   garage: {pt:'REC/PE — ponte e mar na placa da abertura.',en:'REC/PE — bridge and sea on the opening plaque.'},
@@ -22,7 +24,40 @@ export const personalDetailLayout: readonly { id: string; zone: ZoneId; position
   { id:'constancy-grip', zone:'driver-profile', position:[-6.96,.998,2.9], yaw:Math.PI/2 },
 ]
 
-export function createPersonalDetails(r: Resources) {
+// M16 fila 09: generated mesh cleaned in Blender (docs/production/ASSETS.md). The file is authored at real size
+// (0.17 m tall, origin at the base); the scene enlarges it like the other desk props, to the height the procedural
+// stand-in already occupied, and seats it on the "constância" plaque. Same station, same framing.
+export const handgripPlacement = {
+  url:'models/props/handgrip.glb', position:[0,-.205,.025] as Vec3, scale:2.35,
+  limits:{longest:[.12,.22],triangles:12000} as PropModelLimits,
+}
+// Silver anodised aluminium with a diamond knurl (our own height field, no image asset) and a black steel spring.
+function handgripMaterials(r: Resources) {
+  const size=128,diamonds=4
+  const canvases=[0,1].map(()=>{const canvas=document.createElement('canvas');canvas.width=canvas.height=size;return canvas})
+  const [normalContext,roughContext]=canvases.map(canvas=>canvas.getContext('2d'))
+  const [normalImage,roughImage]=[normalContext,roughContext].map(context=>context?.createImageData(size,size))
+  if(normalContext&&roughContext&&normalImage&&roughImage){
+    const ridge=(t: number)=>1-Math.abs(((t%1)+1)%1*2-1)
+    // Two crossed groove families leave pyramids between them; the period divides the tile, so it wraps.
+    const height=(x: number,y: number)=>Math.min(ridge((x+y)*diamonds/size),ridge((x-y)*diamonds/size))
+    for(let y=0;y<size;y++)for(let x=0;x<size;x++){
+      const nx=(height(x-1,y)-height(x+1,y))*2.2,ny=(height(x,y-1)-height(x,y+1))*2.2,length=Math.hypot(nx,ny,1),i=(y*size+x)*4
+      normalImage.data[i]=(nx/length*.5+.5)*255;normalImage.data[i+1]=(ny/length*.5+.5)*255;normalImage.data[i+2]=(1/length*.5+.5)*255;normalImage.data[i+3]=255
+      // Grooves stay matt, worn peaks catch the light.
+      roughImage.data[i]=roughImage.data[i+1]=roughImage.data[i+2]=255-height(x,y)*70;roughImage.data[i+3]=255
+    }
+    normalContext.putImageData(normalImage,0,0);roughContext.putImageData(roughImage,0,0)
+  }
+  const [normalMap,roughnessMap]=canvases.map(canvas=>{const map=r.texture(new CanvasTexture(canvas));map.wrapS=map.wrapT=RepeatWrapping;map.repeat.set(14,14);return map})
+  return {
+    aluminium:r.material(new MeshStandardMaterial({name:'handgrip-aluminium',color:'#a4abb1',metalness:.92,roughness:.46,envMapIntensity:.7,normalMap,normalScale:new Vector2(.55,.55),roughnessMap})),
+    // Dark steel, glossy enough for the coils to read against the dark locker behind the station.
+    spring:r.material(new MeshStandardMaterial({name:'handgrip-spring',color:'#1d2125',metalness:.85,roughness:.3,envMapIntensity:1.1})),
+  }
+}
+
+export function createPersonalDetails(r: Resources, dependencies?: Parameters<typeof createPropModelLease>[2]) {
   const root=new Group();root.name='five-personal-details'
   const canvas=document.createElement('canvas');canvas.width=canvas.height=512
   const ctx=canvas.getContext('2d')
@@ -100,13 +135,31 @@ export function createPersonalDetails(r: Resources) {
   // Tilt in the object's local frame: both grips remain above the worktop after station yaw.
   control.rotation.order='YXZ'
   control.rotation.x=-.3
-  r.mesh(grip,coil,metal,[0,.13,0])
-  r.rod(grip,[-.035,.11,0],[-.16,-.11,0],.024,metal);r.rod(grip,[.035,.11,0],[.16,-.11,0],.024,metal)
-  r.rod(grip,[-.09,.015,.01],[-.17,-.13,.01],.046,tire);r.rod(grip,[.09,.015,.01],[.17,-.13,.01],.046,tire)
+  // Procedural stand-in: stays if the GLB is missing, invalid or still loading.
+  const gripFallback=new Group();gripFallback.name='handgrip-procedural-fallback';grip.add(gripFallback)
+  r.mesh(gripFallback,coil,metal,[0,.13,0])
+  r.rod(gripFallback,[-.035,.11,0],[-.16,-.11,0],.024,metal);r.rod(gripFallback,[.035,.11,0],[.16,-.11,0],.024,metal)
+  r.rod(gripFallback,[-.09,.015,.01],[-.17,-.13,.01],.046,tire);r.rod(gripFallback,[.09,.015,.01],[.17,-.13,.01],.046,tire)
+  // Kept out of the static instanced batches so it can leave the scene when the model arrives.
+  gripFallback.traverse(object=>{object.userData.dynamic=true})
+  const handgripLease=createPropModelLease(model=>{
+    const {aluminium,spring}=handgripMaterials(r)
+    model.name='handgrip-model';model.position.set(...handgripPlacement.position);model.scale.setScalar(handgripPlacement.scale)
+    model.traverse(object=>{
+      if(!(object instanceof Mesh))return
+      const source=Array.isArray(object.material)?object.material[0]:object.material
+      object.material=source?.name==='handgrip-spring'?spring:aluminium;object.castShadow=object.receiveShadow=true
+    })
+    gripFallback.removeFromParent();grip.add(model)
+  },handgripPlacement.limits,dependencies)
   r.box(grip,[.56,.16,.055],[0,-.285,.025],black)
   graphic(grip,3,[.53,.15],[0,-.285,.058])
   r.box(grip,[.55,.025,.29],[0,-.375,0],metal)
   updateLocale('pt')
   r.onFontsReady?.(()=>{const current=locale??'pt';locale=null;updateLocale(current)})
-  return {root,details,updateLocale,get uploads(){return uploads}}
+  return {root,details,updateLocale,get uploads(){return uploads},
+    // Asynchronous and optional: the scene is complete without it.
+    loadModels:(url?: string)=>handgripLease.load(url??new URL(handgripPlacement.url,document.baseURI).href),
+    disposeModels:()=>handgripLease.dispose(),
+    get handgripStatus(){return handgripLease.status}}
 }
