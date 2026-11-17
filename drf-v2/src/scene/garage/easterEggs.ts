@@ -16,6 +16,7 @@ type Tier = 'all' | 'full'
 // (drf-ia3d/scripts/colorir_projecao.py, outside the repo) and stored as the GLB base colour texture.
 export type EasterEggModel = {
   id: string; zone: ZoneId; url: string; tier: Tier; position: Vec3; yaw: number; scale: number
+  /** Fila 22: same mesh and UVs with a 512 px base colour texture, fetched on the light (phone) profile. */ lightUrl?: string
   tilt?: readonly [x: number, z: number]; limits: PropModelLimits
   /** Rest the tilted model on its support (lowest point at the group's height). */ ground?: boolean
   /** Self-lit share of the base colour: a discreet highlight without a new light (no program recompiles). */ glow?: number
@@ -29,23 +30,23 @@ export const easterEggModels: readonly EasterEggModel[] = [
     limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62 } },
   { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-6.93,.61,1.85], yaw:1.2, scale:2.1, glow:.22,
     limits:{longest:[.15,.21],triangles:16000}, finish:{roughness:.45 } },
-  { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
+  { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', lightUrl:'models/props/amplificador-512.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
     limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85,tint:'#6a6a6a' } },
-  { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
+  { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', lightUrl:'models/props/case-guitarra-512.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
     limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78 } },
-  { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
+  { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', lightUrl:'models/props/guitarra-512.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
     limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22 } },
-  { id:'bola', zone:'garage', url:'models/props/bola.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
+  { id:'bola', zone:'garage', url:'models/props/bola.glb', lightUrl:'models/props/bola-512.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
     limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7 } },
-  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', tier:'full', position:[-1.555,0,4.141], yaw:2.57, scale:1,
+  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', lightUrl:'models/props/chuteira-em-pe-512.glb', tier:'full', position:[-1.555,0,4.141], yaw:2.57, scale:1,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', tier:'full', position:[-1.743,0,4.276], yaw:.75, scale:1, tilt:[-.2,0], ground:true,
+  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', lightUrl:'models/props/chuteira-caida-512.glb', tier:'full', position:[-1.743,0,4.276], yaw:.75, scale:1, tilt:[-.2,0], ground:true,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
+  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', lightUrl:'models/props/cobra-coral-512.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
     limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4 } },
-  { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
+  { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', lightUrl:'models/props/vaso-esp32-512.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
     limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8 } },
-  { id:'cinto-ferramentas', zone:'strategy-room', url:'models/props/cinto-ferramentas.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
+  { id:'cinto-ferramentas', zone:'strategy-room', url:'models/props/cinto-ferramentas.glb', lightUrl:'models/props/cinto-ferramentas-512.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
     limits:{longest:[.55,.65],triangles:16000}, finish:{roughness:.7 } },
 ]
 
@@ -260,7 +261,7 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     const from = base
     // One file at a time with a macrotask between them: parsing never stacks into one long task.
     const wait = (ms = 0) => new Promise<void>(resolve => setTimeout(resolve, ms))
-    const loadWanted = async () => { for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await wait() } }
+    const loadWanted = async () => { for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(quality === 'low' ? entry.spec.lightUrl ?? entry.spec.url : entry.spec.url, from).href); await wait() } }
     queue = queue.then(async () => {
       if (!started) { started = true; await wait(startDelayMs) }
       await loadWanted()
