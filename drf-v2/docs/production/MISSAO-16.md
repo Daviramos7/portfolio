@@ -561,3 +561,20 @@ estourada perto da luminária (base de roughness `.34` → `.50`, `envMapIntensi
 - Reduced motion e fallback sem WebGL só pelo smoke, sem print dedicado.
 
 Aprovação do Davi: pendente
+
+## Integração da fila (17/11/2026, missão 17)
+Merges `--no-ff` na `feat/drf-engineering`: 4b (`ec2f605`), handgrip 09 (`23eeb78`), materiais 11 (`ff91426`),
+DRF-01 13 (`30ffd5f`, docs), geração 12 (`b7f7cfd`, docs), Orçamento 08+16 (`bce34e4`), UI mobile 15 (`cf57d19`).
+Único conflito: 11 × 4b, nos imports do `garageRenderer.ts` (união dos dois) e no fim deste arquivo (as duas
+seções mantidas, 4b antes da 11). A luz assada (14) fica de fora.
+
+Validação depois de cada merge de código: `npm run lint` ok, `npm run build` ok, `node --test
+--test-concurrency=1 tests/*.test.mjs` contra `vite preview` na 5175: 107 → 111 → 117 → 118 → 118/118. Smoke final
+(`browser-smoke.mjs http://127.0.0.1:5175/`) exit 0, 0 erro de console e de rede. Prints do smoke (desktop por zona,
+390, 320, recruiter, fallback sem WebGL) em
+`C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila17-integracao\final\`.
+
+Ressalvas herdadas: os materiais da 4b não recebem o acabamento da 11; boxes da 4b não aparecem de nenhuma
+estação; mobile só emulado (celular físico pendente).
+
+Aprovação do Davi: pendente

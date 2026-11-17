@@ -47,6 +47,13 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
 - **Fase 4a: aprovada pelo Davi (28/10 17:43) e integrada** na `feat/drf-engineering` (merge `dc9c50b`): sala
   elevada 4,5 m e **reta em z −52** (`d3eebd9`), 97/97 testes. Branch e worktree da 4a mantidos. Carro provisório
   (troca na 4b/4c). Pendente: o carro some no mobile 390 atrás da ficha "Programas" e do monitor.
+- **Integração da fila (17/11, missão 17):** merges `--no-ff` na `feat/drf-engineering`, nesta ordem: 4b `ec2f605`,
+  handgrip/09 `23eeb78`, materiais/11 `ff91426` (conflito trivial resolvido por união: imports do
+  `garageRenderer.ts` e fim do `MISSAO-16.md`), DRF-01/13 `30ffd5f` (docs), geração/12 `b7f7cfd` (docs),
+  Orçamento/08+16 `bce34e4`, UI mobile/15 `cf57d19`. Lint e build ok; 118/118 testes em série contra o
+  `vite preview` na 5175; smoke exit 0 (passar a URL: `node tests/browser-smoke.mjs http://127.0.0.1:5175/`,
+  o padrão é 5173). **Fora:** luz assada/14 (`m16-14-luz-assada-poc`). Branches e worktrees mantidos.
+  `node_modules` reinstalado pelo Davi (o aviso do `npm install` abaixo já não vale).
 - **Fase 3 (IA 3D):** cadeia local pronta em `C:\Users\davir\drf-ia3d\` (FLUX.2 klein 4B → BiRefNet → TripoSG
   sem diso). Teste P1 (handgrip) ok, ~2,5 min. Falta Blender: limpar e decimar de 535 k faces, UV e escala.
   Nada no site ainda.
