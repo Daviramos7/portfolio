@@ -590,3 +590,14 @@ smoke exit 0. Detalhe, medições e ressalvas: `_fila\19-easter-eggs-sala.result
 assets em `ASSETS.md`.
 
 Aprovação do Davi: pendente
+
+## Fila 24 — integração da versão publicável (17/11/2026, branch `feat/drf-engineering`)
+`m16-22d-figure` contém 17b, 19, 20, 21, 22 e 22b (conferido com `git merge-base --is-ancestor`); a 18 (só docs)
+não estava na cadeia. Merges `--no-ff`, sem conflito: `m16-18-guitarra` → `fb73ac8`, `m16-22d-figure` → `579803d`.
+Fora: `m16-22c-cabeca` (figure v4 reprovada) e `m16-14-luz-assada-poc`. Lint e build ok; testes em série contra o
+`vite preview` na 5175: **136/136**; smoke exit 0, sem erro de console e de rede. Prints das 6 poses (hero + 5
+estações) em 1440, 390 e 320 e closes dos 10 easter eggs (1440) em
+`C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila24-integracao\`.
+Branches mantidas. Sem push, sem deploy.
+
+Aprovação do Davi: pendente

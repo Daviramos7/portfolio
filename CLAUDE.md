@@ -54,6 +54,12 @@ carro que passa. Isso substitui o "BOM" antigo do controle (M14). Direção nova
   `vite preview` na 5175; smoke exit 0 (passar a URL: `node tests/browser-smoke.mjs http://127.0.0.1:5175/`,
   o padrão é 5173). **Fora:** luz assada/14 (`m16-14-luz-assada-poc`). Branches e worktrees mantidos.
   `node_modules` reinstalado pelo Davi (o aviso do `npm install` abaixo já não vale).
+- **Versão publicável integrada (17/11, fila 24):** merges `--no-ff` sem conflito: guitarra/18 `fb73ac8` (docs) e
+  `m16-22d-figure` `579803d` (contém 17b, 19, 20, 21, 22, 22b e 22d: seletor de qualidade, easter eggs, créditos,
+  cores, figure v5). **Fora:** 22c (v4 reprovada) e luz assada/14. Lint e build ok; **136/136** em série contra o
+  preview; smoke exit 0. Prints em `.agent-grid\screenshots\mission-16\fila24-integracao\`. Checklist de publicação
+  em `_fila\feito\24-integracao-final.resultado.md`. Pendente: deploy de **preview** na Vercel liberado pelo Davi
+  (não feito na 24).
 - **Fase 3 (IA 3D):** cadeia local pronta em `C:\Users\davir\drf-ia3d\` (FLUX.2 klein 4B → BiRefNet → TripoSG
   sem diso). Teste P1 (handgrip) ok, ~2,5 min. Falta Blender: limpar e decimar de 535 k faces, UV e escala.
   Nada no site ainda.
