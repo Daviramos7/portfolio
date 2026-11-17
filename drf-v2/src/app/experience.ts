@@ -1,9 +1,12 @@
 import type { ExperienceState, PortfolioContent, SceneEvent, SceneHandle, UIActions } from '../contracts/index.ts'
 import type { ExperienceEnvironment } from './browserEnvironment.ts'
+import { isQualityLevel } from './browserEnvironment.ts'
+import { qualityProfile } from './qualityLevel.ts'
 import { buildLocation, isLocale, isViewMode, normalizeTarget, resolveLocation, sameTarget } from './navigation.ts'
 import type { NavigationSelection } from './navigation.ts'
 
 export function createExperienceController(content: PortfolioContent, environment: ExperienceEnvironment) {
+  const initialQuality = environment.readQualityLevel?.() ?? 'auto'
   let state: ExperienceState = {
     ...resolveLocation(environment.readUrl(), content, environment.readPreferences()),
     navigationSeq: 0,
@@ -16,7 +19,9 @@ export function createExperienceController(content: PortfolioContent, environmen
     ambientEnabled: true,
     panelOpen: false,
     documentVisible: environment.documentVisible(),
-    quality: environment.quality(),
+    qualityLevel: initialQuality,
+    quality: qualityProfile(initialQuality, environment.quality()),
+    qualityReduced: false,
   }
   let sceneHandle: SceneHandle | null = null
   let sceneAttempt = 0
@@ -62,6 +67,11 @@ export function createExperienceController(content: PortfolioContent, environmen
     setMotionPreference: preference => {
       if (!['system', 'cinematic', 'reduced'].includes(preference)) return
       update({ motionPreference: preference, reducedMotion: preference === 'system' ? state.systemReducedMotion : preference === 'reduced' })
+    },
+    setQualityLevel: level => {
+      if (!isQualityLevel(level)) return
+      environment.saveQualityLevel?.(level)
+      update({ qualityLevel: level, quality: qualityProfile(level, environment.quality()), qualityReduced: false })
     },
     navigate: target => select({ ...state, target }, 'push'),
     setLocale: locale => { if (isLocale(locale)) select({ ...state, locale }, 'push') },
@@ -129,6 +139,7 @@ export function createExperienceController(content: PortfolioContent, environmen
           update({ audio: event.status })
           break
         case 'QUALITY_REQUEST': update({ quality: event.quality }); break
+        case 'QUALITY_REDUCED': update({ qualityReduced: event.reduced }); break
       }
     },
     start: () => {

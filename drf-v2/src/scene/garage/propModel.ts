@@ -1,4 +1,4 @@
-import { Box3, Mesh, Vector3 } from 'three'
+import { Box3, Mesh, Texture, Vector3 } from 'three'
 import type { BufferGeometry, Group, Material } from 'three'
 import { createModelByteCache, parseTrackModel } from '../trackside/TrackModel.ts'
 
@@ -10,8 +10,11 @@ const propBytes = createModelByteCache()
 function owner(root: Group) {
   const geometries=new Set<BufferGeometry>(), materials=new Set<Material>()
   root.traverse(object=>{if(object instanceof Mesh){geometries.add(object.geometry);for(const material of Array.isArray(object.material)?object.material:[object.material])materials.add(material)}})
+  // Base colour textures (fila 21) are reused by the scene material, so they live as long as the lease.
+  const textures=new Set<Texture>()
+  for(const material of materials)if('map' in material&&material.map instanceof Texture)textures.add(material.map)
   let released=false
-  return () => { if(released)return;released=true;root.removeFromParent();for(const geometry of geometries)geometry.dispose();for(const material of materials)material.dispose() }
+  return () => { if(released)return;released=true;root.removeFromParent();for(const geometry of geometries)geometry.dispose();for(const material of materials)material.dispose();for(const texture of textures)texture.dispose() }
 }
 function withinLimits(root: Group, limits: PropModelLimits) {
   root.updateMatrixWorld(true)

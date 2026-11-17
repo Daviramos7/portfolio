@@ -34,7 +34,7 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
   const [initialX,initialY]=screenActivity(zone,0)
   marker.position.set((initialX/1024-.5)*size[0],(.5-initialY/512)*size[1],.004)
   const projected=new Vector3();let publicNodes=1
-  let previous = ''
+  let previous = '', scale = 1
   let lastInput: readonly [SceneProps['contentIndex'], Locale, string | null] = [[], 'pt', null]
   function update(index: SceneProps['contentIndex'], locale: Locale, projectId: string | null) {
     lastInput=[index,locale,projectId]
@@ -43,6 +43,8 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
     previous = key; object.userData.screenPresentation = presentation
     publicNodes=Math.min(3,Math.max(1,presentation.lines.length))
     const en = locale === 'en'
+    // Drawing stays in the 1024×512 design space; the backing canvas is `scale` times larger (fila 17b).
+    ctx.setTransform(scale,0,0,scale,0,0)
     ctx.fillStyle = '#0c1720'; ctx.fillRect(0,0,1024,512)
     ctx.fillStyle = '#132934'; ctx.fillRect(20,20,300,472)
     ctx.strokeStyle = '#39616e'; ctx.lineWidth = 2; ctx.strokeRect(20,20,984,472)
@@ -109,5 +111,12 @@ export function createProgrammeScreen(r: Resources, parent: Group, zone: ZoneId,
     // A single public experience still has activity, without adding fictitious nodes.
     if(zone==='pit-wall')marker.scale.setScalar(1+.45*(.5-.5*Math.cos(timeMs*Math.PI*2/8000)))
   }
-  return {object,update,updateAmbient,get uploadVersion(){return map.version}}
+  /** Backing resolution per quality level; a size change frees the GPU copy so the next upload allocates the new size. */
+  function setScale(next: number) {
+    if (!(next > 0) || next === scale) return
+    scale = next; map.dispose()
+    canvas.width = Math.round(1024*scale); canvas.height = Math.round(512*scale)
+    previous = ''; update(...lastInput)
+  }
+  return {object,update,updateAmbient,setScale,get uploadVersion(){return map.version},get resolution(){return [canvas.width,canvas.height] as const}}
 }

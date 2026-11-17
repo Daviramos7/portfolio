@@ -18,6 +18,7 @@ import { createCircuit } from './trackside/circuit.ts'
 import { createSkyline, setSkylineQuality } from './trackside/skyline.ts'
 import { estimateTextureBytes } from './textureBytes.ts'
 import { setBrushedAnisotropy } from './garage/surfaceFinish.ts'
+import { reportsReduction, screenScale, sunShadowMapSize, textAnisotropyFor } from './qualityDetail.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -92,6 +93,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const benchLight = new PointLight('#ffe1bd', 28, 8, 2)
   const rimLight = new PointLight('#c5e7ff', 105, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
+  let reportedReduced = false
   let opening: ReturnType<typeof createTrackOpening> | null = null
   let pitLevel: SceneGroup | null = null, skyline: SceneGroup | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()
@@ -159,6 +161,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     invalidated = true
     const width = canvas.clientWidth, height = canvas.clientHeight
     if (width < 1 || height < 1) return
+    dprGovernor.setLevel(state.qualityLevel)
     dprGovernor.setQuality(state.quality)
     dprGovernor.interrupt()
     const dpr = dprGovernor.dpr
@@ -213,6 +216,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       canvas.dataset.sceneClockMs = String(Math.round(trackTimeMs))
       canvas.dataset.sceneTrackModel = pass?.modelStatus ?? 'fallback'
       canvas.dataset.sceneHandgripModel = garage?.handgripStatus ?? 'fallback'
+      if (garage) canvas.dataset.sceneEasterEggs = Object.values(garage.easterEggStatus).filter(status => status === 'loaded').length.toString()
       const animate = ambientActive()
       if (animate) { ambientTimeMs += delta; garage?.updateAmbient(ambientTimeMs, camera) }
       if (!invalidated && ready && !current && !animate && eligible && state.reducedMotion) { loopRenderedAt = null; requestFrame(); return }
@@ -222,6 +226,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       // Only rendered frames of one continuous loop measure pacing; a restarted loop has no interval yet.
       if (loopRenderedAt !== null && dprGovernor.sample(nowMs - loopRenderedAt, cadence)) resize()
       canvas.dataset.sceneDprState = dprGovernor.state
+      const reduced = reportsReduction(state.qualityLevel) && dprGovernor.state !== 'full'
+      if (reduced !== state.qualityReduced && reduced !== reportedReduced) { reportedReduced = reduced; onEvent({ type: 'QUALITY_REDUCED', reduced }) }
       loopRenderedAt = nowMs
       camera.lookAt(room.localToWorld(worldLookAt.copy(lookAt)))
       if (pitLevel) pitLevel.visible = !pitLevelHiddenFrom(camera.position)
@@ -358,8 +364,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     benchLight.position.set(-6.2, 2.5, -2.8)
     rimLight.position.set(2.6, 2.6, -3.5)
     room.add(workshopLight, benchLight, rimLight)
-    // Applied before the garage builds its canvas text, so first upload already uses it.
-    const textAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
+    // Applied before the garage builds its canvas text, so first upload already uses it (the first update applies the level).
+    const textAnisotropy = textAnisotropyFor('auto', renderer.capabilities.getMaxAnisotropy())
     resources.setTextAnisotropy(textAnisotropy); canvas.dataset.sceneTextAnisotropy = String(textAnisotropy)
     garage = createGarage(resources)
     opening = createTrackOpening(resources)
@@ -368,7 +374,11 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
     // Optional prop models arrive after the static batches; the procedural stand-ins cover the wait and any failure.
-    void garage.loadProps().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
+    // M16 fila 19: deferred past the first frame (rAF, then a fresh task) so start-up stays one task shorter.
+    const props = garage
+    // New casters (helmet stand, scarf) and late models refresh the manual shadow map once when they land.
+    const propsChanged = () => { if (disposed || !renderer) return; if (state?.quality === 'balanced') renderer.shadowMap.needsUpdate = true; invalidated = true; requestFrame() }
+    requestAnimationFrame(()=>setTimeout(()=>{if(disposed)return;const loading=props.loadProps();propsChanged();void loading.then(propsChanged)},0))
     resources.batch(opening.track)
     // M16 4b: boxes, circuit dressing and horizon are built instanced/merged, so they skip the generic batcher.
     pitLevel = createPitLevel(resources); skyline = createSkyline(resources)
@@ -414,6 +424,24 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         previousLocale = state.locale
         previousProject = state.target.projectId
       }
+      if (previous?.qualityLevel !== state.qualityLevel) {
+        // Fila 17b: level detail (screen texels, text anisotropy, sun shadow map); DPR follows in resize().
+        const level = state.qualityLevel, anisotropy = textAnisotropyFor(level, renderer.capabilities.getMaxAnisotropy())
+        resources.setTextAnisotropy(anisotropy); canvas.dataset.sceneTextAnisotropy = String(anisotropy)
+        garage?.setScreenScale(screenScale[level])
+        canvas.dataset.sceneScreenResolution = (garage?.screenResolution ?? [0, 0]).join('x')
+        const edge = sunShadowMapSize[level]
+        if (sun.shadow.mapSize.x !== edge) { sun.shadow.mapSize.set(edge, edge); sun.shadow.map?.dispose(); sun.shadow.map = null; renderer.shadowMap.needsUpdate = true }
+        canvas.dataset.sceneQualityLevel = level
+        reportedReduced = false
+        if (previous) resize()
+      }
+      // M16 fila 19/21: Leve keeps a selection of the easter eggs and never downloads the rest; other levels show all
+      // twelve (on the light profile each file is fetched when its station is framed).
+      if (garage && (previous?.quality !== state.quality || previous?.qualityLevel !== state.qualityLevel))
+        void garage.setQuality(state.quality, state.qualityLevel).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
+      if (garage && previous?.target.zoneId !== state.target.zoneId)
+        void garage.setZone(state.target.zoneId).then(()=>{if(!disposed){invalidated=true;requestFrame()}})
       if (previous?.quality !== state.quality) {
         const shadows = state.quality === 'balanced'
         // Design §4: low drops the box props and keeps one horizon plane.

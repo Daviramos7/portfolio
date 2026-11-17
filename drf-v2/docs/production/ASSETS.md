@@ -87,3 +87,180 @@ procedural anterior continua na cena.
 
 Licença de uso do arquivo final: saída de modelos Apache 2.0 e MIT, gerada localmente a partir de prompt próprio, sem
 restrição de uso público conhecida; distribuído sob os termos do repositório.
+
+## Easter eggs da sala elevada — `public\models\props\*.glb` (M16, fila 19, 17/11/2026)
+
+Origem: gerados localmente na missão 12 (e na 18, case v4 e guitarra) pela cadeia FLUX.2 klein 4B → BiRefNet → TripoSG →
+limpeza no Blender 5.2 (`lote_blender.py`), em `C:\Users\davir\drf-ia3d\geracao\<objeto>\` (fora do Git).
+Licença: saída de modelos rodados localmente; sem asset de terceiros e sem texto ou marca na malha (conferido nas 4 seeds
+de cada objeto; motivos em `geracao\escolhas.json`). Todo texto da cena (DAVI, 16, 7, SIUUU, caneca, ingresso, palheta,
+adesivo, setlists, watchlist, quadro, post-it) é desenhado em canvas no código (`src\scene\garage\easterEggs.ts`).
+Hashes da imagem recortada e da malha bruta: `geracao\TABELA.md`. Cor: pintura por vértice no carregamento (o GLB tem
+um material único); nenhuma textura de imagem.
+
+| Arquivo | Objeto gerado | Seed | Triângulos | Bytes | SHA-256 |
+| --- | --- | --- | --- | --- | --- |
+| `caneca.glb` | caneca | 16 | 5970 | 156.704 | `d7db4dbf66de90d148a7e443bf071f89bcbb2310ae3a4bbbc2b692beb575ad88` |
+| `capacete.glb` | capacete | 2026 | 14924 | 540.872 | `3dcc7eea8483c4ff43e8c6a6ce90365bc35a2467c56f54f91082334e0a0f166a` |
+| `figure.glb` | figure | 77 | 14924 | 454.216 | `c7b78cf0137819ccea0f9ec538129e1db3aeae16aec72b7b8ab91444f04d2a76` |
+| `amplificador.glb` | amplificador | 45 | 14924 | 440.756 | `18a9dab28641bead747c47a077cade439b4f2d7d8eb6e929d687027b2b6c3cd8` |
+| `case-guitarra.glb` | case-guitarra-v4 | 16 | 14924 | 432.596 | `7f3f6080663f720bfc90f440a776519a7e1551a78286dad0d2bbdfea43428e50` |
+| `guitarra.glb` | guitarra-eletrica | 77 | 14924 | 511.056 | `3752b0d2832cab65b65280f3bed97292600f4e049a8f78280930b7464cfdd086` |
+| `bola.glb` | bola | 45 | 5970 | 166.644 | `51c80f8c7d1f2727048de3a74285ec7691d95f80a380acf774d9f4af6d4c7880` |
+| `chuteira-em-pe.glb` | chuteira-em-pe-v2 | 45 | 5970 | 210.580 | `0dd8a35267982f7a1b08aea036abcb792ad7aa36d39ef0f684a4c99f0e10b64e` |
+| `chuteira-caida.glb` | chuteira-caida | 16 | 5970 | 197.840 | `2ab804d2609fadaabef96eeedd598a0dfd8afe5ecb8fedfd85976e53c28c124f` |
+| `cobra-coral.glb` | cobra-coral | 45 | 5970 | 193.012 | `9977672476c6fd3da9f4517528f075444ead095a70617dee9541c3ee695369d9` |
+| `vaso-esp32.glb` | vaso-esp32 | 16 | 11940 | 437.184 | `4f28cc1968a15f2f874790a7a34106451380943eb1fad13e695354d91f893efd` |
+| `cinto-ferramentas.glb` | cinto-ferramentas | 77 | 14924 | 480.900 | `33854e2bf6d417f0f14f50a3ca75c1883e463885ea66ba6f77da6afb7bdf5625` |
+
+Prompts (FLUX.2 klein; cópia de `geracao\objetos.json`):
+
+- **caneca** (s16): Studio product photo of a single plain white ceramic coffee mug, straight cylindrical body, simple C-shaped handle on the right side, glossy glaze, completely blank smooth side with no print, empty
+- **capacete** (s2026): Studio product photo of a single original full-face motor racing helmet of generic own design, matte black shell, one clean horizontal stripe in red and white running around the middle of the shell, dark tinted closed visor, plain smooth unmarked area on the side and at the back of the shell, no stickers, no sponsor decals, no crest, no pattern
+- **figure** (s77): Studio product photo of a single small collectible vinyl figure of an original chibi race mechanic mascot, oversized round head, simple friendly face with small dot eyes, short dark hair, plain matte black racing overalls with one horizontal red and white stripe across the chest, plain black gloves and boots, holding a plain black racing helmet under one arm, standing on a small round black base, original character design not based on any existing character
+- **amplificador** (s45): Studio product photo of a single small generic practice guitar amplifier, boxy cabinet covered in black textured vinyl, plain dark grey grille cloth on the front with no badge, top control panel with a row of five plain black knobs and one small red indicator light, black carry handle on top, metal corner protectors
+- **case-guitarra-v4** (s16): Studio product photo of a single closed hardshell electric guitar case standing upright, long and narrow, about three times taller than it is wide, sized to hold one solid-body electric guitar, wide squared lower end for the guitar body tapering in a straight line to a narrow squared upper end for the neck, slim shallow depth, black textured tolex vinyl covering, polished chrome metal corner protectors on every corner, three small chrome latches along the long side edge, black carry handle on the long side, plain lid with no badge and no stickers
+- **guitarra-eletrica** (s77): Studio product photo of a single solid-body electric guitar of an original custom design standing upright, front view, sharp asymmetric offset double-cutaway body with angular bevelled horns, gloss black finish with one thin red stripe and one thin white stripe running in parallel diagonally across the body, six metal strings, two black rectangular humbucker pickups clearly visible, black pickguard, fixed bridge, three plain black control knobs, dark fretboard with small dot inlays, plain pointed angular headstock with six chrome tuners and no logo
+- **bola** (s45): Studio product photo of a single old worn street football, generic stitched leather panels in dirty off-white and faded black, scuffed and scratched surface, slightly deflated, plain panels with no print
+- **chuteira-em-pe-v2** (s45): Studio product photo of a single classic low-cut leather soccer cleat resting on its studs on the ground, sleek low profile with the collar below the ankle, long narrow shape with a rounded toe, plain black leather upper with no stripes and no side markings, flat fold-over tongue, black laces tied, white sole plate with round moulded studs, plain smooth blank heel panel, slightly worn, seen from the side three-quarter with the heel nearer the camera
+- **chuteira-caida** (s16): Studio product photo of a single generic football boot lying on its side with the sole facing the camera, plain black leather upper with no stripes and no side markings, white sole with moulded studs clearly visible, one blank strip of beige masking tape stuck across the sole, slightly worn
+- **cobra-coral** (s45): Studio product photo of a single coral snake coiled in a neat flat spiral with the head slightly raised, slender body with repeating bands of red, black and white, smooth glossy scales, calm pose
+- **vaso-esp32** (s16): Studio product photo of a single small terracotta flower pot with a small green leafy houseplant, a small generic dark microcontroller development board with two rows of pins standing upright stuck in the soil, one thin wire going from the board to a small fork-shaped two-prong soil moisture sensor probe pushed into the soil, unmarked circuit board
+- **cinto-ferramentas** (s77): Studio product photo of a single brown leather mechanic's tool belt with three pouches hanging from one steel wall hook, the pouches hold a cross-shaped wheel wrench, a chrome torque wrench and a pair of pliers with red handles, one front pocket left empty and slightly open, plain leather with no stamp
+
+Uso na cena: `createEasterEggs`, montado depois do primeiro quadro. `low` baixa só caneca, capacete e figure; os outros
+9 só baixam em `balanced`. Limites por objeto (maior dimensão e triângulos) em `easterEggModels`; arquivo ausente ou fora
+do limite deixa só os detalhes de papel e geometria simples. Pneus: textura de borracha e marcações (`DRF ENGINEERING`,
+`RACE SLICK · 18`) desenhadas em canvas em `src\scene\car\wheels.ts`, sem nome de fornecedor real.
+
+## Easter eggs com cor — fila 21 (17/11/2026)
+
+**Método (opção A, sem download):** `C:\Users\davir\drf-ia3d\scripts\colorir_projecao.py` (Blender 5.2 headless + numpy,
+fora do repo). Para cada GLB limpo da fila 19: procura a direção de vista ortográfica cuja silhueta casa com o alfa do
+recorte BiRefNet da imagem FLUX escolhida (`<pasta>-s<seed>-cut.png`; IoU em grade 72×72, azimute 0–360°, elevação
+≥ −5° para não cair na vista antípoda espelhada), projeta UV por essa vista, recorta a imagem num quadrado em volta do
+objeto, estende as bordas para o fundo transparente (anel a anel, média dos vizinhos) e grava o GLB com a textura em
+JPEG (qualidade 86). O lado oculto recebe a cor da frente, atravessada pela projeção (cor aproximada). Lado da textura:
+512 px nos objetos do nível Leve (caneca, capacete, figure), 1024 no resto. Geometria, triângulos e escala iguais aos
+da fila 19; só mudaram UV, material e imagem. Opção B (regiões com material próprio) não foi necessária.
+Textos (DAVI, 16, 7, SIUUU, caneca, ingresso, palheta, adesivo) continuam no atlas de canvas próprio, por cima; o da
+caneca passou a tinta escura porque a caneca gerada é branca. Prancha de conferência:
+`C:\Users\davir\drf-ia3d\geracao\cor-prancha.png`; resumo por objeto em `geracao\cor.json`.
+Na cena: o material usa o `map` do GLB; o amplificador leva um tom multiplicador `#6a6a6a` (o tolex da imagem é cinza
+médio e a luz do Pit Wall clareava demais); a figure tem 22% de autoiluminação pela própria textura (destaque sem luz
+nova, para não recompilar os programas da cena).
+
+| Arquivo | Imagem de origem | Textura (px) | IoU silhueta | Vista (az / el) | Bytes | SHA-256 do GLB | SHA-256 da textura PNG (`geracao\<pasta>\<id>-cor-<px>.png`) |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `bola.glb` | `bola` s45 | 1024 | 0.96 | 209.0° / 73.0° | 307832 | `93c6a6e110f5f73f9164f728a972970456f7d96f9e076d00b0d4e1b869af7e19` | `359a22995da9464cfd4757b15d0a337a8defafe48fd45d4d4720a476b5f3cdf1` |
+| `capacete.glb` | `capacete` s2026 | 512 | 0.969 | 318.0° / 14.0° | 561636 | `d5121360f2de84ff7feb13f85506138d9d91f164efd1f5f49c73667edcfa87f4` | `ab7cb70e4b5141d0179d9fb0a1cd48cde452d6da9b09d89c5d3821bb23a31de8` |
+| `caneca.glb` | `caneca` s16 | 512 | 0.922 | 355.0° / 6.0° | 164968 | `c381adeb0c00760c169d994a11cfcc6fe6b0fbc1eb0aa7f56f51750713f1a3b0` | `1e0731d095a7e9d4b34bfac8213ee5c3ed2f70f3e4db9622c539030b43981b3c` |
+| `figure.glb` | `figure` s77 | 512 | 0.891 | 335.0° / 15.0° | 475448 | `5a1581c5fa670c12c32ce2be565622dc8be5a851b1c7997174ad94b76222d2a9` | `01743e676f5d7260150ee83584223615aa6d66b10c233761f482bfc9d5f1e286` |
+| `amplificador.glb` | `amplificador` s45 | 1024 | 0.926 | 330.0° / 35.0° | 601264 | `8404dfde3c3a337056b00c862a10bce7d79ab0709484d229ede62a56349d3767` | `6b1041630b83c0a26648aa3035222d33cad2685aaf86953c2e3d8247f58b3b75` |
+| `case-guitarra.glb` | `case-guitarra-v4` s16 | 1024 | 0.937 | 54.0° / 13.0° | 483776 | `0a46cc564d97cc7f3f871d9e81a30fca726eeaaded16f4a83d492c6f969aea97` | `46ea0122d53275feb70b6b7695164bdbf8c0ffc6f2f9be240ffa300536f733e0` |
+| `guitarra.glb` | `guitarra-eletrica` s77 | 1024 | 0.878 | 329.0° / -1.0° | 579260 | `d35ae87fb07db4383304da62f5fd0f33937d0da3e1346de762c3c37afd52aa05` | `e3913e36dd6829659a4dc69c2bd1d8a0c69fb2db6100b8ca3b2a22f9366ba307` |
+| `chuteira-em-pe.glb` | `chuteira-em-pe-v2` s45 | 1024 | 0.917 | 18.0° / 31.0° | 285744 | `9b7578ce82cc538f8ff3fdf27019380dd694b0b2adad6b03159f970a3a80feda` | `1b59c3edda6ab0db221310a0b1d921dd6bb1effc703cf690fc1c2f504c9a3216` |
+| `chuteira-caida.glb` | `chuteira-caida` s16 | 1024 | 0.932 | 2.0° / 68.0° | 264696 | `07c6f4221aaf08d751b736cfc33a6d1433aecb24f8a6803cfbff8672eb291dbe` | `7b5ebdb1b89ac23b65525a5d6319c5daa54fb2c77ec18bdd96cb55cc8d16f2dd` |
+| `cobra-coral.glb` | `cobra-coral` s45 | 1024 | 0.928 | 337.0° / 25.0° | 353624 | `e0045e95085e1ddcc1152bd72773f02dace030cd61b4285d5599f789625b2676` | `b4c120f11cf0db4441ce12c5738760d460b0d41b117f68afb4cfededbc868567` |
+| `vaso-esp32.glb` | `vaso-esp32` s16 | 1024 | 0.833 | 351.0° / 16.0° | 504516 | `40f028bedf01e689cd67dec6e1ed516d53c3a27bc102c7a876dcf3b70f262c30` | `3449cc191899dd186638ea911dfc234093cb780fea0e02e429cef23fdf99ebe8` |
+| `cinto-ferramentas.glb` | `cinto-ferramentas` s77 | 1024 | 0.93 | 12.0° / 7.0° | 579208 | `0a4584b0401a9fa0aecc9879f722e12ad58cde1a36d22a60abf439c16649a804` | `b4164dbb9d7cd8670888891281226c7f17ba2c1f1b015f85b1f06f32af95440c` |
+
+Total dos 12: 5161972 bytes (fila 19: 4,22 MB). Origem e licença: as mesmas da fila 19 (imagens FLUX.2 klein 4B e
+malhas TripoSG geradas localmente; sem marca, logo ou texto de terceiros).
+
+## Fila 22 — figure com cabelo e barba, texturas 512 no celular (17/11/2026)
+**Figure novo (`figure.glb`).** Mesmo estilo chibi do mascote (macacão preto com faixa vermelha e branca, capacete sob o
+braço, base redonda), agora com cabelo penteado para trás, ondulado, volume no topo e laterais curtas, e barba cheia,
+curta e escura. Personagem original, sem marca nem texto.
+- Prompt (FLUX.2 klein 4B, revisão `e7b7dc27…`, 4 passos, guidance 1.0, 1024 px, sufixo padrão do lote em
+  `drf-ia3d\geracao\objetos.json`, id `figure-v2`): "Studio product photo of a single small collectible vinyl figure of
+  an original chibi race mechanic mascot, oversized round head, simple friendly face with small dot eyes, dark brown hair
+  swept back with soft waves and volume on top, short sides, full short dark beard covering the jaw and chin, plain matte
+  black racing overalls with one horizontal red and white stripe across the chest, plain black gloves and boots, holding
+  a plain black racing helmet under one arm, standing on a small round black base, original character design not based
+  on any existing character".
+- Seeds 16, 45, 77, 2026; escolhida **s45** (motivo em `geracao\escolhas.json`; s16 descartada por emblema na manga).
+  Imagem `figure-v2-s45-flux.png` `2414f722fa6792d4c23481ee782e566a101482b85186b0c1d2dd80097e3e57b3`; recorte, malha
+  bruta (1.393.592 faces) e GLB limpo (14.924 triângulos, maior lado 0,18 m) com hashes em `geracao\TABELA.md`.
+- Cor: `colorir_projecao.py` (fila 21), vista 321° / 15°, IoU 0,883, textura 512. Retoque só na textura
+  (`drf-ia3d\scripts\retocar_testa.py <glb> 129 170 370`): 4.546 pixels cor de pele acima da linha das sobrancelhas
+  viram o castanho mediano do cabelo (73, 54, 51), porque o topete da malha é mais alto que o da foto e puxava a testa.
+  Textura final `figure-cor-retocado-textura.png` `0e263a2ed52897758737b3e000deaf8e561d14bbe13b78fe7ea0496a371f7f57`.
+- `figure.glb`: 507.032 bytes, `f2db8ccb3f2a6f5410373394964893eede60f85f47eac022c7b00e0d7e56adbf`. O GLB da fila 21
+  ficou guardado em `drf-ia3d\geracao\figure\figure-site-fila21.glb`.
+
+**Variantes 512 (`<id>-512.glb`).** Para os 9 objetos de textura 1024, o perfil leve (celular) baixa uma cópia com a
+mesma malha, os mesmos UV e a textura reduzida para 512 (Lanczos, JPEG 86). Só os bytes da imagem mudam
+(`drf-ia3d\scripts\textura_lado.py 512 <ids>`); o desktop segue com os arquivos de 1024.
+
+| Arquivo | Bytes (1024 → 512) | SHA-256 da variante |
+|---|---|---|
+| `amplificador-512.glb` | 601264 → 508204 | `c501dbb66888fd81eb0e6c5843f23e506c9dd009efc9201a916201ba4cd62e88` |
+| `case-guitarra-512.glb` | 483776 → 457364 | `108523ad3aaaae5be518a97adb61344421a0328a8a3b32fd54a03a5cc0e3edab` |
+| `guitarra-512.glb` | 579260 → 546952 | `9b770234273dd6015613d3b08b2e4a8108f61153b16d414fef240b85b54a66ca` |
+| `bola-512.glb` | 307832 → 226732 | `1572915126106bbad757a1e4413e00a6883bcbf17c82901fc92fb7e5845cd7b5` |
+| `chuteira-em-pe-512.glb` | 285744 → 244760 | `ad6a8646ffaa34df250055bae0c4cf1a24f10f0e9119359affc01eb1fdfa5360` |
+| `chuteira-caida-512.glb` | 264696 → 230252 | `89e15297e071e1886ba2783fc2fac89760f6590f6abccf761a01a0aa9af281c3` |
+| `cobra-coral-512.glb` | 353624 → 270612 | `659d9f48f107bfb38b542124880e55afe85946e31c5c07548d9eff247e58077c` |
+| `vaso-esp32-512.glb` | 504516 → 470912 | `365dbc023b3e61b4f6254d818db1cd408d980fc95ff91a39c60efd5148765b8f` |
+| `cinto-ferramentas-512.glb` | 579208 → 524084 | `6195ab617c6f7b47ba1ad57d601ee07081b2c2ecdfe93cb5da7b177f88594406` |
+
+Origem e licença: as mesmas da fila 19 (geração local, sem marca, logo ou texto de terceiros).
+
+## Fila 22b — figure do Davi modelado por script (17/11/2026)
+
+Substitui o figure da fila 22 (FLUX → TripoSG → cor projetada). **Modelado por script**: `drf-v2/tools/blender/figure_davi.py`
+(Blender 5.2.0 LTS, `bpy`/`bmesh`, sem IA, sem imagem de referência dentro do arquivo). A imagem FLUX s45 da fila 22 serviu
+só como referência de proporção. Estilo genérico de action figure vinil chibi, sem personagem nem linha de brinquedo de marca.
+
+- Peças: base redonda; pernas, tronco e braços de macacão preto; faixa horizontal branca e vermelha no peito e nas costas
+  (cortes planos exatos na malha, sem dente de serra); luvas e botas; capacete na mão (preto fosco, faixa vermelha, viseira
+  cinza-azulada); cabeça lisa; olhos, brilho e sobrancelhas como pintura (decal colado na superfície, 0,4–0,8 mm, sem relevo);
+  nariz e orelhas lisos; calota de cabelo + 7 mechas onduladas penteadas para trás, volume no topo, laterais curtas; barba
+  cheia e curta (casca espelhada com espessura) e bigode como volume próprio.
+- Cor por material, guardada como paleta: textura PNG 64×64 com 12 células de cor sólida; o UV de cada face cai no centro
+  da célula do seu material; filtro NEAREST (a cena usa um material só com a textura do GLB, `easterEggs.ts`).
+  Cores (sRGB): pele `#f2cdb0`, cabelo/barba `#6a4532`, macacão `#18181b`, faixa `#c8162c`/`#f1f1ee`, luvas `#2c2c31`,
+  capacete `#101012`, viseira `#3f4a5c`, base `#232325`, olho `#141210`, brilho `#ffffff`, orelha/nariz `#eabd9c`.
+- **DAVI no capacete: não feito.** A 2,1× na cena o capacete tem ~4 cm; o texto ficaria abaixo de um pixel no 1440.
+
+| Arquivo | Bytes | sha256 |
+| --- | --- | --- |
+| `public/models/props/figure.glb` | 261264 | `69c3cbdd78d92dfe9db85cd7685f962f8e354d57fc002171154af2696492ab3f` |
+| `drf-ia3d/geracao/figure-v3/figure-paleta.png` (fora do Git) | — | `518f6ccbfb11f7bc24d9413a98384cd196dba9632ef41c307fdf523e5ef24727` |
+
+Triângulos 11269 (teto 15000), vértices no Blender 5742, tamanho 0.12123 × 0.10526 × 0.18 m (Blender XYZ, Z para cima),
+base em z = 0, frente em −Y. Triângulos por cor: cabelo/barba 5451, pele 1680, luvas 1168, macacão 1140, capacete 713,
+orelha/nariz 616, base 188, faixa vermelha 168, viseira 53, faixa branca 40, olho 36, brilho 16.
+
+Comandos:
+```bash
+/c/Users/davir/drf-ia3d/scripts/blender.sh --background --python C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/drf-v2/tools/blender/figure_davi.py -- --output C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.glb --report C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.json
+/c/Users/davir/drf-ia3d/scripts/blender.sh --background --python C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/drf-v2/tools/blender/preview_asset.py -- --input C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.glb --output C:/Users/davir/drf-ia3d/geracao/figure-v3/prancha.png
+```
+Na cena: mesma posição, giro e escala da fila 22 (`easterEggs.ts`, `[-6.93,.61,1.85]`, yaw 1.2, 2,1×). Licença: obra própria
+gerada por script do repositório.
+
+## Fila 22d — figure v5: cabelo em mechas e barba rente (17/11/2026)
+Refino da v3 (22b) no mesmo script `drf-v2/tools/blender/figure_davi.py`, **sem IA na cabeça** (a v4 da 22c, cabeça
+TripoSG, foi reprovada pelo Davi e não entrou). Corpo, rosto, olhos, cores e capacete iguais à v3.
+
+- Cabelo: calota fina (2,2 mm) inflada sob o topete + **14 mechas** penteadas para trás (raiz arredondada, afinando até a
+  ponta; topete sobe e vai para trás; laterais curtas e rentes; ondulação suave). As mechas nascem atrás da linha do
+  cabelo, então de frente o topo é um arco liso, sem coroa de pontas.
+- Barba: casca única de 2 mm (sem espelho, some a fresta sob o bigode da v3) no maxilar e nas bochechas, subindo até as
+  costeletas na frente da orelha; borda relaxada (sem dente de serra). **Bigode separado**; **boca** pintada (cor nova
+  `boca` `#8a4a42`) visível entre bigode e barba.
+- **Normal map** 256×128 PNG (dado linear) no segundo UV (`Fios`, glTF `TEXCOORD_1`): metade esquerda ranhuras de fios
+  que seguem o ângulo do penteado; metade direita granulado curto (barba e bigode) e faixa lisa para o resto.
+  Cena: `easterEggs.ts` passa a manter o `normalMap` do arquivo (só o figure tem).
+
+| Arquivo | Bytes | sha256 |
+| --- | --- | --- |
+| `public/models/props/figure.glb` | 409820 | `76194b4509ad3cc41c9c993991dda414adfbb8171d01827cc36382c5243e6cec` |
+| `drf-ia3d/geracao/figure-v5/figure-normal.png` (fora do Git) | — | `d66373dab1d1cda896a1b27d2b2a8232ec9f682c97a9f2f86ebf20daab51eed0` |
+| `drf-ia3d/geracao/figure-v5/figure-paleta.png` (fora do Git) | — | `cc070accc7ad2ee3fffb63d982129d35573e926260e714a1d98790c64823463d` |
+
+Triângulos 14056 (teto 15000), 0.12186 × 0.10581 × 0.18 m (Blender XYZ). Por cor: cabelo/barba/bigode 8224, pele 1680,
+luvas 1168, macacão 1140, capacete 713, orelha/nariz 616, base 188, faixa vermelha 168, viseira 53, faixa branca 40,
+olho 36, brilho 16, boca 14. Comandos iguais aos da 22b, trocando `figure-v3` por `figure-v5`. Licença: obra própria.
