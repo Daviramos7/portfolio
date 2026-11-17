@@ -12,7 +12,6 @@ const audit = (id: string, name: string, revision: string): Evidence => ({
 const audits = [
   audit('audit-atleta', 'Atleta Híbrido', '0ae9190'),
   audit('audit-brasilscore', 'BrasilScore', 'aadc1e9'),
-  audit('audit-pyspark', 'PySpark / Recife', '27f0c93'),
   audit('audit-stock', 'Stock Data Pipeline', 'f9feca6'),
   audit('audit-spfc', 'SPFC', 'ff13dc2'),
   audit('audit-task', 'Task Manager', 'b1b2409'),
@@ -24,14 +23,6 @@ const metric = (id: string, projectId: string, evidenceId: string, value: number
   period: t('Auditoria local • 09/10/2026', 'Local audit • 2026-10-09'), context,
 })
 const metrics: Metric[] = [
-  metric('recife-records-2023', 'public-expenditure-big-data', 'audit-pyspark', 127119, 'records',
-    t('Registros públicos processados', 'Public records processed'),
-    t('Dataset Recife 2023. Spark 4.0.4 local[2], Windows 11, Python 3.13.9. CSV público; exportações verificadas. Não é cluster ou produção.',
-      'Recife 2023 dataset. Spark 4.0.4 local[2], Windows 11, Python 3.13.9. Public CSV; exports checked. Not a cluster or production run.')),
-  metric('recife-liquidated-2023', 'public-expenditure-big-data', 'audit-pyspark', 7803361234.91, 'BRL',
-    t('Despesas liquidadas no dataset', 'Liquidated expenditure in dataset'),
-    t('Total local arredondado a centavos, dataset público Recife 2023. DoubleType; não constitui validação contábil completa, economia gerada ou resultado profissional.',
-      'Local total rounded to cents, public Recife 2023 dataset. DoubleType; not a full accounting validation, savings or professional outcome.')),
   metric('atleta-tests', 'atleta-hibrido', 'audit-atleta', 283, 'tests',
     t('Testes existentes aprovados', 'Existing tests passed'),
     t('22 arquivos de testes, revisão 0ae9190, Node 22.21.0; lint/build aprovados. Complemento: 4 PASS/3 FAIL. Smoke com backend sintético; Supabase/RLS e Android reais bloqueados. Não é cobertura.',
@@ -70,13 +61,6 @@ const updates: Record<string, Partial<Project>> = {
     productStatus: t('Fluxos offline verificados; API real não validada', 'Offline flows verified; live API unvalidated'),
     limitations: [t('Fluxos verificados com API e imagens sintéticas locais; integração remota e aparência completa pendentes. Estado da rodada e recuperação de erros exigem ajustes. Licenças de assets e contribuição individual precisam de revisão.', 'Flows checked with a local synthetic API and images; live integration and full appearance pending. Round state and error recovery need adjustments. Asset licenses and individual contribution need review.')],
     decisions: [t('HTML, CSS e JavaScript consomem a PokéAPI e mantêm o estado da rodada no navegador; recorde em localStorage e sugestões navegáveis por teclado.', 'HTML, CSS and JavaScript consume PokéAPI and keep round state in the browser; localStorage high score and keyboard-navigable suggestions.')],
-  },
-  'public-expenditure-big-data': {
-    problem: t('Transformar despesas públicas de 2023 em agregações e saídas verificáveis.', 'Turn 2023 public expenditure into inspectable aggregates and exports.'),
-    summary: t('Pipeline PySpark para análise de despesas públicas do Recife, com normalização monetária, agregações, qualidade de dados e exportações de ranking e dashboard.', 'PySpark pipeline for Recife public expenditure analysis, with monetary normalization, aggregation, data quality and ranking and dashboard exports.'),
-    productStatus: t('Pipeline público reproduzido localmente', 'Public pipeline reproduced locally'),
-    decisions: [t('Agregações Spark sobre CSV público, Top10 agregado em Pandas e saídas CSV, JSON, PNG e ZIP. A revisão local reproduziu 127.119 registros do dataset de 2023.', 'Spark aggregations over public CSV, aggregated Top10 in Pandas and CSV, JSON, PNG and ZIP outputs. The local review reproduced 127,119 records from the 2023 dataset.')],
-    limitations: [t('Execução local; cluster e Colab não verificados. DoubleType não constitui validação contábil completa; compatibilidade de entradas e validação de arquivos têm restrições documentadas.', 'Local execution; cluster and Colab unverified. DoubleType is not full accounting validation; input compatibility and file validation have documented restrictions.')],
   },
   'atleta-hibrido': {
     problem: t('Reunir treino, alimentação, hidratação e recuperação distinguindo origem e ausência.', 'Bring training, nutrition, hydration and recovery together while distinguishing provenance and missing data.'),

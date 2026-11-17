@@ -67,6 +67,9 @@ const baselineContent: PortfolioContent = {
       decisions: [text(
         'PySpark e dbt transformam 132 mil registros num modelo dimensional com 86 testes de dados. Uma API FastAPI expõe 10 consultas, e um agente com tool calling responde em português. Um verificador fora do LLM confere se cada número citado veio da API.',
         'PySpark and dbt turn 132k records into a dimensional model with 86 data tests. A FastAPI service exposes 10 queries, and a tool-calling agent answers in Portuguese. A checker outside the LLM verifies that every number cited came from the API.',
+      ), text(
+        'Começou como um notebook PySpark de auditoria das despesas de 2023 (repositório analise-despesas-recife-pyspark) e evoluiu para pipeline, API e agente.',
+        'It started as a PySpark notebook auditing 2023 spending (repository analise-despesas-recife-pyspark) and evolved into a pipeline, an API and an agent.',
       )],
       results: [
         text('100% de acerto com Gemini e 96,7% com um modelo local de 7B, em 30 perguntas com gabarito em SQL, sem nenhum número inventado', '100% accuracy with Gemini and 96.7% with a local 7B model, on 30 questions with SQL ground truth and zero made-up numbers'),
@@ -77,7 +80,7 @@ const baselineContent: PortfolioContent = {
       productStatus: text('Online em planos gratuitos', 'Deployed on free tiers'),
       repositoryUrl: `${github}/orcamento-publico-recife`,
       demoUrl: 'https://orcamento-recife.streamlit.app',
-      evidenceIds: ['recife-budget-dossier'],
+      evidenceIds: ['recife-budget-dossier', 'pyspark-readme'],
       relatedZones: ['garage', 'strategy-room'],
       // The dossier's indicator table qualifies both accuracy figures as single runs; keep that caveat visible.
       limitations: [text(
@@ -95,17 +98,6 @@ const baselineContent: PortfolioContent = {
       technologies: ['Angular', 'FastAPI', 'Python', 'Pandas', 'ETL'],
       relatedZones: ['garage', 'pit-wall', 'strategy-room'],
       limitations: [text('Código, bases e ambiente interno não são públicos. O material da V1 identifica um protótipo Figma sanitizado.', 'Code, datasets, and the internal environment are not public. V1 materials identify a sanitized Figma prototype.')],
-    }),
-    project({
-      id: 'public-expenditure-big-data',
-      title: text('Auditoria de Despesas Públicas com PySpark', 'Public Expenditure Audit with PySpark'),
-      summary: text('Pipeline PySpark para análise de despesas públicas do Recife, com normalização monetária, agregações, qualidade de dados e exportações de ranking e dashboard.', 'PySpark pipeline for Recife public expenditure analysis, with monetary normalization, aggregation, data quality and ranking and dashboard exports.'),
-      technologies: ['Python', 'PySpark', 'Spark SQL', 'Pandas', 'ETL'],
-      repositoryUrl: `${github}/analise-despesas-recife-pyspark`,
-      relatedZones: ['garage', 'telemetry', 'strategy-room'],
-      evidenceIds: ['pyspark-readme'],
-      metricIds: ['recife-records-2023', 'recife-liquidated-2023'],
-      limitations: [text('Resultados documentados no README, não reproduzidos nesta revisão. O tempo de execução varia por ambiente.', 'Results documented in the README, not reproduced in this review. Execution time varies by environment.')],
     }),
     project({
       id: 'atleta-hibrido',
@@ -183,14 +175,11 @@ const baselineContent: PortfolioContent = {
     summary: text('Participação no desenvolvimento de uma plataforma de gestão e análise de receitas municipais, utilizando Angular, Python/FastAPI, Pandas, ETL e Parquet.', 'Participation in developing a municipal revenue management and analytics platform using Angular, Python/FastAPI, Pandas, ETL, and Parquet.'),
     evidenceIds: ['portfolio-v1'],
   }],
-  metrics: [
-    { id: 'recife-records-2023', projectId: 'public-expenditure-big-data', label: text('Registros processados', 'Records processed'), unit: 'records', period: text('Dataset de despesas do Recife — 2023', 'Recife expenditure dataset — 2023'), evidenceIds: ['pyspark-readme'], state: 'documented', value: 127119, context: text('Quantidade informada no README do projeto para o dataset de 2023. Pipeline não executado nesta revisão.', 'Count reported in the project README for the 2023 dataset. The pipeline was not executed in this review.') },
-    { id: 'recife-liquidated-2023', projectId: 'public-expenditure-big-data', label: text('Valor liquidado', 'Liquidated expenditure'), unit: 'BRL', period: text('Dataset de despesas do Recife — 2023', 'Recife expenditure dataset — 2023'), evidenceIds: ['pyspark-readme'], state: 'documented', value: 7803361234.91, context: text('Total informado no README do projeto. É resultado documentado de dados públicos, não telemetria ao vivo ou métrica de desempenho.', 'Total reported in the project README. This is a documented result from public data, not live telemetry or a performance metric.') },
-  ],
+  metrics: [],
   media: [],
   evidence: [
     evidence('portfolio-v1', text('Conteúdo público do portfólio V1', 'Public V1 portfolio content'), `${github}/portfolio/blob/main/README.md`, null),
-    evidence('pyspark-readme', text('README — despesas públicas do Recife', 'README — Recife public expenditure'), `${github}/analise-despesas-recife-pyspark/blob/27f0c93/README.md`, '27f0c93'),
+    evidence('pyspark-readme', text('Repositório de origem — notebook PySpark das despesas de 2023', 'Origin repository — PySpark notebook on 2023 spending'), `${github}/analise-despesas-recife-pyspark`, '27f0c93'),
     evidence('atleta-readme', text('README e código — Atleta Híbrido', 'README and code — Atleta Híbrido'), `${github}/AtletaHib/blob/0ae9190/README.md`, '0ae9190'),
     evidence('atleta-bridge', text('README — Android Bridge', 'README — Android Bridge'), `${github}/AtletaHib/blob/0ae9190/android_bridge/README.md`, '0ae9190'),
     evidence('brasilscore-readme', text('README e código — BrasilScore', 'README and code — BrasilScore'), `${github}/BrasilScore/blob/aadc1e9/README.md`, 'aadc1e9'),
