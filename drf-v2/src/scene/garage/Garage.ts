@@ -2,6 +2,7 @@ import { CanvasTexture, CatmullRomCurve3, Group, MeshBasicMaterial, PlaneGeometr
 import type { Camera } from 'three'
 import type { Locale, Quality, SceneProps, ZoneId } from '../../contracts/index.ts'
 import { createDRF01 } from '../car/DRF01.ts'
+import { applyTyreDetail } from '../car/wheels.ts'
 import type { Resources, Vec3 } from './resources.ts'
 import { createProgrammeScreen } from './programmeScreen.ts'
 import { createPersonalDetails } from './personalDetails.ts'
@@ -231,7 +232,13 @@ export function createGarage(r: Resources) {
     team.setText('DRF ENGINEERING', locale === 'pt' ? 'RECIFE / BRASIL · EQUIPE FICTÍCIA' : 'RECIFE / BRAZIL · FICTIONAL TEAM')
   }
   return { garage, updateLabels, updateAmbient,
-    loadProps:()=>Promise.all([personal.loadModels(),eggs.load()]).then(()=>undefined),
+    // Called after the first frame: tyre surfaces, easter eggs and prop files never weigh on start-up.
+    loadProps:()=>{
+      applyTyreDetail(r,garage)
+      const loading=Promise.all([personal.loadModels(),eggs.load()]).then(()=>undefined)
+      // Second pass of the static batcher: only the late, non-dynamic pieces (tyres, sidewalls, paper, scarf,
+      // stand) are still loose meshes; full-tier groups and model groups are dynamic and stay out.
+      r.batch(garage);return loading},
     disposeProps:()=>{personal.disposeModels();eggs.dispose()}, get handgripStatus(){return personal.handgripStatus},
     setQuality:(quality: Quality)=>eggs.setQuality(quality), get easterEggStatus(){return eggs.status},
     get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},

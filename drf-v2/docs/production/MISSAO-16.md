@@ -578,3 +578,15 @@ Ressalvas herdadas: os materiais da 4b não recebem o acabamento da 11; boxes da
 estação; mobile só emulado (celular físico pendente).
 
 Aprovação do Davi: pendente
+
+## Fila 19 — easter eggs na sala elevada + pneus (17/11/2026, branch `m16-19-easter-eggs`)
+12 GLB gerados (caneca, capacete, figure, amplificador, case v4, guitarra, bola, 2 chuteiras, cobra, vaso ESP32, cinto)
+e os detalhes de papel (setlists, watchlist, quadro do autômato, post-it, ingresso, palheta, adesivo, cachecol, placa
+REC/PE redesenhada) na sala elevada, com textos em canvas próprio. `low` mostra e baixa só uma seleção (caneca,
+capacete, figure + papéis leves). Pneus com borracha granulada, faixa e marcações originais no flanco, friso no aro.
+Tudo isso é montado depois do primeiro quadro: a montagem inicial voltou para 4,1–4,3 s (base 3,8–3,9 s; a 1ª versão
+deu 4,6 s e derrubou 3 testes de UI). Hero 1440: 106 → 130 draw calls; hero 390 low: 87 → 97. 120/120 em série,
+smoke exit 0. Detalhe, medições e ressalvas: `_fila\19-easter-eggs-sala.resultado.md` (fora do Git); registro dos
+assets em `ASSETS.md`.
+
+Aprovação do Davi: pendente

@@ -1,4 +1,4 @@
-import { CanvasTexture, CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, RingGeometry, SRGBColorSpace, Shape, SphereGeometry, TorusGeometry, Vector2 } from 'three'
+import { CanvasTexture, CylinderGeometry, ExtrudeGeometry, Group, LatheGeometry, Mesh, MeshBasicMaterial, MeshStandardMaterial, RepeatWrapping, RingGeometry, SRGBColorSpace, Shape, SphereGeometry, TorusGeometry, Vector2 } from 'three'
 import type { Resources } from '../garage/resources.ts'
 import { displayFont } from '../garage/canvasText.ts'
 
@@ -67,15 +67,15 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
   const alloy = r.material(new MeshStandardMaterial({color:'#85919b',metalness:.85,roughness:.32}))
   const brake = r.material(new MeshStandardMaterial({color:'#4e4b45',metalness:.65,roughness:.72}))
   const mountShape=r.geometry(new CylinderGeometry(.045,.045,.1,8))
-  const { rubber, ink } = tyreSurfaces(r)
-  const sidewallShape = r.geometry(new RingGeometry(.365,.585,64,1))
   const pinstripeShape = r.geometry(new TorusGeometry(.33,.005,5,48));pinstripeShape.rotateY(Math.PI/2)
   const valveShape = r.geometry(new CylinderGeometry(.007,.007,.035,6))
   const jointShape=r.geometry(new SphereGeometry(.026,8,6))
   const wheels: Group[]=[]
   for(const z of [-1.6,1.55])for(const side of [-1,1]) {
     const wheel = new Group();wheel.name=`wheel-${z<0?'rear':'front'}-${side<0?'left':'right'}`;wheel.position.set(side*1.3,.605,z);parent.add(wheel);wheels.push(wheel)
-    const tire=r.mesh(wheel,tireShape,rubber);tire.rotation.z=Math.PI/2;tire.name='tire'
+    const tire=r.mesh(wheel,tireShape,r.palette.tire);tire.rotation.z=Math.PI/2;tire.name='tire'
+    // Kept out of the static batch: applyTyreDetail swaps its material after the first frame.
+    tire.userData.dynamic=true;tire.userData.tyre=true
     const rim=r.mesh(wheel,rimShape,alloy);rim.rotation.z=Math.PI/2;rim.name='closed-rim'
     const disc=r.mesh(wheel,discShape,brake,[side*-.12,0,0]);disc.rotation.z=Math.PI/2;disc.name='brake-disc'
     const axle=r.rod(wheel,[-.2,0,0],[.2,0,0],.055,r.palette.black);axle.name='axle'
@@ -83,8 +83,7 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
       const bead=r.mesh(wheel,beadShape,alloy,[face*.205,0,0]);bead.name='machined-rim-lip-'+face
       const hub=r.mesh(wheel,hubShape,alloy,[face*.185,0,0]);hub.rotation.z=Math.PI/2;hub.name='hub-'+face
       for(let n=0;n<8;n++){const arm=r.mesh(wheel,spokeShape,alloy,[face*.17,0,0]);arm.rotation.x=n*Math.PI/4;arm.name='spoke-'+face+'-'+n}
-      // Sidewall band and markings sit just proud of the flat sidewall (|x| = .22); pinstripe on the rim face.
-      const marks=r.mesh(wheel,sidewallShape,ink,[face*.2215,0,0]);marks.rotation.y=face*Math.PI/2;marks.castShadow=false;marks.name='tyre-sidewall-'+face
+      // Pinstripe on the rim face (palette paint: no new shader at start-up).
       r.mesh(wheel,pinstripeShape,r.palette.paint,[face*.207,0,0]).name='rim-pinstripe-'+face
     }
     const nut=r.mesh(wheel,nutShape,r.palette.metal,[side*.24,0,0]);nut.rotation.z=Math.PI/2;nut.name='retaining-nut'
@@ -109,4 +108,26 @@ export function createWheelAssemblies(r: Resources, parent: Group) {
     }else r.rod(parent,[side*.48,.84,z-.18],[side*1.04,.5,z],.018,alloy)
   }
   return wheels
+}
+
+// Applied after the first frame (Garage.loadProps): the grain/markings canvases and their shaders cost ~0.3 s of
+// main thread on ANGLE/D3D11, so they stay out of the start-up task. Until then the tyres wear the plain palette rubber.
+export function applyTyreDetail(r: Resources, root: Group) {
+  const tyres: Mesh[] = []
+  root.traverse(object => { if (object instanceof Mesh && object.userData.tyre) tyres.push(object) })
+  if (!tyres.length) return 0
+  const { rubber, ink } = tyreSurfaces(r)
+  const sidewallShape = r.geometry(new RingGeometry(.365,.585,64,1))
+  for (const tire of tyres) {
+    tire.material = rubber
+    const wheel = tire.parent
+    if (!wheel) continue
+    // Sidewall band and markings sit just proud of the flat sidewall (|x| = .22).
+    for (const face of [-1, 1]) {
+      const marks=r.mesh(wheel as Group,sidewallShape,ink,[face*.2215,0,0]);marks.rotation.y=face*Math.PI/2
+      marks.castShadow=false;marks.name='tyre-sidewall-'+face
+    }
+    delete tire.userData.tyre;delete tire.userData.dynamic
+  }
+  return tyres.length
 }

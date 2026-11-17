@@ -87,3 +87,48 @@ procedural anterior continua na cena.
 
 Licença de uso do arquivo final: saída de modelos Apache 2.0 e MIT, gerada localmente a partir de prompt próprio, sem
 restrição de uso público conhecida; distribuído sob os termos do repositório.
+
+## Easter eggs da sala elevada — `public\models\props\*.glb` (M16, fila 19, 17/11/2026)
+
+Origem: gerados localmente na missão 12 (e na 18, case v4 e guitarra) pela cadeia FLUX.2 klein 4B → BiRefNet → TripoSG →
+limpeza no Blender 5.2 (`lote_blender.py`), em `C:\Users\davir\drf-ia3d\geracao\<objeto>\` (fora do Git).
+Licença: saída de modelos rodados localmente; sem asset de terceiros e sem texto ou marca na malha (conferido nas 4 seeds
+de cada objeto; motivos em `geracao\escolhas.json`). Todo texto da cena (DAVI, 16, 7, SIUUU, caneca, ingresso, palheta,
+adesivo, setlists, watchlist, quadro, post-it) é desenhado em canvas no código (`src\scene\garage\easterEggs.ts`).
+Hashes da imagem recortada e da malha bruta: `geracao\TABELA.md`. Cor: pintura por vértice no carregamento (o GLB tem
+um material único); nenhuma textura de imagem.
+
+| Arquivo | Objeto gerado | Seed | Triângulos | Bytes | SHA-256 |
+| --- | --- | --- | --- | --- | --- |
+| `caneca.glb` | caneca | 16 | 5970 | 156.704 | `d7db4dbf66de90d148a7e443bf071f89bcbb2310ae3a4bbbc2b692beb575ad88` |
+| `capacete.glb` | capacete | 2026 | 14924 | 540.872 | `3dcc7eea8483c4ff43e8c6a6ce90365bc35a2467c56f54f91082334e0a0f166a` |
+| `figure.glb` | figure | 77 | 14924 | 454.216 | `c7b78cf0137819ccea0f9ec538129e1db3aeae16aec72b7b8ab91444f04d2a76` |
+| `amplificador.glb` | amplificador | 45 | 14924 | 440.756 | `18a9dab28641bead747c47a077cade439b4f2d7d8eb6e929d687027b2b6c3cd8` |
+| `case-guitarra.glb` | case-guitarra-v4 | 16 | 14924 | 432.596 | `7f3f6080663f720bfc90f440a776519a7e1551a78286dad0d2bbdfea43428e50` |
+| `guitarra.glb` | guitarra-eletrica | 77 | 14924 | 511.056 | `3752b0d2832cab65b65280f3bed97292600f4e049a8f78280930b7464cfdd086` |
+| `bola.glb` | bola | 45 | 5970 | 166.644 | `51c80f8c7d1f2727048de3a74285ec7691d95f80a380acf774d9f4af6d4c7880` |
+| `chuteira-em-pe.glb` | chuteira-em-pe-v2 | 45 | 5970 | 210.580 | `0dd8a35267982f7a1b08aea036abcb792ad7aa36d39ef0f684a4c99f0e10b64e` |
+| `chuteira-caida.glb` | chuteira-caida | 16 | 5970 | 197.840 | `2ab804d2609fadaabef96eeedd598a0dfd8afe5ecb8fedfd85976e53c28c124f` |
+| `cobra-coral.glb` | cobra-coral | 45 | 5970 | 193.012 | `9977672476c6fd3da9f4517528f075444ead095a70617dee9541c3ee695369d9` |
+| `vaso-esp32.glb` | vaso-esp32 | 16 | 11940 | 437.184 | `4f28cc1968a15f2f874790a7a34106451380943eb1fad13e695354d91f893efd` |
+| `cinto-ferramentas.glb` | cinto-ferramentas | 77 | 14924 | 480.900 | `33854e2bf6d417f0f14f50a3ca75c1883e463885ea66ba6f77da6afb7bdf5625` |
+
+Prompts (FLUX.2 klein; cópia de `geracao\objetos.json`):
+
+- **caneca** (s16): Studio product photo of a single plain white ceramic coffee mug, straight cylindrical body, simple C-shaped handle on the right side, glossy glaze, completely blank smooth side with no print, empty
+- **capacete** (s2026): Studio product photo of a single original full-face motor racing helmet of generic own design, matte black shell, one clean horizontal stripe in red and white running around the middle of the shell, dark tinted closed visor, plain smooth unmarked area on the side and at the back of the shell, no stickers, no sponsor decals, no crest, no pattern
+- **figure** (s77): Studio product photo of a single small collectible vinyl figure of an original chibi race mechanic mascot, oversized round head, simple friendly face with small dot eyes, short dark hair, plain matte black racing overalls with one horizontal red and white stripe across the chest, plain black gloves and boots, holding a plain black racing helmet under one arm, standing on a small round black base, original character design not based on any existing character
+- **amplificador** (s45): Studio product photo of a single small generic practice guitar amplifier, boxy cabinet covered in black textured vinyl, plain dark grey grille cloth on the front with no badge, top control panel with a row of five plain black knobs and one small red indicator light, black carry handle on top, metal corner protectors
+- **case-guitarra-v4** (s16): Studio product photo of a single closed hardshell electric guitar case standing upright, long and narrow, about three times taller than it is wide, sized to hold one solid-body electric guitar, wide squared lower end for the guitar body tapering in a straight line to a narrow squared upper end for the neck, slim shallow depth, black textured tolex vinyl covering, polished chrome metal corner protectors on every corner, three small chrome latches along the long side edge, black carry handle on the long side, plain lid with no badge and no stickers
+- **guitarra-eletrica** (s77): Studio product photo of a single solid-body electric guitar of an original custom design standing upright, front view, sharp asymmetric offset double-cutaway body with angular bevelled horns, gloss black finish with one thin red stripe and one thin white stripe running in parallel diagonally across the body, six metal strings, two black rectangular humbucker pickups clearly visible, black pickguard, fixed bridge, three plain black control knobs, dark fretboard with small dot inlays, plain pointed angular headstock with six chrome tuners and no logo
+- **bola** (s45): Studio product photo of a single old worn street football, generic stitched leather panels in dirty off-white and faded black, scuffed and scratched surface, slightly deflated, plain panels with no print
+- **chuteira-em-pe-v2** (s45): Studio product photo of a single classic low-cut leather soccer cleat resting on its studs on the ground, sleek low profile with the collar below the ankle, long narrow shape with a rounded toe, plain black leather upper with no stripes and no side markings, flat fold-over tongue, black laces tied, white sole plate with round moulded studs, plain smooth blank heel panel, slightly worn, seen from the side three-quarter with the heel nearer the camera
+- **chuteira-caida** (s16): Studio product photo of a single generic football boot lying on its side with the sole facing the camera, plain black leather upper with no stripes and no side markings, white sole with moulded studs clearly visible, one blank strip of beige masking tape stuck across the sole, slightly worn
+- **cobra-coral** (s45): Studio product photo of a single coral snake coiled in a neat flat spiral with the head slightly raised, slender body with repeating bands of red, black and white, smooth glossy scales, calm pose
+- **vaso-esp32** (s16): Studio product photo of a single small terracotta flower pot with a small green leafy houseplant, a small generic dark microcontroller development board with two rows of pins standing upright stuck in the soil, one thin wire going from the board to a small fork-shaped two-prong soil moisture sensor probe pushed into the soil, unmarked circuit board
+- **cinto-ferramentas** (s77): Studio product photo of a single brown leather mechanic's tool belt with three pouches hanging from one steel wall hook, the pouches hold a cross-shaped wheel wrench, a chrome torque wrench and a pair of pliers with red handles, one front pocket left empty and slightly open, plain leather with no stamp
+
+Uso na cena: `createEasterEggs`, montado depois do primeiro quadro. `low` baixa só caneca, capacete e figure; os outros
+9 só baixam em `balanced`. Limites por objeto (maior dimensão e triângulos) em `easterEggModels`; arquivo ausente ou fora
+do limite deixa só os detalhes de papel e geometria simples. Pneus: textura de borracha e marcações (`DRF ENGINEERING`,
+`RACE SLICK · 18`) desenhadas em canvas em `src\scene\car\wheels.ts`, sem nome de fornecedor real.

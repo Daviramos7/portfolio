@@ -369,7 +369,11 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     void pass.load().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
     resources.batch(garage.garage)
     // Optional prop models arrive after the static batches; the procedural stand-ins cover the wait and any failure.
-    void garage.loadProps().then(()=>{if(!disposed){invalidated=true;requestFrame()}})
+    // M16 fila 19: deferred past the first frame (rAF, then a fresh task) so start-up stays one task shorter.
+    const props = garage
+    // New casters (helmet stand, scarf) and late models refresh the manual shadow map once when they land.
+    const propsChanged = () => { if (disposed || !renderer) return; if (state?.quality === 'balanced') renderer.shadowMap.needsUpdate = true; invalidated = true; requestFrame() }
+    requestAnimationFrame(()=>setTimeout(()=>{if(disposed)return;const loading=props.loadProps();propsChanged();void loading.then(propsChanged)},0))
     resources.batch(opening.track)
     // M16 4b: boxes, circuit dressing and horizon are built instanced/merged, so they skip the generic batcher.
     pitLevel = createPitLevel(resources); skyline = createSkyline(resources)
