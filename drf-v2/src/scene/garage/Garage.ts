@@ -229,6 +229,8 @@ export function createGarage(r: Resources) {
     team.setText('DRF ENGINEERING', locale === 'pt' ? 'RECIFE / BRASIL · EQUIPE FICTÍCIA' : 'RECIFE / BRAZIL · FICTIONAL TEAM')
   }
   return { garage, updateLabels, updateAmbient,
+    setScreenScale:(scale:number)=>screens.forEach(display=>display.setScale(scale)),
+    get screenResolution(){return screens[0]?.resolution ?? [0,0]},
     loadProps:()=>personal.loadModels(), disposeProps:()=>personal.disposeModels(), get handgripStatus(){return personal.handgripStatus},
     get screenLayouts(){return screens.map(screen=>({zone:screen.object.name.replace('programme-screen-',''),...screen.object.userData.textLayout}))},
     get screenUploads(){return screens.reduce((sum,screen)=>sum+screen.uploadVersion,0)} }

@@ -1,4 +1,4 @@
-import type { Quality } from '../contracts/index.ts'
+import type { Quality, QualityLevel } from '../contracts/index.ts'
 
 // D11 (M16): low quality renders at DPR 1.5 and falls back to 1 when the sustained frame interval degrades.
 // The signal is the interval between two *rendered* frames of one continuous loop, smoothed with an EWMA.
@@ -25,6 +25,14 @@ export const dprPolicy = {
   maxSampleMs: 250,
 } as const
 
+// Fila 17b: visitor-chosen levels. `auto` is the M16 policy above (adapts on the low profile only).
+// Alta/Máxima keep the governor as a safety net: a sustained slow stretch drops them to the Auto ceiling (1.5).
+export const levelPolicy = {
+  light: { cap: 1, fallback: 1, adaptive: false },
+  high: { cap: 2, fallback: 1.5, adaptive: true },
+  max: { cap: 3, fallback: 1.5, adaptive: true },
+} as const satisfies Record<Exclude<QualityLevel, 'auto'>, { cap: number; fallback: number; adaptive: boolean }>
+
 /** Minimum time between two rendered frames while the idle ambience is capped. */
 export const cappedFrameMs = 1000 / dprPolicy.cappedFps - dprPolicy.capToleranceMs
 
@@ -37,21 +45,29 @@ export type DprGovernor = {
   /** Forgets the running average (loop paused, tab hidden, resize) without undoing a degradation. */
   interrupt: () => void
   setQuality: (quality: Quality) => void
+  /** Changing the level starts over at its full ceiling (the visitor asked for it explicitly). */
+  setLevel: (level: QualityLevel) => void
 }
 
-export function createDprGovernor(deviceRatio: () => number, quality: Quality = 'balanced'): DprGovernor {
-  let current = quality, state: DprGovernor['state'] = 'full', degradations = 0
+export function createDprGovernor(deviceRatio: () => number, quality: Quality = 'balanced', initialLevel: QualityLevel = 'auto'): DprGovernor {
+  let current = quality, level = initialLevel, state: DprGovernor['state'] = 'full', degradations = 0
   let smoothed: number | null = null, slowMs = 0, fastMs = 0, lastCadence: FrameCadence | null = null
-  const cap = () => current === 'low' && state !== 'full' ? dprPolicy.fallback : dprPolicy[current]
+  function cap() {
+    if (level !== 'auto') return state === 'full' ? levelPolicy[level].cap : levelPolicy[level].fallback
+    return current === 'low' && state !== 'full' ? dprPolicy.fallback : dprPolicy[current]
+  }
+  const adaptive = () => level === 'auto' ? current === 'low' : levelPolicy[level].adaptive
+  const dpr = () => Math.min(deviceRatio() || 1, cap())
   function interrupt() { smoothed = null; slowMs = 0; fastMs = 0; lastCadence = null }
   return {
-    get dpr() { return Math.min(deviceRatio() || 1, cap()) },
+    get dpr() { return dpr() },
     get state() { return state },
     get smoothedMs() { return smoothed },
     sample(intervalMs, cadence = 'native') {
-      // Only low quality adapts, and a single long gap (GC, tab switch) is not a sustained trend.
-      if (current !== 'low' || state === 'latched' || !(intervalMs > 0) || intervalMs > dprPolicy.maxSampleMs) return false
+      // Only low quality (Auto) and Alta/Máxima adapt; a single long gap (GC, tab switch) is not a sustained trend.
+      if (!adaptive() || state === 'latched' || !(intervalMs > 0) || intervalMs > dprPolicy.maxSampleMs) return false
       if (cadence !== lastCadence) { interrupt(); lastCadence = cadence }
+      const before = dpr()
       const limits = dprPolicy[cadence]
       smoothed = smoothed === null ? intervalMs : smoothed + (intervalMs - smoothed) * dprPolicy.smoothing
       if (state === 'full') {
@@ -65,12 +81,17 @@ export function createDprGovernor(deviceRatio: () => number, quality: Quality = 
         state = 'full'
       }
       interrupt()
-      return deviceRatio() > dprPolicy.fallback
+      return dpr() !== before
     },
     interrupt,
     setQuality(quality) {
       if (quality === current) return
       current = quality
+      interrupt()
+    },
+    setLevel(next) {
+      if (next === level) return
+      level = next; state = 'full'; degradations = 0
       interrupt()
     },
   }

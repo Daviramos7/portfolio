@@ -18,6 +18,7 @@ import { createCircuit } from './trackside/circuit.ts'
 import { createSkyline, setSkylineQuality } from './trackside/skyline.ts'
 import { estimateTextureBytes } from './textureBytes.ts'
 import { setBrushedAnisotropy } from './garage/surfaceFinish.ts'
+import { reportsReduction, screenScale, sunShadowMapSize, textAnisotropyFor } from './qualityDetail.ts'
 
 export function clampHeroTooltip(button: {left:number;top:number;width:number;height:number}, label: {width:number;height:number}, free: {left:number;top:number;right:number;bottom:number}) {
   const preferred=button.left+button.width+label.width<=free.right?button.left+button.width:button.left-label.width
@@ -92,6 +93,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
   const benchLight = new PointLight('#ffe1bd', 28, 8, 2)
   const rimLight = new PointLight('#c5e7ff', 105, 16, 2)
   let garage: ReturnType<typeof createGarage> | null = null
+  let reportedReduced = false
   let opening: ReturnType<typeof createTrackOpening> | null = null
   let pitLevel: SceneGroup | null = null, skyline: SceneGroup | null = null
   const raycaster = new Raycaster(), pointer = new Vector2()
@@ -159,6 +161,7 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     invalidated = true
     const width = canvas.clientWidth, height = canvas.clientHeight
     if (width < 1 || height < 1) return
+    dprGovernor.setLevel(state.qualityLevel)
     dprGovernor.setQuality(state.quality)
     dprGovernor.interrupt()
     const dpr = dprGovernor.dpr
@@ -222,6 +225,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
       // Only rendered frames of one continuous loop measure pacing; a restarted loop has no interval yet.
       if (loopRenderedAt !== null && dprGovernor.sample(nowMs - loopRenderedAt, cadence)) resize()
       canvas.dataset.sceneDprState = dprGovernor.state
+      const reduced = reportsReduction(state.qualityLevel) && dprGovernor.state !== 'full'
+      if (reduced !== state.qualityReduced && reduced !== reportedReduced) { reportedReduced = reduced; onEvent({ type: 'QUALITY_REDUCED', reduced }) }
       loopRenderedAt = nowMs
       camera.lookAt(room.localToWorld(worldLookAt.copy(lookAt)))
       if (pitLevel) pitLevel.visible = !pitLevelHiddenFrom(camera.position)
@@ -358,8 +363,8 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     benchLight.position.set(-6.2, 2.5, -2.8)
     rimLight.position.set(2.6, 2.6, -3.5)
     room.add(workshopLight, benchLight, rimLight)
-    // Applied before the garage builds its canvas text, so first upload already uses it.
-    const textAnisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy())
+    // Applied before the garage builds its canvas text, so first upload already uses it (the first update applies the level).
+    const textAnisotropy = textAnisotropyFor('auto', renderer.capabilities.getMaxAnisotropy())
     resources.setTextAnisotropy(textAnisotropy); canvas.dataset.sceneTextAnisotropy = String(textAnisotropy)
     garage = createGarage(resources)
     opening = createTrackOpening(resources)
@@ -413,6 +418,18 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
         previousIndex = index
         previousLocale = state.locale
         previousProject = state.target.projectId
+      }
+      if (previous?.qualityLevel !== state.qualityLevel) {
+        // Fila 17b: level detail (screen texels, text anisotropy, sun shadow map); DPR follows in resize().
+        const level = state.qualityLevel, anisotropy = textAnisotropyFor(level, renderer.capabilities.getMaxAnisotropy())
+        resources.setTextAnisotropy(anisotropy); canvas.dataset.sceneTextAnisotropy = String(anisotropy)
+        garage?.setScreenScale(screenScale[level])
+        canvas.dataset.sceneScreenResolution = (garage?.screenResolution ?? [0, 0]).join('x')
+        const edge = sunShadowMapSize[level]
+        if (sun.shadow.mapSize.x !== edge) { sun.shadow.mapSize.set(edge, edge); sun.shadow.map?.dispose(); sun.shadow.map = null; renderer.shadowMap.needsUpdate = true }
+        canvas.dataset.sceneQualityLevel = level
+        reportedReduced = false
+        if (previous) resize()
       }
       if (previous?.quality !== state.quality) {
         const shadows = state.quality === 'balanced'

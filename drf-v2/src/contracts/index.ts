@@ -86,6 +86,8 @@ export type ViewMode = 'immersive' | 'recruiter'
 export type RenderStatus = 'idle' | 'loading' | 'ready' | 'unavailable' | 'error'
 export type AudioStatus = 'off' | 'requested' | 'on' | 'unavailable'
 export type Quality = 'low' | 'balanced'
+/** Visitor-chosen graphics level (fila 17b). `auto` keeps the viewport profile and the M16 DPR policy. */
+export type QualityLevel = 'auto' | 'light' | 'high' | 'max'
 export type NavigationTarget = Readonly<{ zoneId: ZoneId; projectId: ProjectId | null }>
 export type ExperienceState = Readonly<{
   locale: Locale
@@ -102,6 +104,9 @@ export type ExperienceState = Readonly<{
   panelOpen: boolean
   documentVisible: boolean
   quality: Quality
+  qualityLevel: QualityLevel
+  /** The DPR safety net lowered resolution under sustained load (shown discreetly in the menu). */
+  qualityReduced: boolean
 }>
 
 export type SceneEvent =
@@ -110,6 +115,7 @@ export type SceneEvent =
   | { type: 'CAMERA_SETTLED'; navigationSeq: number }
   | { type: 'AUDIO_STATUS'; status: AudioStatus }
   | { type: 'QUALITY_REQUEST'; quality: Quality }
+  | { type: 'QUALITY_REDUCED'; reduced: boolean }
 
 export type SceneProps = Readonly<{
   state: ExperienceState
@@ -129,6 +135,7 @@ export type SceneHandle = {
 }
 export type UIActions = Readonly<{
   setMotionPreference: (preference: ExperienceState['motionPreference']) => void
+  setQualityLevel: (level: QualityLevel) => void
   navigate: (target: NavigationTarget) => void
   setLocale: (locale: Locale) => void
   setMode: (mode: ViewMode) => void
