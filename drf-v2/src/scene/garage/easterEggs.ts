@@ -21,9 +21,11 @@ export type EasterEggModel = {
 const solid = (color: string): Paint => () => color
 const between = (value: number, low: number, high: number) => value >= low && value < high
 // Helmet: DRF-01 livery, matte black with a red and white horizontal band round the shell (decision 11/11).
-const helmet: Paint = (_x, y) => between(y, .165, .205) ? '#9b1730' : between(y, .205, .222) ? '#d9dede' : '#141619'
+// The visor faces local +z, so the band stops short of it instead of crossing the opening.
+const helmet: Paint = (_x, y, z) => z > .045 ? '#141619' : between(y, .165, .205) ? '#9b1730' : between(y, .205, .222) ? '#d9dede' : '#141619'
 // Original mascot: round black base, red race suit with a white chest band, warm face, dark hair.
-const mascot: Paint = (_x, y) => y < .016 ? '#1b1e22' : between(y, .108, .121) ? '#e4e6e3' : y < .142 ? '#8e1529' : y < .168 ? '#d6a382' : '#2a211d'
+// The head is large (anime proportions) and starts near y .097; the face looks along local +z.
+const mascot: Paint = (_x, y, z) => y < .016 ? '#1b1e22' : y < .028 ? '#2a2d31' : between(y, .07, .079) ? '#e4e6e3' : y < .097 ? '#8e1529' : y > .163 || z < -.024 ? '#2a211d' : '#d6a382'
 // Coral snake rings (red, black, yellow-white, black) follow the coil angle; plain belly near the floor.
 const coral: Paint = (x, y, z) => {
   if (y < .006) return '#3b2a22'
@@ -36,10 +38,10 @@ const guitar: Paint = (x, y) => {
   const s = y + x * .55
   return between(s, .15, .19) ? '#a31a33' : between(s, .19, .215) ? '#e2e5e4' : '#0f1012'
 }
-const pot: Paint = (_x, y) => y < .118 ? '#8f4f33' : y < .128 ? '#6d3a25' : '#3f6b36'
+const pot: Paint = (_x, y) => y < .088 ? '#8f4f33' : y < .1 ? '#6d3a25' : '#3f6b36'
 
 export const easterEggModels: readonly EasterEggModel[] = [
-  { id:'caneca', url:'models/props/caneca.glb', tier:'all', position:[-6.95,.85,-4.42], yaw:.7, scale:1.4,
+  { id:'caneca', url:'models/props/caneca.glb', tier:'all', position:[-6.58,.85,-4.38], yaw:.62, scale:1.4,
     limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32,paint:solid('#16181b')} },
   { id:'capacete', url:'models/props/capacete.glb', tier:'all', position:[-2.6,1.085,2.95], yaw:.95, scale:1,
     limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62,paint:helmet} },
@@ -49,7 +51,7 @@ export const easterEggModels: readonly EasterEggModel[] = [
     limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85,paint:solid('#1c1e21')} },
   { id:'case-guitarra', url:'models/props/case-guitarra.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
     limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78,paint:solid('#121315')} },
-  { id:'guitarra', url:'models/props/guitarra.glb', tier:'full', position:[2.8,0,-5.88], yaw:.45, scale:1, tilt:[-.08,-.1],
+  { id:'guitarra', url:'models/props/guitarra.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
     limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22,paint:guitar} },
   { id:'bola', url:'models/props/bola.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
     limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7,paint:(_x,y)=>y<.05?'#a9a291':'#d8d2c2'} },
@@ -59,7 +61,7 @@ export const easterEggModels: readonly EasterEggModel[] = [
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55,paint:solid('#17191c')} },
   { id:'cobra-coral', url:'models/props/cobra-coral.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
     limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4,paint:coral} },
-  { id:'vaso-esp32', url:'models/props/vaso-esp32.glb', tier:'full', position:[6.98,1.05,3.35], yaw:-1.2, scale:1.2,
+  { id:'vaso-esp32', url:'models/props/vaso-esp32.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
     limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8,paint:pot} },
   { id:'cinto-ferramentas', url:'models/props/cinto-ferramentas.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
     limits:{longest:[.55,.65],triangles:16000}, finish:{roughness:.7,paint:solid('#4f3421')} },
@@ -122,7 +124,7 @@ function drawAtlas(ctx: CanvasRenderingContext2D) {
   })
   tile('postit', (w, h) => {
     paper(w, h, '#f2dc5d')
-    write('não esquecer', 10, 44, 17, '#24304a'); write('o ANALYZE', 12, 74, 21, '#24304a', 700)
+    write('não esquecer', 10, 44, 16, '#24304a'); write('o ANALYZE', 10, 74, 17, '#24304a', 700)
     ctx.strokeStyle = '#24304a'; ctx.lineWidth = 2; ctx.beginPath(); ctx.moveTo(12, 84); ctx.lineTo(110, 82); ctx.stroke()
   })
   tile('ticket', (w, h) => {
@@ -134,7 +136,7 @@ function drawAtlas(ctx: CanvasRenderingContext2D) {
   tile('helmetName', (w) => { ctx.textAlign = 'center'; write('DAVI', w / 2, 74, 72, '#eef0ee', 700, displayFont) })
   tile('helmetNumber', (w) => { ctx.textAlign = 'center'; write('16', w / 2, 70, 62, '#eef0ee', 700, displayFont) })
   tile('bootNumber', (w) => { ctx.textAlign = 'center'; write('7', w / 2, 74, 72, '#c8a24a', 700, displayFont) })
-  tile('mug', () => write('SELECT * FROM cafe', 10, 62, 34, '#eceee9', 700, '"Geist Mono", ui-monospace, monospace'))
+  tile('mug', () => write('SELECT * FROM cafe', 8, 60, 29, '#eceee9', 700, '"Geist Mono", ui-monospace, monospace'))
   tile('pick', (w, h) => {
     ctx.fillStyle = '#a3192f'; ctx.beginPath(); ctx.moveTo(w / 2, h - 6); ctx.bezierCurveTo(8, h * .55, 4, 10, w / 2, 8); ctx.bezierCurveTo(w - 4, 10, w - 8, h * .55, w / 2, h - 6); ctx.fill()
     ctx.textAlign = 'center'; write('DRF', w / 2, 48, 24, '#f1f1ee', 700, displayFont)
@@ -210,15 +212,19 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     if (spec.tilt) { group.rotation.order = 'YXZ'; group.rotation.x = spec.tilt[0]; group.rotation.z = spec.tilt[1] }
     const lease = createPropModelLease(model => {
       const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, vertexColors: true, roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6 }))
-      const color = new Color()
+      // Parse each paint colour once; the loop then only copies three floats per vertex.
+      const parsed = new Map<string, Color>()
       model.traverse(object => {
         if (!(object instanceof Mesh)) return
         const position = object.geometry.getAttribute('position'), colors = new Float32Array(position.count * 3)
         for (let i = 0; i < position.count; i++) {
-          color.set(spec.finish.paint(position.getX(i), position.getY(i), position.getZ(i))).toArray(colors, i * 3)
+          const key = spec.finish.paint(position.getX(i), position.getY(i), position.getZ(i))
+          let color = parsed.get(key); if (!color) { color = new Color(key); parsed.set(key, color) }
+          color.toArray(colors, i * 3)
         }
         object.geometry.setAttribute('color', new BufferAttribute(colors, 3))
-        object.material = material; object.castShadow = object.receiveShadow = true
+        // Small props receive the room's shadows but do not cast: ~150k extra triangles stay out of the shadow pass.
+        object.material = material; object.castShadow = false; object.receiveShadow = true
       })
       model.name = spec.id + '-model'; model.scale.setScalar(spec.scale); group.add(model)
       marks(spec.id, group)
@@ -230,26 +236,29 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     const s = easterEggModels.find(spec => spec.id === id)?.scale ?? 1
     if (id === 'caneca') {
       // Wrapped on the body (centre x -0.018, radius 0.041), on the side away from the handle.
-      const wrap = mapToRect(r.geometry(new CylinderGeometry(.0425, .0425, .026, 20, 1, true, -1.15, 2.3)), 'mug')
+      const wrap = mapToRect(r.geometry(new CylinderGeometry(.0425, .0425, .026, 24, 1, true, -1.35, 2.7)), 'mug')
       r.mesh(group, wrap, ink, [-.018 * s, .055 * s, 0]).scale.setScalar(s)
     } else if (id === 'capacete') {
       for (const side of [-1, 1]) decal(group, 'helmetName', [.13, .05], [side * .177, .245, -.01], [0, side * Math.PI / 2, 0])
       decal(group, 'helmetNumber', [.035, .035], [0, .27, -.137], [0, Math.PI, 0])
     } else if (id === 'chuteira-em-pe') decal(group, 'bootNumber', [.035, .035], [-.146, .085, 0], [0, -Math.PI / 2, 0])
-    else if (id === 'chuteira-caida') decal(group, 'tape', [.11, .04], [.02, .02, .064], [0, 0, .04])
+    else if (id === 'chuteira-caida') decal(group, 'tape', [.11, .04], [.02, .072, .064], [0, 0, .04])
     else if (id === 'amplificador') decal(group, 'sticker', [.08, .036], [.08, .235, .095], [0, 0, -.06])
     else if (id === 'case-guitarra') decal(group, 'pick', [.045, .045], [.02, 1.052, 0], [-Math.PI / 2, 0, .5])
-    else if (id === 'cinto-ferramentas') decal(group, 'ticket', [.1, .05], [.01, .36, .072], [0, 0, .32])
+    else if (id === 'cinto-ferramentas') decal(group, 'ticket', [.1, .05], [.005, .25, .052], [0, 0, .28])
     group.traverse(object => { object.userData.dynamic = true })
   }
 
   // Files are fetched only once loading was requested and the quality is known, so `low` never downloads the
   // full-tier models; moving up to `balanced` later fetches the rest (each lease loads at most once).
-  let quality: Quality | null = null, base: string | null = null
+  let quality: Quality | null = null, base: string | null = null, queue: Promise<void> = Promise.resolve()
   function sync() {
     if (base === null || quality === null) return Promise.resolve()
     const from = base, wanted = leases.filter(({ spec }) => quality !== 'low' || spec.tier === 'all')
-    return Promise.all(wanted.map(({ spec, lease }) => lease.load(new URL(spec.url, from).href))).then(() => undefined)
+    // One file at a time with a macrotask between them: parsing and painting never stack into one long task.
+    const yieldToFrame = () => new Promise<void>(resolve => setTimeout(resolve, 0))
+    queue = queue.then(async () => { for (const { spec, lease } of wanted) { await lease.load(new URL(spec.url, from).href); await yieldToFrame() } })
+    return queue
   }
   return {
     root,
