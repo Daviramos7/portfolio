@@ -50,6 +50,6 @@ export function RecruiterView({ content, state, actions, onProject }: Props) {
         <ZoneContent content={content} locale={state.locale} zoneId={item.id} recruiter selectedProjectId={state.target.projectId} onProject={onProject} />
       </section>)}
     </div>
-    <footer className="drf-footer"><span>DRF ENGINEERING / {content.profile.name}</span><div className="drf-links">{content.profile.contactLinks.map(link => <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer">{link.label[state.locale]} ↗</a>)}</div></footer>
+    <footer className="drf-footer"><span>DRF ENGINEERING / {content.profile.name}</span><div className="drf-links">{content.profile.contactLinks.map(link => <a key={link.id} href={link.url} target="_blank" rel="noopener noreferrer">{link.label[state.locale]} ↗</a>)}</div><p className="drf-footer-credits">{t.credits3d} {t.disclaimer}</p></footer>
   </>
 }
