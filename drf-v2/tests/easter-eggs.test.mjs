@@ -56,7 +56,8 @@ test('each easter egg GLB carries one JPEG base colour texture and UVs',async()=
   for(const spec of easterEggModels){
     const json=gltfJson(await bytesOf(spec.url))
     assert.equal(json.images?.length,1,spec.id+' images')
-    assert.equal(json.images[0].mimeType,'image/jpeg',spec.id+' jpeg')
+    // Fila 22b: the figure is modelled by script with a flat-colour palette (PNG, nearest filtering), not a photo.
+    assert.equal(json.images[0].mimeType,spec.id==='figure'?'image/png':'image/jpeg',spec.id+' image type')
     assert.ok(json.materials?.[0]?.pbrMetallicRoughness?.baseColorTexture,spec.id+' base colour texture')
     assert.ok(json.meshes.every(mesh=>mesh.primitives.every(p=>p.attributes.TEXCOORD_0!==undefined)),spec.id+' uv')
   }
@@ -95,4 +96,15 @@ test('light variants keep the mesh and UVs and carry a 512 px texture',async()=>
     assert.deepEqual(jpegSize(light.view(light.json.images[0].bufferView).slice().buffer),[512,512],spec.id+' light texture')
     assert.deepEqual(jpegSize(full.view(full.json.images[0].bufferView).slice().buffer),[1024,1024],spec.id+' desktop texture')
   }
+})
+
+test('the figure is the scripted model: palette texture with nearest filtering, one mesh, under 15k triangles',async()=>{
+  const spec=easterEggModels.find(item=>item.id==='figure'),bytes=await bytesOf(spec.url),json=gltfJson(bytes)
+  assert.equal(json.samplers?.[0]?.magFilter,9728,'nearest mag filter keeps the colour cells clean')
+  assert.equal(json.meshes.length,1)
+  const root=await parse(bytes);let triangles=0;root.traverse(o=>{if(o instanceof Mesh)triangles+=(o.geometry.index?.count??o.geometry.attributes.position.count)/3})
+  assert.ok(triangles<=15000,'triangles '+triangles)
+  const size=new Box3().setFromObject(root).getSize(new Vector3())
+  assert.ok(Math.abs(size.y-.18)<.002,'height '+size.y)
+  assert.ok(bytes.byteLength<400000,'bytes '+bytes.byteLength)
 })

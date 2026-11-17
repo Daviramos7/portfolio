@@ -206,3 +206,37 @@ mesma malha, os mesmos UV e a textura reduzida para 512 (Lanczos, JPEG 86). Só 
 | `cinto-ferramentas-512.glb` | 579208 → 524084 | `6195ab617c6f7b47ba1ad57d601ee07081b2c2ecdfe93cb5da7b177f88594406` |
 
 Origem e licença: as mesmas da fila 19 (geração local, sem marca, logo ou texto de terceiros).
+
+## Fila 22b — figure do Davi modelado por script (17/11/2026)
+
+Substitui o figure da fila 22 (FLUX → TripoSG → cor projetada). **Modelado por script**: `drf-v2/tools/blender/figure_davi.py`
+(Blender 5.2.0 LTS, `bpy`/`bmesh`, sem IA, sem imagem de referência dentro do arquivo). A imagem FLUX s45 da fila 22 serviu
+só como referência de proporção. Estilo genérico de action figure vinil chibi, sem personagem nem linha de brinquedo de marca.
+
+- Peças: base redonda; pernas, tronco e braços de macacão preto; faixa horizontal branca e vermelha no peito e nas costas
+  (cortes planos exatos na malha, sem dente de serra); luvas e botas; capacete na mão (preto fosco, faixa vermelha, viseira
+  cinza-azulada); cabeça lisa; olhos, brilho e sobrancelhas como pintura (decal colado na superfície, 0,4–0,8 mm, sem relevo);
+  nariz e orelhas lisos; calota de cabelo + 7 mechas onduladas penteadas para trás, volume no topo, laterais curtas; barba
+  cheia e curta (casca espelhada com espessura) e bigode como volume próprio.
+- Cor por material, guardada como paleta: textura PNG 64×64 com 12 células de cor sólida; o UV de cada face cai no centro
+  da célula do seu material; filtro NEAREST (a cena usa um material só com a textura do GLB, `easterEggs.ts`).
+  Cores (sRGB): pele `#f2cdb0`, cabelo/barba `#6a4532`, macacão `#18181b`, faixa `#c8162c`/`#f1f1ee`, luvas `#2c2c31`,
+  capacete `#101012`, viseira `#3f4a5c`, base `#232325`, olho `#141210`, brilho `#ffffff`, orelha/nariz `#eabd9c`.
+- **DAVI no capacete: não feito.** A 2,1× na cena o capacete tem ~4 cm; o texto ficaria abaixo de um pixel no 1440.
+
+| Arquivo | Bytes | sha256 |
+| --- | --- | --- |
+| `public/models/props/figure.glb` | 261264 | `69c3cbdd78d92dfe9db85cd7685f962f8e354d57fc002171154af2696492ab3f` |
+| `drf-ia3d/geracao/figure-v3/figure-paleta.png` (fora do Git) | — | `518f6ccbfb11f7bc24d9413a98384cd196dba9632ef41c307fdf523e5ef24727` |
+
+Triângulos 11269 (teto 15000), vértices no Blender 5742, tamanho 0.12123 × 0.10526 × 0.18 m (Blender XYZ, Z para cima),
+base em z = 0, frente em −Y. Triângulos por cor: cabelo/barba 5451, pele 1680, luvas 1168, macacão 1140, capacete 713,
+orelha/nariz 616, base 188, faixa vermelha 168, viseira 53, faixa branca 40, olho 36, brilho 16.
+
+Comandos:
+```bash
+/c/Users/davir/drf-ia3d/scripts/blender.sh --background --python C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/drf-v2/tools/blender/figure_davi.py -- --output C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.glb --report C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.json
+/c/Users/davir/drf-ia3d/scripts/blender.sh --background --python C:/Users/davir/OneDrive/Documentos/GitHub/portfolio/drf-v2/tools/blender/preview_asset.py -- --input C:/Users/davir/drf-ia3d/geracao/figure-v3/figure-v3.glb --output C:/Users/davir/drf-ia3d/geracao/figure-v3/prancha.png
+```
+Na cena: mesma posição, giro e escala da fila 22 (`easterEggs.ts`, `[-6.93,.61,1.85]`, yaw 1.2, 2,1×). Licença: obra própria
+gerada por script do repositório.
