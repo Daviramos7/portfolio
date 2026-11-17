@@ -88,7 +88,7 @@ export function createGarage(r: Resources) {
   r.box(garage, [.48, .26, .11], [-3.25, 1.6, 1.5], black)
   r.box(garage, [.4, .18, .015], [-3.25, 1.6, 1.565], taskLight)
   const cable = new CatmullRomCurve3([[-7.4, .03, .1], [-5.4, .03, .8], [-4.2, .03, 1.6], [-3.25, .03, 1.5]].map(p => new Vector3(...p)))
-  r.mesh(garage, r.geometry(new TubeGeometry(cable, 24, .018, 6, false)), black)
+  r.mesh(garage, r.geometry(new TubeGeometry(cable, 24, .018, 6, false)), tire)
   zoneSign('garage', [0, 3.44, -6.15])
   const team = r.sign(garage, 'DRF ENGINEERING', [3.5, .8], [-6.25, 3.4, -6.44])
   team.setText('DRF ENGINEERING', 'RECIFE / BRASIL · EQUIPE FICTÍCIA')
@@ -180,8 +180,9 @@ export function createGarage(r: Resources) {
   }
   garage.add(tools)
   const hoseShape = r.geometry(new TorusGeometry(.4, .022, 6, 40))
-  for (let n = 0; n < 4; n++) r.mesh(garage, hoseShape, black, [-7.8, .7, -.7 + n * .05]).rotation.y = Math.PI / 2
-  r.rod(garage, [-7.8, .31, -.5], [-7.2, .05, .5], .018, black)
+  // Hoses are rubber (matte), not painted metal.
+  for (let n = 0; n < 4; n++) r.mesh(garage, hoseShape, tire, [-7.8, .7, -.7 + n * .05]).rotation.y = Math.PI / 2
+  r.rod(garage, [-7.8, .31, -.5], [-7.2, .05, .5], .018, tire)
   for (const side of [-1, 1]) {
     r.rod(garage, [side * 2.1, .05, -2.8], [side * 2.1, .8, -2.8], .022, metal)
     r.rod(garage, [side * 2.1, .5, -2.8], [side * 1.8, .06, -2.55], .023, metal)

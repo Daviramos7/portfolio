@@ -15,12 +15,20 @@ export function createFloorSurface(register: (texture: Texture) => Texture) {
       const sx = tx * tx * (3 - 2 * tx), sy = ty * ty * (3 - 2 * ty)
       return (hash(ix, iy) * (1 - sx) + hash(ix + 1, iy) * sx) * (1 - sy) + (hash(ix, iy + 1) * (1 - sx) + hash(ix + 1, iy + 1) * sx) * sy
     }
+    // M16 fila 11: poured epoxy. The roughness channel is absolute (material roughness is 1): glossy pours with
+    // broad dull patches, faint squeegee passes across the room and dust settling towards the walls. The blurred
+    // reflection comes from the prefiltered environment and the lamps; there is no screen-space or planar pass.
     for (let y = 0; y < size; y++) for (let x = 0; x < size; x++) {
       const broad = noise(x / 72, y / 85), grain = noise(x / 3, y / 3)
-      const value = 90 + broad * 30 + grain * 7, i = (y * size + x) * 4
+      const patch = noise(x / 41 + 9, y / 37 + 4), pass = noise(x / 120 + 3, y / 7)
+      const wall = Math.min(x, size - 1 - x, y, size - 1 - y) / size
+      const dust = 1 - Math.min(1, wall / .09)
+      const value = 96 + broad * 20 + grain * 4, i = (y * size + x) * 4
       colors.data[i] = value; colors.data[i + 1] = value + 5; colors.data[i + 2] = value + 7
-      rough.data[i] = rough.data[i + 1] = rough.data[i + 2] = 216 + broad * 18 + grain * 10
-      relief.data[i] = relief.data[i + 1] = relief.data[i + 2] = 116 + grain * 24
+      const gloss = .5 +(patch - .5) * .2 + (pass - .5) * .07 + grain * .03 + dust * dust * .22
+      rough.data[i] = rough.data[i + 1] = rough.data[i + 2] = Math.max(0, Math.min(1, gloss)) * 255
+      // Self-levelled surface: slow waviness only, so the reflection bends instead of sparkling.
+      relief.data[i] = relief.data[i + 1] = relief.data[i + 2] = 104 + noise(x / 19 + 2, y / 23) * 48
       colors.data[i + 3] = rough.data[i + 3] = relief.data[i + 3] = 255
     }
     a.putImageData(colors, 0, 0); r.putImageData(rough, 0, 0); h.putImageData(relief, 0, 0)
@@ -28,7 +36,8 @@ export function createFloorSurface(register: (texture: Texture) => Texture) {
     const y = (world: number) => (world + 8.5) / 20 * size
     // Two faint wheel paths from pit entrance to the parked car, plus a service-turn arc.
     for (const side of [-1, 1]) {
-      for (const [ctx, color] of [[a, 'rgba(20,23,25,.19)'], [r, 'rgba(160,160,160,.22)']] as const) {
+      // Rubber laid on the wheel paths is darker and clearly duller than the pour around it.
+      for (const [ctx, color] of [[a, 'rgba(20,23,25,.19)'], [r, 'rgba(176,176,176,.5)']] as const) {
         ctx.strokeStyle = color; ctx.lineWidth = .38 / 17 * size; ctx.lineCap = 'round'
         ctx.beginPath(); ctx.moveTo(x(side * 1.3), y(-6.8)); ctx.bezierCurveTo(x(side * 1.5), y(-4.6), x(side * 1.3), y(-2), x(side * 1.3), y(1.55)); ctx.stroke()
         ctx.lineWidth = .23 / 17 * size
@@ -40,6 +49,12 @@ export function createFloorSurface(register: (texture: Texture) => Texture) {
     for (let n = 0; n < 20; n++) {
       const px = x(-4.8 + hash(n, 2) * 1.9), py = y(-.8 + hash(n, 3) * 2.5)
       a.beginPath(); a.moveTo(px, py); a.lineTo(px + 3 + hash(n, 5) * 10, py - 2); a.stroke()
+    }
+    // The same scratches cut the gloss.
+    r.strokeStyle = 'rgba(200,200,200,.45)'; r.lineWidth = 1.5
+    for (let n = 0; n < 20; n++) {
+      const px = x(-4.8 + hash(n, 2) * 1.9), py = y(-.8 + hash(n, 3) * 2.5)
+      r.beginPath(); r.moveTo(px, py); r.lineTo(px + 3 + hash(n, 5) * 10, py - 2); r.stroke()
     }
   }
   const map = register(new CanvasTexture(albedo)); map.colorSpace = SRGBColorSpace

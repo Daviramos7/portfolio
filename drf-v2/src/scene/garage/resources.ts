@@ -1,6 +1,8 @@
-import { BoxGeometry, CanvasTexture, CylinderGeometry, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
+import { BoxGeometry, CanvasTexture, CylinderGeometry, Float32BufferAttribute, InstancedMesh, Matrix4, Mesh, MeshBasicMaterial, MeshPhysicalMaterial, MeshStandardMaterial, PlaneGeometry, RepeatWrapping, SRGBColorSpace, Vector2, Vector3 } from 'three'
 import type { BufferGeometry, Group, Material, Texture } from 'three'
 import { createFloorSurface } from './floorSurface.ts'
+import { createSurfaceMaps } from './surfaceMaps.ts'
+import { objectSpaceFinish } from './surfaceFinish.ts'
 import { bodyFont, fitCanvasBlocks } from './canvasText.ts'
 
 export type Vec3 = readonly [number, number, number]
@@ -30,34 +32,10 @@ export type Vec3 = readonly [number, number, number]
     textAnisotropy = Math.max(1, level)
     for (const map of textTextures) if (map.anisotropy !== textAnisotropy) { map.anisotropy = textAnisotropy; map.needsUpdate = true }
   }
-  function surface(kind: 'carbon' | 'metal' | 'rubber' | 'painted') {
-    const canvas = document.createElement('canvas'); canvas.width = canvas.height = 256
-    const ctx = canvas.getContext('2d')
-    if (ctx) {
-      let seed = 17
-      const random = () => { seed = (seed * 1664525 + 1013904223) >>> 0; return seed / 4294967296 }
-      const pixels = ctx.createImageData(256, 256)
-      for (let y = 0; y < 256; y++) for (let x = 0; x < 256; x++) {
-        // Twill yarn relief, directional machining and molded/painted finishes are different fields.
-        const over = (Math.floor(x / 8) + Math.floor(y / 8)) % 4 < 2
-        const yarn = Math.sin((over ? y : x) % 8 / 8 * Math.PI)
-        const brush = Math.sin(y * 1.7) * 5 + Math.sin(y * .19) * 2
-        const peel = Math.sin(x * .81 + Math.sin(y * .7)) * Math.cos(y * .87) * 8
-        const value = kind === 'carbon' ? 185 + yarn * 30 + (over ? 8 : 0) + random() * 4 :
-          kind === 'metal' ? 168 + brush + random() * 7 :
-          kind === 'painted' ? 194 + peel + Math.sin(x * .04) * 4 + random() * 4 :
-          211 + Math.sin(x * .34) * 3 + random() * 11
-        const i = (y * 256 + x) * 4
-        pixels.data[i] = pixels.data[i + 1] = pixels.data[i + 2] = value
-        pixels.data[i + 3] = 255
-      }
-      ctx.putImageData(pixels, 0, 0)
-    }
-    const map = texture(new CanvasTexture(canvas)); map.wrapS = map.wrapT = RepeatWrapping
-    map.repeat.set(kind === 'rubber' ? 12 : 3, kind === 'metal' ? 1 : 3)
-    return map
-  }
-  const carbonMap = surface('carbon'), metalMap = surface('metal'), rubberMap = surface('rubber'), paintedMap = surface('painted')
+  // M16 fila 11: twill, brushing and orange peel live in surfaceMaps.ts and are mapped in metres (surfaceFinish.ts).
+  const carbonSurface = createSurfaceMaps(texture, 'carbon'), metalSurface = createSurfaceMaps(texture, 'metal')
+  const rubberSurface = createSurfaceMaps(texture, 'rubber'), paintedSurface = createSurfaceMaps(texture, 'painted')
+  const carbonMap = carbonSurface.map, metalMap = metalSurface.map, paintedMap = paintedSurface.map
   const floorSurface = createFloorSurface(texture)
   // Tangent-space normals from our own height field, wrapped at texture boundaries.
   function normalFromHeight(height: Texture, strength: number) {
@@ -83,23 +61,38 @@ export type Vec3 = readonly [number, number, number]
     const normal = texture(new CanvasTexture(canvas)); normal.wrapS = normal.wrapT = RepeatWrapping
     normal.repeat.copy(height.repeat); return normal
   }
-  const carbonNormal = normalFromHeight(carbonMap, 2), rubberNormal = normalFromHeight(rubberMap, .8)
-  const metalNormal = normalFromHeight(metalMap, 1.3), paintedNormal = normalFromHeight(paintedMap, 1.5)
+  const carbonNormal = normalFromHeight(carbonSurface.relief, 2.2), rubberNormal = normalFromHeight(rubberSurface.relief, .8)
+  const metalNormal = normalFromHeight(metalSurface.relief, 1.6), paintedNormal = normalFromHeight(paintedSurface.relief, 1.2)
   const floorNormal = normalFromHeight(floorSurface.height, 2.5)
   const cube = geometry(new BoxGeometry(1, 1, 1)), cylinder = geometry(new CylinderGeometry(1, 1, 1, 20))
+  // Marks the unit cube for the edge-wear term of surfaceFinish.ts; any other geometry reads 0 (no wear).
+  cube.setAttribute('drfCube', new Float32BufferAttribute(new Float32Array(cube.getAttribute('position').count).fill(1), 1))
   const palette = {
-    carbon: material(new MeshPhysicalMaterial({ specularIntensity: .18, color: '#10171c', metalness: .02, roughness: .9, envMapIntensity: .4, clearcoat: .04, clearcoatRoughness: .4, normalMap: carbonNormal, normalScale: new Vector2(.23, .23), roughnessMap: carbonMap })),
-    paint: material(new MeshPhysicalMaterial({ color: '#9b1730', metalness: .1, roughness: .32, clearcoat: .65, clearcoatRoughness: .28, envMapIntensity: .7, roughnessMap: paintedMap, normalMap: paintedNormal, normalScale: new Vector2(.06,.06) })),
-    panel: material(new MeshStandardMaterial({ color: '#b4b5ac', metalness: .08, roughness: .82, roughnessMap: paintedMap, normalMap: paintedNormal, normalScale: new Vector2(.12,.12) })),
-    structure: material(new MeshStandardMaterial({ color: '#26333f', metalness: .78, roughness: .44, envMapIntensity: .65, roughnessMap: metalMap, normalMap: metalNormal, normalScale: new Vector2(.12,.12) })),
-    polymer: material(new MeshPhysicalMaterial({ color: '#101a24', metalness: 0, roughness: .82, clearcoat: .04, envMapIntensity: .3, normalMap: paintedNormal, normalScale: new Vector2(.15,.15) })),
-    black: material(new MeshStandardMaterial({ color: '#11141a', roughness: .59, metalness: .22 })),
-    red: material(new MeshStandardMaterial({ color: '#930e29', metalness: .55, roughness: .23 })),
-    white: material(new MeshStandardMaterial({ color: '#d8e1e3', metalness: .42, roughness: .26 })),
-    metal: material(new MeshStandardMaterial({ color: '#87949c', metalness: .9, roughness: .42, envMapIntensity: .7, normalMap: metalNormal, normalScale: new Vector2(.18,.18), roughnessMap: metalMap })),
-    floor: material(new MeshStandardMaterial({ color: '#a5a6a2', map: floorSurface.map, metalness: .015, roughness: .93, roughnessMap: floorSurface.roughness, normalMap: floorNormal, normalScale: new Vector2(.55, .55) })),
+    // M16 fila 11. Carbon: visible 2x2 twill (the grey field modulates albedo and roughness) under a smooth lacquer.
+    carbon: material(objectSpaceFinish(new MeshPhysicalMaterial({ specularIntensity: .35, color: '#1b2228', map: carbonMap, metalness: 0, roughness: .62, envMapIntensity: .55, clearcoat: .6, clearcoatRoughness: .2, normalMap: carbonNormal, normalScale: new Vector2(.55, .55), roughnessMap: carbonMap }),
+      { edge: .22, width: .004, roughness: .25, macro: .18, color: '#4a5158' })),
+    paint: material(objectSpaceFinish(new MeshPhysicalMaterial({ color: '#9b1730', metalness: .1, roughness: .32, clearcoat: .65, clearcoatRoughness: .28, envMapIntensity: .7, roughnessMap: paintedMap, normalMap: paintedNormal, normalScale: new Vector2(.06,.06) }))),
+    // Matte wall paint with scuffed joints; dark painted steel; moulded polymer that polishes on its edges.
+    panel: material(objectSpaceFinish(new MeshStandardMaterial({ color: '#b4b5ac', metalness: 0, roughness: .88, roughnessMap: paintedMap, normalMap: paintedNormal, normalScale: new Vector2(.1,.1) }),
+      { edge: .3, width: .03, roughness: .08, macro: .22, color: '#8d8e86' })),
+    structure: material(objectSpaceFinish(new MeshStandardMaterial({ color: '#26333f', metalness: .55, roughness: .5, envMapIntensity: .6, roughnessMap: metalMap, normalMap: metalNormal, normalScale: new Vector2(.1,.1) }),
+      { edge: .3, width: .004, roughness: -.12, macro: .25, color: '#6c7780' })),
+    polymer: material(objectSpaceFinish(new MeshPhysicalMaterial({ color: '#101a24', metalness: 0, roughness: .8, clearcoat: .04, envMapIntensity: .3, normalMap: paintedNormal, normalScale: new Vector2(.15,.15) }),
+      { edge: .28, width: .005, roughness: -.22, macro: .2, color: '#2c3742' })),
+    // Paint, not chrome: black, red and white are matte/satin coatings that chip to a duller tone on edges.
+    black: material(objectSpaceFinish(new MeshStandardMaterial({ color: '#11141a', roughness: .74, metalness: .04 }),
+      { edge: .25, width: .004, roughness: -.15, macro: .2, color: '#3a3f47' })),
+    red: material(objectSpaceFinish(new MeshStandardMaterial({ color: '#7e0d24', metalness: .04, roughness: .52 }),
+      { edge: .35, width: .004, roughness: .1, macro: .2, color: '#6d6f73' })),
+    white: material(objectSpaceFinish(new MeshStandardMaterial({ color: '#d3dcde', metalness: 0, roughness: .6 }),
+      { edge: .3, width: .004, roughness: .1, macro: .3, color: '#8e9494' })),
+    // Brushed aluminium: brush rows along the part; the anisotropic highlight is switched on for `balanced` only.
+    metal: material(objectSpaceFinish(new MeshPhysicalMaterial({ color: '#a9b1b5', metalness: .88, roughness: .4, envMapIntensity: .9, anisotropyRotation: Math.PI / 2, normalMap: metalNormal, normalScale: new Vector2(.2,.2), roughnessMap: metalMap }),
+      { edge: .3, width: .004, roughness: -.1, macro: .22, color: '#c3cacd' })),
+    // Epoxy: the roughness map carries the absolute value (gloss patches, dull wheel paths, dusty perimeter).
+    floor: material(new MeshStandardMaterial({ color: '#a5a6a2', map: floorSurface.map, metalness: 0, roughness: 1, envMapIntensity: .65, roughnessMap: floorSurface.roughness, normalMap: floorNormal, normalScale: new Vector2(.1, .1) })),
     concrete: material(new MeshStandardMaterial({ color: '#81878a', metalness: .02, roughness: .93 })),
-    tire: material(new MeshStandardMaterial({ color: '#161819', roughness: .94, normalMap: rubberNormal, normalScale: new Vector2(.3, .3) })),
+    tire: material(new MeshStandardMaterial({ color: '#1a1b1c', metalness: 0, roughness: .97, envMapIntensity: .25, normalMap: rubberNormal, normalScale: new Vector2(.3, .3) })),
     light: material(new MeshBasicMaterial({ color: '#8eaebb', toneMapped: false })),
     taskLight: material(new MeshBasicMaterial({ color: '#ffdfa8', toneMapped: false })),
     redLight: material(new MeshBasicMaterial({ color: '#e33352', toneMapped: false })),
