@@ -1,4 +1,4 @@
-import { CanvasTexture, CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace } from 'three'
+import { Box3, CanvasTexture, CylinderGeometry, Group, Mesh, MeshBasicMaterial, MeshStandardMaterial, PlaneGeometry, SRGBColorSpace, Vector3 } from 'three'
 import type { Texture } from 'three'
 import type { Quality, QualityLevel, ZoneId } from '../../contracts/index.ts'
 import type { Resources, Vec3 } from './resources.ts'
@@ -17,7 +17,9 @@ type Tier = 'all' | 'full'
 export type EasterEggModel = {
   id: string; zone: ZoneId; url: string; tier: Tier; position: Vec3; yaw: number; scale: number
   tilt?: readonly [x: number, z: number]; limits: PropModelLimits
-  finish: { roughness: number; metalness?: number }
+  /** Rest the tilted model on its support (lowest point at the group's height). */ ground?: boolean
+  /** Self-lit share of the base colour: a discreet highlight without a new light (no program recompiles). */ glow?: number
+  finish: { roughness: number; metalness?: number; tint?: string }
 }
 
 export const easterEggModels: readonly EasterEggModel[] = [
@@ -25,19 +27,19 @@ export const easterEggModels: readonly EasterEggModel[] = [
     limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32 } },
   { id:'capacete', zone:'garage', url:'models/props/capacete.glb', tier:'all', position:[-2.6,1.085,2.95], yaw:.95, scale:1,
     limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62 } },
-  { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-7.02,.61,1.15], yaw:1.57, scale:1.6,
+  { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-6.93,.61,1.85], yaw:1.2, scale:2.1, glow:.22,
     limits:{longest:[.15,.21],triangles:16000}, finish:{roughness:.45 } },
   { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
-    limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85 } },
+    limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85,tint:'#6a6a6a' } },
   { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
     limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78 } },
   { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
     limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22 } },
   { id:'bola', zone:'garage', url:'models/props/bola.glb', tier:'full', position:[-1.75,0,4.05], yaw:.3, scale:1,
     limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7 } },
-  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', tier:'full', position:[-1.25,0,4.3], yaw:2.2, scale:1,
+  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', tier:'full', position:[-1.555,0,4.141], yaw:2.57, scale:1,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', tier:'full', position:[-2.25,0,4.45], yaw:-.5, scale:1,
+  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', tier:'full', position:[-1.743,0,4.276], yaw:.75, scale:1, tilt:[-.2,0], ground:true,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
   { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', tier:'full', position:[-7.62,1.09,-.25], yaw:.4, scale:1,
     limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4 } },
@@ -133,7 +135,7 @@ function mapToRect(geometry: PlaneGeometry | CylinderGeometry, name: Rect) {
   return geometry
 }
 
-export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof createPropModelLease>[2]) {
+export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof createPropModelLease>[2], startDelayMs = 1200, restDelayMs = 1500) {
   const root = new Group(); root.name = 'easter-eggs'
   // Built on the first load() (after the first frame, see Garage.loadProps): the atlas, the paper geometry and
   // their shader stay out of the start-up task, which ANGLE/D3D11 already spends ~4 s compiling. Being late, none
@@ -203,13 +205,20 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
         // The file's own base colour texture (projected FLUX image); the scene material keeps our lighting settings.
         let map: Texture | null = null
         model.traverse(object => { if (!map && object instanceof Mesh && !Array.isArray(object.material)) map = (object.material as MeshStandardMaterial).map ?? null })
-        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, map, color: map ? '#ffffff' : '#3a3c3f', roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6 }))
+        const glow = spec.glow && map ? { emissive: '#ffffff', emissiveMap: map, emissiveIntensity: spec.glow } : {}
+        const material = r.material(new MeshStandardMaterial({ name: 'easter-egg-' + spec.id, map, color: map ? spec.finish.tint ?? '#ffffff' : '#3a3c3f', roughness: spec.finish.roughness, metalness: spec.finish.metalness ?? 0, envMapIntensity: .6, ...glow }))
         model.traverse(object => {
           if (!(object instanceof Mesh)) return
           // Small props receive the room's shadows but do not cast: ~150k extra triangles stay out of the shadow pass.
           object.material = material; object.castShadow = false; object.receiveShadow = true
         })
         model.name = spec.id + '-model'; model.scale.setScalar(spec.scale); group.add(model)
+        if (spec.ground) {
+          // World space: the room is lifted but never rotated or scaled, so a y difference is a local one.
+          group.updateWorldMatrix(true, true)
+          const lowest = new Box3().setFromObject(model).min.y, support = group.getWorldPosition(new Vector3()).y
+          group.position.y += support - lowest
+        }
         marks(spec.id, group)
       }, spec.limits, dependencies)
       return { spec, group, lease }
@@ -235,28 +244,27 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
 
   // Files are fetched only once loading was requested and the quality is known. Leve keeps the `all` selection and
   // never downloads the rest. Any other level shows all twelve (fila 21): the full profile (desktop) fetches them
-  // right after the selection; the light profile (phones on Auto/Alta) fetches each one only when its station is
-  // framed, and the opening station waits for the selection plus a pause, so the first load is the selection alone.
+  // after the selection; the light profile (phones on Auto/Alta) fetches each one only when its station is framed.
+  // The first file waits a moment after start-up and the rest wait for the selection plus a pause, so decoding and
+  // the textured shader program never stack onto the scene's first frames.
   let quality: Quality | null = null, showAll = false, base: string | null = null, queue: Promise<void> = Promise.resolve()
-  let selectionDone = false
+  let started = false, selectionDone = false
   const framed = new Set<ZoneId>()
   function applyVisibility() {
     if (quality === null) return
     for (const [, group] of groups) group.visible = showAll || group.userData.tier === 'all'
   }
-  const wantedNow = ({ spec }: Lease) => spec.tier === 'all' || (showAll && (quality === 'balanced' || (selectionDone && framed.has(spec.zone))))
+  const wantedNow = ({ spec }: Lease) => spec.tier === 'all' || (showAll && selectionDone && (quality === 'balanced' || framed.has(spec.zone)))
   function sync() {
     if (base === null || quality === null) return Promise.resolve()
     const from = base
     // One file at a time with a macrotask between them: parsing never stacks into one long task.
-    const yieldToFrame = (ms = 0) => new Promise<void>(resolve => setTimeout(resolve, ms))
+    const wait = (ms = 0) => new Promise<void>(resolve => setTimeout(resolve, ms))
+    const loadWanted = async () => { for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await wait() } }
     queue = queue.then(async () => {
-      for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await yieldToFrame() }
-      if (!selectionDone && showAll && quality === 'low') {
-        await yieldToFrame(1500); selectionDone = true
-        for (const entry of leases.filter(wantedNow)) { await entry.lease.load(new URL(entry.spec.url, from).href); await yieldToFrame() }
-      }
-      selectionDone = true
+      if (!started) { started = true; await wait(startDelayMs) }
+      await loadWanted()
+      if (!selectionDone) { if (showAll) await wait(restDelayMs); selectionDone = true; await loadWanted() }
     })
     return queue
   }
