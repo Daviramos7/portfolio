@@ -34,11 +34,11 @@ function fixture(initial = 'https://drf.example/', saved = {}) {
   }
 }
 
-test('catalogue preserves ten bilingual records and scoped execution evidence', () => {
+test('catalogue preserves nine bilingual records and scoped execution evidence', () => {
   assert.doesNotThrow(() => validatePortfolioContent(portfolioContent))
-  assert.equal(portfolioContent.projects.length, 10)
-  assert.deepEqual(portfolioContent.metrics.slice(0, 2).map(metric => [metric.value, metric.state]), [[127119, 'reproduced'], [7803361234.91, 'reproduced']])
-  assert.equal(new Set(portfolioContent.metrics.map(metric => metric.projectId)).size, 5)
+  assert.equal(portfolioContent.projects.length, 9)
+  assert.deepEqual(portfolioContent.metrics.slice(0, 2).map(metric => [metric.value, metric.state]), [[283, 'reproduced'], [32, 'reproduced']])
+  assert.equal(new Set(portfolioContent.metrics.map(metric => metric.projectId)).size, 4)
   for (const metric of portfolioContent.metrics) {
     assert.equal(metric.state, 'reproduced')
     assert.ok(metric.context.pt && metric.context.en)
@@ -276,7 +276,7 @@ test('scene readouts reuse public bilingual facts without fabricating career or 
   const index = buildSceneContentIndex(portfolioContent)
   const zones = index.filter(item => item.projectId === null)
   assert.ok(zones.every(item => item.screenLines.every(line => line.pt && line.en)))
-  assert.ok(zones.find(item => item.zoneId === 'telemetry').screenLines.some(line => line.en.includes('127,119')))
+  assert.ok(zones.find(item => item.zoneId === 'telemetry').screenLines.some(line => line.en.includes('283 tests')))
   assert.deepEqual(zones.find(item => item.zoneId === 'strategy-room').screenLines.slice(1), portfolioContent.profile.interests.slice(0, 2))
   assert.ok(index.find(item => item.projectId === 'atleta-hibrido').screenLines.some(line => line.pt.includes('React')))
 })

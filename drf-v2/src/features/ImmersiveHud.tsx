@@ -7,6 +7,8 @@ import { ProgramIdentity } from '../components/drf/ProgramIdentity.tsx'
 import { ProgramContext } from '../components/drf/ProgramContext.tsx'
 import { useCompactHud } from '../hooks/ui/useCompactHud.ts'
 import { closeDetailsOnEscape } from './detailsEscape.ts'
+import { CollectionButton, ShowcaseOverlay } from './ShowcaseOverlay.tsx'
+import './showcase.css'
 
 type Props = PortfolioShellProps & {
   program: Project | undefined
@@ -54,6 +56,7 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
   }
 
   return <>
+    <ShowcaseOverlay state={state} />
     <header className="drf-hud-header">
       <div className="drf-hud-brand">
         <span className="drf-hud-mark" aria-hidden="true">DRF<span>/</span></span>
@@ -63,11 +66,13 @@ export function ImmersiveHud({ content, state, actions, program, onChoose, onIns
         <summary aria-label={`${t.menu}: ${t.menuHint}`}><SlidersHorizontal size={16} aria-hidden="true" /><span>{t.menu}</span><small aria-hidden="true">{state.locale.toUpperCase()}</small></summary>
         <div className="drf-hud-menu-panel">
           {localeGroup}
+          <CollectionButton state={state} />
           <EnvironmentControls state={state} actions={actions} inline />
         </div>
       </details> : <EnvironmentControls state={state} actions={actions} />}
       <div className="drf-hud-tools">
         {!compact && localeGroup}
+        {!compact && <CollectionButton state={state} />}
         <button type="button" className="drf-recruiter-switch" onClick={() => actions.setMode('recruiter')} aria-label={t.cvLabel}>
           <BookOpen size={16} aria-hidden="true" /><span>Recruiter</span>
         </button>

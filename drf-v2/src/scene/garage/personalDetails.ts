@@ -11,7 +11,7 @@ export const personalDetailDescriptions: Record<ZoneId, Record<Locale, string>> 
   garage: {pt:'REC/PE — ponte e mar na placa da abertura.',en:'REC/PE — bridge and sea on the opening plaque.'},
   'pit-wall': {pt:'Três cores — um estojo autoral na bancada do pit wall.',en:'Three colours — an original case on the pit wall bench.'},
   telemetry: {pt:'Observar, testar, iterar — um laboratório de ideias na bancada.',en:'Observe, test, iterate — a laboratory of ideas on the bench.'},
-  'strategy-room': {pt:'360 — uma pausa para jogar, na bancada de estratégia.',en:'360 — a gaming break, on the strategy bench.'},
+  'strategy-room': {pt:'DRF — uma pausa para jogar, na bancada de estratégia.',en:'DRF — a gaming break, on the strategy bench.'},
   'driver-profile': {pt:'Constância — um handgrip na área do perfil.',en:'Consistency — a handgrip in the profile area.'},
 }
 // Exactly five authored, passive discoveries. These are visual allusions, not biography/data.
@@ -95,7 +95,7 @@ export function createPersonalDetails(r: Resources, dependencies?: Parameters<ty
         ctx.beginPath();ctx.moveTo(29,174);ctx.lineTo(29,213);ctx.lineTo(149,213);ctx.moveTo(29,201);ctx.bezierCurveTo(72,206,80,169,145,183);ctx.stroke()
         ctx.font=`500 15px ${bodyFont}`;ctx.fillText(next==='pt'?'ESBOÇO · DEMO':'SKETCH · DEMO',14,245)
       }else if(tile===2){
-        ctx.font=`700 112px ${displayFont}`;ctx.textAlign='center';ctx.fillText('360',128,165)
+        ctx.font=`700 86px ${displayFont}`;ctx.textAlign='center';ctx.fillText('DRF',128,158) // fila 25: own monogram, no third-party mark
         ctx.beginPath();ctx.arc(128,128,113,.15,Math.PI*1.88);ctx.stroke()
       }else{
         ctx.textAlign='center';ctx.font=`700 36px ${displayFont}`;ctx.fillText(next==='pt'?'CONSTÂNCIA':'CONSISTENCY',128,116)

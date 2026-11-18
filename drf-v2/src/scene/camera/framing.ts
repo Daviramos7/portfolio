@@ -30,7 +30,7 @@ export const programmeFramings: Readonly<Record<'desktop' | 'mobile', Framing>> 
 export const hotspotVolumes: Readonly<Record<ZoneId, Readonly<{ position: Point; size: Point; anchor: Point }>>> = {
   garage: { position: [0, .85, 0], size: [3.2, 1.9, 6.2], anchor: [0, 1.1, 1.4] },
   telemetry: { position: [-5.7, 1.7, -4.75], size: [3.8, 2.4, 1.3], anchor: [-5.7, 2.22, -4.6] },
-  'pit-wall': { position: [5.75, 1.7, -4.75], size: [3.8, 2.4, 1.3], anchor: [5.75, 2.24, -4.6] },
+  'pit-wall': { position: [5.75, 1.7, -4.75], size: [3.8, 2.4, 1.3], anchor: [6.95, 1.3, -4.6] }, // fila 25: lower-right corner of the monitor, clear of its text at 390/320
   'driver-profile': { position: [-7.65, 1.6, 2.1], size: [1.5, 3.4, 3.8], anchor: [-7.4, 2.52, 2.1] },
   'strategy-room': { position: [7.65, 1.9, 1.9], size: [1.5, 3.5, 3.8], anchor: [7.4, 3, 1.9] },
 }

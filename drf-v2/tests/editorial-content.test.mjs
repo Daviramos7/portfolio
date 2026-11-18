@@ -12,8 +12,8 @@ test('owner-confirmed contact and education are bilingual and public CV stays un
   assert.equal(profile.cvUrl, '/cv/Davi-Ramos-Ferreira-public-2026.pdf')
 })
 
-test('seven audited cases retain useful detail, bounded claims and unknown contribution', () => {
-  const ids = ['atleta-hibrido', 'brasilscore', 'public-expenditure-big-data', 'stock-data-pipeline', 'spfc-analysis', 'task-manager', 'guess-the-pokemon']
+test('six audited cases retain useful detail, bounded claims and unknown contribution', () => {
+  const ids = ['atleta-hibrido', 'brasilscore', 'stock-data-pipeline', 'spfc-analysis', 'task-manager', 'guess-the-pokemon']
   for (const id of ids) {
     const project = portfolioContent.projects.find(item => item.id === id)
     assert.equal(project.contribution, null)
@@ -53,5 +53,19 @@ test('Recife Public Budget leads the catalogue with the dossier figures verbatim
 test('audit metrics, evidence identifiers, source classifications and benchmark conditions are immutable in this editorial revision', () => {
   const source = readFileSync(new URL('../src/content/auditEvidence.ts', import.meta.url), 'utf8').replaceAll('\r\n', '\n')
   const prefix = source.split('const updates:')[0]
-  assert.equal(createHash('sha256').update(prefix).digest('hex'), '279d37a97e0e537e1a21a889ba8c477eb20e420b04fefc264d0773d9e1db8fd5')
+  assert.equal(createHash('sha256').update(prefix).digest('hex'), 'd38e993004f7b3fb8fddd3ebd7e68c2df9c341345ce78656d555bf9bf3c90f0b')
+})
+
+test('the old PySpark audit card is gone and survives only as the Recife Public Budget origin line', () => {
+  assert.equal(portfolioContent.projects.some(item => item.id === 'public-expenditure-big-data'), false)
+  assert.doesNotMatch(JSON.stringify(portfolioContent.projects), /Auditoria de Despesas Públicas|Public Expenditure Audit/)
+  assert.ok(portfolioContent.metrics.every(metric => portfolioContent.projects.some(item => item.id === metric.projectId)))
+  assert.ok(portfolioContent.evidence.every(item => item.id !== 'audit-pyspark'))
+  const budget = portfolioContent.projects[0]
+  assert.equal(budget.decisions.length, 2)
+  assert.match(budget.decisions[1].pt, /^Começou como um notebook PySpark de auditoria das despesas de 2023.*analise-despesas-recife-pyspark.*evoluiu para pipeline, API e agente.$/)
+  assert.match(budget.decisions[1].en, /^It started as a PySpark notebook.*2023.*analise-despesas-recife-pyspark.*pipeline, an API and an agent.$/)
+  assert.ok(budget.evidenceIds.includes('pyspark-readme'))
+  assert.equal(portfolioContent.evidence.find(item => item.id === 'pyspark-readme').publicUrl, 'https://github.com/Daviramos7/analise-despesas-recife-pyspark')
+  assert.equal(budget.results.length, 3)
 })

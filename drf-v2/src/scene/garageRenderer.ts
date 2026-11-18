@@ -1,4 +1,4 @@
-import { ACESFilmicToneMapping, BoxGeometry, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
+import { ACESFilmicToneMapping, Box3, BoxGeometry, Color, DirectionalLight, Fog, Group, HemisphereLight, Mesh, MeshBasicMaterial, PCFShadowMap, PerspectiveCamera, PointLight, Raycaster, Scene, Vector2, Vector3, WebGLRenderer } from 'three'
 import type { CatmullRomCurve3, Group as SceneGroup, WebGLRenderTarget } from 'three'
 import type { ExperienceState, SceneEvent, SceneProps, SceneHandle, ZoneId } from '../contracts/index.ts'
 import { createResources } from './garage/resources.ts'
@@ -17,6 +17,7 @@ import { createPitLevel, pitLevelHiddenFrom, setPitLevelQuality } from './garage
 import { createCircuit } from './trackside/circuit.ts'
 import { createSkyline, setSkylineQuality } from './trackside/skyline.ts'
 import { estimateTextureBytes } from './textureBytes.ts'
+import { openShowcase, showcaseIdForEgg } from './showcase/showcaseCatalog.ts'
 import { setBrushedAnisotropy } from './garage/surfaceFinish.ts'
 import { reportsReduction, screenScale, sunShadowMapSize, textAnisotropyFor } from './qualityDetail.ts'
 
@@ -149,11 +150,32 @@ export function createGarageRenderer(canvas: HTMLCanvasElement, onEvent: (event:
     const hit = raycaster.intersectObjects(pickVolumes, false)[0]
     return hit ? hit.object.userData.zoneId as ZoneId : null
   }
+  // Fila 25: an easter egg under the pointer opens the inspection showcase. Boxes, not triangles: a click or a
+  // hover never walks the ~150k triangles of the props; nearest box wins, within reading distance of the camera.
+  const eggBox = new Box3(), eggHit = new Vector3()
+  function pickEgg(event: MouseEvent): string | null {
+    if (!active() || !ready || state?.panelOpen || !garage) return null
+    const bounds = canvas.getBoundingClientRect()
+    if (!bounds.width || !bounds.height) return null
+    pointer.set((event.clientX - bounds.left) / bounds.width * 2 - 1, 1 - (event.clientY - bounds.top) / bounds.height * 2)
+    raycaster.setFromCamera(pointer, camera)
+    let best: string | null = null, nearest = 7
+    for (const group of garage.easterEggRoot.children) {
+      if (!group.visible || !group.name.startsWith('easter-egg-')) continue
+      eggBox.setFromObject(group)
+      if (eggBox.isEmpty() || !raycaster.ray.intersectBox(eggBox, eggHit)) continue
+      const distance = eggHit.distanceTo(raycaster.ray.origin), id = showcaseIdForEgg(group.name.slice('easter-egg-'.length))
+      if (id && distance < nearest) { nearest = distance; best = id }
+    }
+    return best
+  }
   function selectHotspot(event: MouseEvent) {
+    const egg = pickEgg(event)
+    if (egg) { openShowcase(egg); return }
     const zoneId = pick(event)
     if (zoneId && availableZones.has(zoneId)) onEvent({ type: 'SELECT_TARGET', target: { zoneId, projectId: null } })
   }
-  function hoverHotspot(event: PointerEvent) { canvas.style.cursor = pick(event) ? 'pointer' : '' }
+  function hoverHotspot(event: PointerEvent) { canvas.style.cursor = pickEgg(event) || pick(event) ? 'pointer' : '' }
   function clearHover() { canvas.style.cursor = '' }
 
   function resize() {
