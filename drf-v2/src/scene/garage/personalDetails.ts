@@ -18,8 +18,8 @@ export const personalDetailDescriptions: Record<ZoneId, Record<Locale, string>> 
 // M16 4b: the two details on the rear consoles follow the desks down 0.2 m (Garage.ts consoleDrop).
 export const personalDetailLayout: readonly { id: string; zone: ZoneId; position: Vec3; yaw: number }[] = [
   { id:'rec-pe', zone:'garage', position:[-3.92,3.05,-6.09], yaw:0 },
-  { id:'three-tone-case', zone:'pit-wall', position:[4.46,.97,-4.12], yaw:0 },
-  { id:'science-note', zone:'telemetry', position:[-7.22,1.19,-4.18], yaw:.18 },
+  { id:'three-tone-case', zone:'pit-wall', position:[6.55,.97,-4.12], yaw:0 }, // fila 26: alone on the bench
+  { id:'science-note', zone:'telemetry', position:[-5.1,1.19,-4.7], yaw:.25 }, // fila 26: by the monitor foot, clear of the 1440 card and of the screen's DEMO label
   { id:'control-360', zone:'strategy-room', position:[7.09,1.5,3.08], yaw:-Math.PI/2 },
   { id:'constancy-grip', zone:'driver-profile', position:[-6.96,.998,2.9], yaw:Math.PI/2 },
 ]

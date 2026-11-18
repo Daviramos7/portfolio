@@ -4,6 +4,13 @@ import { mkdtemp } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 
+// Fila 26: transport limit for one CDP command, not an assertion. A Runtime.evaluate only answers when the page's main
+// thread is free, and the immersive start-up holds it in one long task (programs compiled by ANGLE/D3D11): measured
+// with a PerformanceObserver('longtask') on the preview, 4235 and 4337 ms at 1440x900, 2863 and 3232 ms at 390. The
+// old 5 s limit left under a second of margin, so a loaded machine turned that task into "CDP timeout:
+// Runtime.evaluate" (fila 25 integration). Every check and waitFor below keeps its own condition and budget.
+export const cdpCommandTimeoutMs = 20000
+
 export async function openBrowser(base) {
   const chromePath = process.env.CHROME_PATH ?? 'C:/Program Files/Google/Chrome/Application/chrome.exe'
   const profile = await mkdtemp(join(tmpdir(), 'drf-showcase-'))
@@ -35,7 +42,7 @@ export async function openBrowser(base) {
     })
     const command = (method, params = {}, attached = true) => new Promise((done, reject) => {
       const id = ++nextId
-      const timeout = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}`)) }, 15000)
+      const timeout = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}`)) }, cdpCommandTimeoutMs)
       pending.set(id, { done, reject, timeout })
       socket.send(JSON.stringify({ id, method, params, ...(attached && sessionId ? { sessionId } : {}) }))
     })

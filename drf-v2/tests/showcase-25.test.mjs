@@ -22,7 +22,13 @@ test('catalogue: every item is a real egg with PT/EN text and a thumbnail', asyn
   assert.equal(showcaseIdForEgg('suporte-capacete'), 'capacete')
   assert.equal(showcaseIdForEgg('unknown'), null)
   assert.match(showcaseItems.find(item => item.id === 'setlists').caption.pt, /Pink Floyd fechando com Eclipse/)
-  assert.match(showcaseItems.find(item => item.id === 'caneca').caption.en, /SELECT \* FROM cafe/)
+  // Fila 26: Davi's own lines (_fila/TEXTOS-EASTER-EGGS.md) replace the PT captions; the EN keeps his tone.
+  const caption = id => showcaseItems.find(item => item.id === id).caption
+  assert.equal(caption('caneca').pt, 'Não sou muito fã de café, mas tem q tomar.')
+  assert.equal(caption('figure').pt, 'Esse era pra ser meu boneco kkkkkk')
+  assert.equal(caption('chuteira-caida').pt, 'Acho que ficou claro quem é kkkkkk')
+  assert.equal(caption('cobra-coral').pt, 'Apenas um time aí de Pernambuco.')
+  for (const id of ['caneca', 'figure', 'cobra-coral', 'guitarra', 'bola', 'chuteira-em-pe', 'chuteira-caida', 'cinto-ferramentas']) assert.notEqual(caption(id).en, caption(id).pt)
   assert.match(showcaseItems.find(item => item.id === 'capacete').caption.pt, /16/)
 })
 
@@ -56,7 +62,7 @@ test('showcase overlay in the browser (1440 / 390 / 320, four quality levels, re
     await shot('1440-colecao')
     await b.click('[data-showcase-item="caneca"]')
     await b.waitFor(`document.querySelector('.drf-showcase-canvas')?.dataset.showcaseStatus === 'ready'`, 200)
-    assert.match(await b.evaluate(`document.querySelector('.drf-showcase-caption').textContent`), /SELECT \* FROM cafe/)
+    assert.equal(await b.evaluate(`document.querySelector('.drf-showcase-caption').textContent`), 'Não sou muito fã de café, mas tem q tomar.')
     const before = await yaw(); await new Promise(done => setTimeout(done, 700)); assert.ok(await yaw() > before + .05, 'slow automatic turn')
     const { x, y } = await centre(), dragged = await yaw()
     await mouse('mousePressed', x, y); await mouse('mouseMoved', x + 120, y + 40); await mouse('mouseReleased', x + 120, y + 40)

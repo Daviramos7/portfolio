@@ -601,3 +601,22 @@ estações) em 1440, 390 e 320 e closes dos 10 easter eggs (1440) em
 Branches mantidas. Sem push, sem deploy.
 
 Aprovação do Davi: pendente
+
+## Fila 26 — posições no mobile, textos do Davi e teste estável (18/11/2026, branch `m16-26-posicoes`)
+Câmeras intocadas: só os objetos mudaram. Medição com a câmera real de cada estação (`framing.ts` + fov do renderer)
+em 1440×900, 390 e 320, cruzando com as caixas da HUD/ficha lidas no navegador (`tests/positions-26.harness.mjs`, fora
+do glob) e com oclusão 3D por raycast na garagem inteira. Pit Wall: guitarra, case e amplificador (×1,3) no chão,
+encostados no console (o amplificador só cabe nos dois enquadramentos em x ≈ 5,1–5,3: à esquerda o 1440 corta, à
+direita a bancada de montagem tapa no 390); estojo sozinho na bancada; post-it ×1,3 fora da alça. Garagem: suporte
+do capacete à direita da roda traseira (antes sob a ficha "Programas" e fora do 390), canto da bola ×1,3 sem tapar o
+carro, cachecol fora do aerofólio. Telemetria: nota de ciência junto ao pé do monitor (antes sob o card do 1440;
+na esquerda tapava o rótulo DEMO da tela), caneca ×1,3. Perfil: figure 2,1 → 2,4, cobra ×1,3. Estratégia: no 390 só
+cabe a tela e uma faixa estreita de parede, então setlists empilhadas na faixa, cinto pendurado na frente da bancada,
+quadro ×0,6 acima da tela, vaso ×1,35/1,2. Textos do Davi na vitrine (8 legendas PT, EN no mesmo tom). Teste: a
+partida da cena segura a thread principal numa tarefa de 4,2–4,3 s (1440, `longtask`), e os harnesses de UI tinham
+5 s de limite por comando CDP; limite único de 20 s em `cdpBrowser.mjs` (asserções iguais). Lint e build ok;
+**140/140 em série duas vezes seguidas**; smoke exit 0. Tabela e prints antes/depois:
+`_fila\feito\26-posicoes-mobile-textos.resultado.md` (fora do Git) e
+`C:\Users\davir\OneDrive\Documentos\GitHub\portfolio\.agent-grid\screenshots\mission-16\fila26-posicoes\`.
+
+Aprovação do Davi: pendente
