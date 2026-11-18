@@ -23,33 +23,39 @@ export type EasterEggModel = {
   finish: { roughness: number; metalness?: number; tint?: string }
 }
 
-// Fila 22: the ball corner sits on the floor right of the car's nose (the old corner hid behind the "Programas"
-// card) and the coral snake on the bench next to the figure, so both read in the 1440 and 390 framings. The boots
-// keep the fila 21 arrangement around the ball, turned by -0.52 rad towards the cameras.
+// Fila 26 (cameras untouched, only the objects moved; measured with tests/positions-26.harness.mjs): every item sits
+// inside its station framing at 1440x900, 390 and 320, clear of the HUD/station card and of the other items.
+// Garage: helmet stand right of the car's rear wheel (never in front of the car) and ball corner on the floor by its
+// nose (the stand hid under the "Programas" card and left the 390 frame). Pit wall: guitar, case and amplifier on
+// the floor against the console front (the music corner; the bench keeps only the three-tone case); a floor amp only
+// reads in both framings at x ~5.1-5.3 (further left the 1440 frame cuts it, further right the assembly bench hides
+// it at 390); the three never touch. Strategy: the 390 frame is the screen plus a narrow wall strip on its left, so the setlists stack in
+// that strip, the tool belt hangs on the bench front and the whiteboard (smaller) hangs above the screen. Small items
+// grow up to 1.3x.
 export const easterEggModels: readonly EasterEggModel[] = [
-  { id:'caneca', zone:'telemetry', url:'models/props/caneca.glb', tier:'all', position:[-6.58,.85,-4.38], yaw:.62, scale:1.4,
+  { id:'caneca', zone:'telemetry', url:'models/props/caneca.glb', tier:'all', position:[-5.75,.85,-4.2], yaw:.62, scale:1.82,
     limits:{longest:[.1,.14],triangles:7000}, finish:{roughness:.32 } },
-  { id:'capacete', zone:'garage', url:'models/props/capacete.glb', tier:'all', position:[-2.6,1.085,2.95], yaw:.95, scale:1,
+  { id:'capacete', zone:'garage', url:'models/props/capacete.glb', tier:'all', position:[3.5,1.085,2.5], yaw:.95, scale:1,
     limits:{longest:[.3,.42],triangles:16000}, finish:{roughness:.62 } },
-  { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-6.93,.61,1.85], yaw:1.2, scale:2.1, glow:.22,
+  { id:'figure', zone:'driver-profile', url:'models/props/figure.glb', tier:'all', position:[-6.93,.61,1.85], yaw:1.2, scale:2.4, glow:.22,
     limits:{longest:[.15,.21],triangles:16000}, finish:{roughness:.45 } },
-  { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', lightUrl:'models/props/amplificador-512.glb', tier:'full', position:[4.3,.85,-4.58], yaw:-.2, scale:1,
+  { id:'amplificador', zone:'pit-wall', url:'models/props/amplificador.glb', lightUrl:'models/props/amplificador-512.glb', tier:'full', position:[5.26,0,-3.87], yaw:-.35, scale:1.3,
     limits:{longest:[.25,.34],triangles:16000}, finish:{roughness:.85,tint:'#6a6a6a' } },
-  { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', lightUrl:'models/props/case-guitarra-512.glb', tier:'full', position:[3.25,0,-5.98], yaw:-.15, scale:1, tilt:[-.1,0],
+  { id:'case-guitarra', zone:'pit-wall', url:'models/props/case-guitarra.glb', lightUrl:'models/props/case-guitarra-512.glb', tier:'full', position:[4.36,0,-3.92], yaw:-.15, scale:1, tilt:[-.1,0],
     limits:{longest:[.95,1.15],triangles:16000}, finish:{roughness:.78 } },
-  { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', lightUrl:'models/props/guitarra-512.glb', tier:'full', position:[2.86,0,-5.86], yaw:.3, scale:1, tilt:[-.06,-.21],
+  { id:'guitarra', zone:'pit-wall', url:'models/props/guitarra.glb', lightUrl:'models/props/guitarra-512.glb', tier:'full', position:[4.76,0,-3.84], yaw:.3, scale:1, tilt:[-.06,-.21],
     limits:{longest:[.9,1.1],triangles:16000}, finish:{roughness:.22 } },
-  { id:'bola', zone:'garage', url:'models/props/bola.glb', lightUrl:'models/props/bola-512.glb', tier:'full', position:[2.6,0,3.6], yaw:-.22, scale:1,
+  { id:'bola', zone:'garage', url:'models/props/bola.glb', lightUrl:'models/props/bola-512.glb', tier:'full', position:[2.35,0,4.1], yaw:-.22, scale:1.3,
     limits:{longest:[.19,.25],triangles:7000}, finish:{roughness:.7 } },
-  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', lightUrl:'models/props/chuteira-em-pe-512.glb', tier:'full', position:[2.724,0,3.776], yaw:2.05, scale:1,
+  { id:'chuteira-em-pe', zone:'garage', url:'models/props/chuteira-em-pe.glb', lightUrl:'models/props/chuteira-em-pe-512.glb', tier:'full', position:[2.579,0,3.939], yaw:3.62, scale:1.3,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', lightUrl:'models/props/chuteira-caida-512.glb', tier:'full', position:[2.494,0,3.8], yaw:.23, scale:1, tilt:[-.2,0], ground:true,
+  { id:'chuteira-caida', zone:'garage', url:'models/props/chuteira-caida.glb', lightUrl:'models/props/chuteira-caida-512.glb', tier:'full', position:[2.61,0,4.238], yaw:1.8, scale:1.3, tilt:[-.2,0], ground:true,
     limits:{longest:[.26,.32],triangles:7000}, finish:{roughness:.55 } },
-  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', lightUrl:'models/props/cobra-coral-512.glb', tier:'full', position:[-6.85,.61,1.25], yaw:.4, scale:1,
+  { id:'cobra-coral', zone:'driver-profile', url:'models/props/cobra-coral.glb', lightUrl:'models/props/cobra-coral-512.glb', tier:'full', position:[-6.85,.61,1.3], yaw:.4, scale:1.3,
     limits:{longest:[.27,.33],triangles:7000}, finish:{roughness:.4 } },
-  { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', lightUrl:'models/props/vaso-esp32-512.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.2,
+  { id:'vaso-esp32', zone:'strategy-room', url:'models/props/vaso-esp32.glb', lightUrl:'models/props/vaso-esp32-512.glb', tier:'full', position:[6.98,1.05,.55], yaw:-1.2, scale:1.35,
     limits:{longest:[.25,.31],triangles:13000}, finish:{roughness:.8 } },
-  { id:'cinto-ferramentas', zone:'strategy-room', url:'models/props/cinto-ferramentas.glb', lightUrl:'models/props/cinto-ferramentas-512.glb', tier:'full', position:[8.06,1.02,-2.55], yaw:-Math.PI/2, scale:1,
+  { id:'cinto-ferramentas', zone:'strategy-room', url:'models/props/cinto-ferramentas.glb', lightUrl:'models/props/cinto-ferramentas-512.glb', tier:'full', position:[6.38,.6,1.95], yaw:-Math.PI/2, scale:1,
     limits:{longest:[.55,.65],triangles:16000}, finish:{roughness:.7 } },
 ]
 
@@ -193,27 +199,30 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
     }
 
     // Paper and flat details: geometry + atlas, always present (no file to wait for).
-    // Post-it hangs from the lower bezel of the pit wall monitor, below the programme text.
-    const postit = place('post-it', 'all', [4.62, 1.1, -4.888], 0)
+    // Post-it hangs from the lower bezel of the pit wall monitor, below the programme text (fila 26: clear of the
+    // three-tone case, 1.3x).
+    const postit = place('post-it', 'all', [4.75, 1.1, -4.888], 0); postit.scale.setScalar(1.3)
     decal(postit, 'postit', [.13, .13], [0, 0, 0], [0, 0, .07])
     // Watchlist taped to the locker side, facing the telemetry station.
     const watch = place('watchlist', 'all', [-7.355, 1.5, -4.95], Math.PI / 2)
     decal(watch, 'watchlist', [.3, .45], [0, 0, 0], [0, 0, -.03])
     for (const x of [-.11, .11]) r.box(watch, [.07, .02, .002], [x, .22, .002], white)
-    // Whiteboard with the hand-drawn automaton on the right wall, between two studs, above the service aisle.
-    const board = place('quadro-automato', 'all', [8.1, 2.05, -.95], -Math.PI / 2)
+    // Whiteboard with the hand-drawn automaton on the right wall, above the strategy screen and below the light
+    // (fila 26: 0.6x, so it fits between the screen, the zone sign, the light and the 390 frame edge).
+    const board = place('quadro-automato', 'all', [8.08, 3.51, -.3], -Math.PI / 2); board.scale.setScalar(.6)
     r.box(board, [1.26, .82, .03], [0, 0, -.016], metal)
     decal(board, 'board', [1.2, .76], [0, 0, .001])
     r.box(board, [.9, .03, .06], [0, -.42, .03], metal)
-    // Two setlists side by side, taped to the right wall next to the tool belt.
-    const lists = place('setlists', 'full', [8.27, 1.62, -3.38], -Math.PI / 2)
-    decal(lists, 'setlist1', [.28, .42], [-.16, 0, 0], [0, 0, .02])
-    decal(lists, 'setlist2', [.28, .42], [.16, .01, 0], [0, 0, -.015])
-    for (const x of [-.16, .16]) r.box(lists, [.08, .022, .002], [x, .215, .002], white)
+    // Two setlists taped one above the other on the right wall, in the strip left of the strategy screen (fila 26).
+    const lists = place('setlists', 'full', [8.27, 1.75, -.64], -Math.PI / 2)
+    decal(lists, 'setlist1', [.28, .42], [0, .225, 0], [0, 0, .02])
+    decal(lists, 'setlist2', [.28, .42], [.005, -.225, 0], [0, 0, -.015])
+    for (const y of [.225, -.225]) r.box(lists, [.08, .022, .002], [0, y + .215, .002], white)
     // Full tier stays out of the second static batch so `low` can hide it.
     lists.traverse(object => { object.userData.dynamic = true })
-    // Plain tricolour scarf (red, white, black; no crest or name) draped over the facade guard rail.
-    const scarf = place('cachecol', 'all', [-1.7, 1.05, -6.28], .04)
+    // Plain tricolour scarf (red, white, black; no crest or name) draped over the facade guard rail, between two posts
+    // behind the car's nose (fila 26: the old spot hid behind the rear wing in the garage framings).
+    const scarf = place('cachecol', 'all', [.8, 1.05, -6.28], .04)
     r.box(scarf, [.2, .05, .1], [0, .035, 0], red)
     for (const [z, drop, sway] of [[.06, .58, .05], [-.06, .46, -.04]] as const) {
       const band = new Group(); band.position.set(0, .02, z); band.rotation.x = sway; scarf.add(band)
@@ -221,7 +230,7 @@ export function createEasterEggs(r: Resources, dependencies?: Parameters<typeof 
       for (let i = 0; i < 6; i++) r.box(band, [.2, stripe, .012], [0, -stripe * (i + .5), 0], [red, white, black][i % 3])
     }
     // Helmet stand next to the show car: a satin post on a weighted foot.
-    const stand = place('suporte-capacete', 'all', [-2.6, 0, 2.95])
+    const stand = place('suporte-capacete', 'all', [3.5, 0, 2.5])
     r.box(stand, [.42, .04, .42], [0, .02, 0], black)
     r.rod(stand, [0, .04, 0], [0, 1.05, 0], .03, metal)
     r.mesh(stand, r.geometry(new CylinderGeometry(.09, .06, .05, 20)), polymer, [0, 1.06, 0])

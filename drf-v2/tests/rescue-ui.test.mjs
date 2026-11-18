@@ -4,6 +4,7 @@ import { mkdtemp, writeFile } from 'node:fs/promises'
 import { tmpdir } from 'node:os'
 import { join } from 'node:path'
 import { portfolioContent } from '../src/content/portfolio.ts'
+import { cdpCommandTimeoutMs } from './cdpBrowser.mjs' // fila 26: shared transport limit (see cdpBrowser.mjs)
 
 // Run with compiled preview on 5175; override URL/Chrome/evidence directory via env.
 const base = process.env.DRF_RESCUE_URL ?? 'http://127.0.0.1:5175/'
@@ -47,7 +48,7 @@ try {
   })
   const command = (method, params = {}, attached = true) => new Promise((done, reject) => {
     const id = ++nextId
-    const timeout = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}`)) }, 5000)
+    const timeout = setTimeout(() => { pending.delete(id); reject(new Error(`CDP timeout: ${method}`)) }, cdpCommandTimeoutMs)
     pending.set(id, { done, reject, timeout })
     socket.send(JSON.stringify({ id, method, params, ...(attached && sessionId ? { sessionId } : {}) }))
   })
